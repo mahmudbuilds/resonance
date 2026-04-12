@@ -115,7 +115,7 @@ export default function DashboardSidebar() {
     <Sidebar variant="inset" collapsible="icon">
       <SidebarHeader className="flex flex-col gap-4 pt-4">
         <div className="flex items-center gap-2 pl-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
-          <Image src="/logo.svg" alt="Resonance Logo" width={32} height={32} />
+          <Image src="/logo.png" alt="Resonance Logo" width={45} height={45} />
           <span className="group-data-[collapsible=icon]:hidden tracking-tighter">
             Resonance
           </span>

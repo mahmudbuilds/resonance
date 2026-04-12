@@ -12,6 +12,9 @@ import {
   TrendingUp,
   Volume2,
   Wand2,
+  Activity,
+  Globe,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -23,205 +26,145 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const userFirstName = user?.firstName;
 
   const features = [
     {
       title: "Text to Speech",
       description:
-        "Transform written words into studio-quality voiceovers with emotional depth and natural inflection",
+        "Craft studio-quality voiceovers with emotional depth and natural inflection. Bring your scripts to life.",
       icon: AudioLines,
       href: "/text-to-speech",
-      gradient: "from-primary via-primary/80 to-primary/60",
-      stats: "50M+ characters generated",
+      color: "text-blue-500",
+      glow: "bg-blue-500/20",
     },
     {
       title: "Voice Library",
       description:
-        "Explore hundreds of handcrafted voices spanning dozens of languages, accents, and personalities",
+        "Explore hundreds of handcrafted voices spanning dozens of languages, accents, and unique personalities.",
       icon: Volume2,
       href: "/voices",
-      gradient: "from-primary/90 via-primary/70 to-primary/50",
-      stats: "400+ premium voices",
+      color: "text-purple-500",
+      glow: "bg-purple-500/20",
     },
     {
       title: "Voice Cloning",
       description:
-        "Create an AI replica of any voice from a brief sample. Perfect for brand consistency",
+        "Create an uncanny AI replica of any voice from a brief sample. Establish powerful brand consistency.",
       icon: Mic2,
       href: "/voice-cloning",
-      gradient: "from-primary/80 via-primary/60 to-primary/40",
-      stats: "Clone in 30 seconds",
+      color: "text-emerald-500",
+      glow: "bg-emerald-500/20",
     },
   ];
 
   const showcaseVoices = [
-    {
-      name: "Marcus",
-      gender: "Male",
-      accent: "American",
-      mood: "Authoritative",
-      plays: "2.4M",
-    },
-    {
-      name: "Elara",
-      gender: "Female",
-      accent: "British",
-      mood: "Warm",
-      plays: "1.8M",
-    },
-    {
-      name: "Kai",
-      gender: "Neutral",
-      accent: "Australian",
-      mood: "Casual",
-      plays: "1.2M",
-    },
-    {
-      name: "Nadia",
-      gender: "Female",
-      accent: "Russian",
-      mood: "Professional",
-      plays: "980K",
-    },
-    {
-      name: "Theo",
-      gender: "Male",
-      accent: "French",
-      mood: "Romantic",
-      plays: "875K",
-    },
-    {
-      name: "Zara",
-      gender: "Female",
-      accent: "Nigerian",
-      mood: "Energetic",
-      plays: "762K",
-    },
+    { name: "Marcus", gender: "Male", accent: "American", mood: "Authoritative", plays: "2.4M", avatar: "M" },
+    { name: "Elara", gender: "Female", accent: "British", mood: "Warm", plays: "1.8M", avatar: "E" },
+    { name: "Kai", gender: "Neutral", accent: "Australian", mood: "Casual", plays: "1.2M", avatar: "K" },
+    { name: "Nadia", gender: "Female", accent: "Russian", mood: "Professional", plays: "980K", avatar: "N" },
+    { name: "Theo", gender: "Male", accent: "French", mood: "Romantic", plays: "875K", avatar: "T" },
+    { name: "Zara", gender: "Female", accent: "Nigerian", mood: "Energetic", plays: "762K", avatar: "Z" },
   ];
 
   const templates = [
-    {
-      title: "YouTube Script",
-      voice: "Marcus",
-      duration: "~5 min",
-      desc: "Engaging video narration",
-    },
-    {
-      title: "Podcast Intro",
-      voice: "Elara",
-      duration: "~30 sec",
-      desc: "Hook your listeners",
-    },
-    {
-      title: "E-learning Module",
-      voice: "Kai",
-      duration: "~10 min",
-      desc: "Educational content",
-    },
-    {
-      title: "Commercial",
-      voice: "Nadia",
-      duration: "~60 sec",
-      desc: "High-conversion ads",
-    },
+    { title: "YouTube Script", voice: "Marcus", duration: "~5 min", desc: "Engaging video narration" },
+    { title: "Podcast Intro", voice: "Elara", duration: "~30 sec", desc: "Hook your listeners" },
+    { title: "E-learning Module", voice: "Kai", duration: "~10 min", desc: "Educational content" },
+    { title: "Commercial", voice: "Nadia", duration: "~60 sec", desc: "High-conversion ads" },
   ];
 
   const stats = [
-    { label: "Active Users", value: "50K+", change: "+12% this month" },
-    { label: "Voices Generated", value: "12M+", change: "+8% this month" },
-    { label: "Languages", value: "140+", change: "New: Yoruba, Igbo" },
+    { label: "Active Usage", value: "84%", change: "+12% this week" },
+    { label: "Generations", value: "1.2k", change: "+8% this week" },
+    { label: "Library Access", value: "140+", change: "New voices added" },
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,var(--primary)/10,transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_60%,var(--primary)/5,transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_30%_at_20%_80%,var(--primary)/5,transparent)]" />
+    <div className="min-h-screen relative w-full overflow-hidden bg-background">
+      {/* Ambient Background Elements */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
+        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] mix-blend-screen" />
+        <div className="absolute top-[20%] -right-[10%] h-[400px] w-[400px] rounded-full bg-purple-500/10 opacity-40 blur-[120px] mix-blend-screen" />
+        <div className="absolute -bottom-[20%] left-[20%] h-[600px] w-[600px] rounded-full bg-blue-500/10 opacity-40 blur-[120px] mix-blend-screen" />
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
       </div>
 
-      <div className="px-6 lg:px-12 py-12 space-y-20">
-        <header className="max-w-6xl mx-auto">
-          <div className="relative">
-            <div className="absolute -top-12 -left-4 w-72 h-72 bg-primary/10 rounded-full blur-[100px]" />
-            <div className="absolute -bottom-8 -right-4 w-64 h-64 bg-primary/10 rounded-full blur-[100px]" />
-
-            <div className="relative">
-              <p className="text-sm font-medium tracking-[0.15em] uppercase text-primary/70 mb-4">
-                {userFirstName ? "Welcome back" : "Loading..."}
-              </p>
-              <h1 className="text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1]">
-                {userFirstName ? (
-                  <>
-                    Hello, {userFirstName}.<br />
-                    <span className="text-muted-foreground font-normal">
-                      What shall we create today?
-                    </span>
-                  </>
-                ) : (
-                  <span className="flex items-center gap-2">
-                    <Spinner />
-                  </span>
-                )}
-              </h1>
-              <p className="text-muted-foreground text-lg max-w-xl leading-relaxed">
-                Transform your content with lifelike AI voices. Generate, clone,
-                and deploy professional voiceovers in minutes.
-              </p>
-            </div>
-          </div>
+      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 space-y-20 max-w-[1400px] mx-auto">
+        {/* Header Section */}
+        <header className="flex flex-col space-y-6">
+          <Badge variant="outline" className="w-fit bg-background/50 backdrop-blur-md border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+            <Sparkles className="w-3.5 h-3.5 mr-2" />
+            Vocal Synthesis Engine v2.0
+          </Badge>
+          
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+            {!isLoaded ? (
+              <Spinner className="w-8 h-8 md:w-12 md:h-12 text-primary" />
+            ) : (
+              <span className="block leading-[1.1]">
+                Welcome back,{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+                  {userFirstName || "Creator"}
+                </span>
+                .
+                <br />
+                <span className="text-muted-foreground/60 font-medium">
+                  What will we build today?
+                </span>
+              </span>
+            )}
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            Harness the power of neural text-to-speech. Generate stunningly lifelike audio, 
+            clone voices with surgical precision, and amplify your creative workflow.
+          </p>
         </header>
 
-        <section className="max-w-6xl mx-auto space-y-8">
+        {/* Feature Grid */}
+        <section className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight">Create</h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Choose how you want to get started
-              </p>
+              <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+                Core Capabilities
+                <div className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-primary to-transparent rounded-full" />
+              </h2>
             </div>
             <Link
               href="/text-to-speech"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
             >
-              View all templates <ArrowRight className="w-4 h-4" />
+              Start Creating 
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
             {features.map((feature) => (
-              <Link key={feature.title} href={feature.href}>
-                <Card className="group relative overflow-hidden h-full transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-1 border-0 bg-gradient-to-b from-background to-background/80">
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-                  />
-                  <div className="absolute inset-[1px] bg-gradient-to-br from-background to-background/80 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-500" />
-
-                  <CardHeader className="relative z-10">
-                    <div className="flex items-center justify-between">
-                      <div
-                        className={`w-12 h-12 rounded-xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500`}
-                      >
-                        <feature.icon className="w-5 h-5 text-primary-foreground" />
+              <Link key={feature.title} href={feature.href} className="group outline-none">
+                <Card className="relative h-full overflow-hidden border border-border/50 bg-card/40 backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-1">
+                  <div className={`absolute top-0 right-0 w-32 h-32 blur-[80px] rounded-full transition-opacity duration-500 opacity-0 group-hover:opacity-100 ${feature.glow}`} />
+                  
+                  <CardHeader className="p-6 pb-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center border border-border/50 group-hover:scale-110 transition-transform duration-500 shadow-sm relative overflow-hidden`}>
+                        <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-current ${feature.color}`} />
+                        <feature.icon className={`w-5 h-5 ${feature.color} relative z-10`} />
                       </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary-foreground/80 group-hover:translate-x-1 transition-all duration-300" />
+                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
                     </div>
-                  </CardHeader>
-
-                  <CardContent className="relative z-10">
-                    <CardTitle className="mb-2 group-hover:text-primary-foreground transition-colors duration-300">
+                    <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
                       {feature.title}
                     </CardTitle>
-                    <CardDescription className="group-hover:text-primary-foreground/70 transition-colors duration-300">
+                  </CardHeader>
+                  <CardContent className="p-6 pt-0">
+                    <CardDescription className="text-sm leading-relaxed mb-6 group-hover:text-foreground/80 transition-colors">
                       {feature.description}
                     </CardDescription>
-                    <p className="text-xs font-medium text-muted-foreground/60 mt-4 group-hover:text-primary-foreground/60 transition-colors duration-300">
-                      {feature.stats}
-                    </p>
                   </CardContent>
                 </Card>
               </Link>
@@ -229,326 +172,184 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="max-w-6xl mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
+        {/* Dashboard Panels */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Trending Voices */}
+          <section className="col-span-2 space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
                 Trending Voices
               </h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Most popular voices this week
-              </p>
+              <Link
+                href="/voices"
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
+              >
+                View Library <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </div>
-            <Link
-              href="/voices"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              Explore all <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <Card className="overflow-hidden border-0 shadow-xl shadow-black/5">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-              {showcaseVoices.map((voice) => (
-                <div
-                  key={voice.name}
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-muted/30 hover:bg-muted/50 transition-all duration-300 cursor-pointer"
-                >
-                  <div className="relative">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
-                      <Volume2 className="w-6 h-6 text-primary" />
-                    </div>
-                    <button className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-lg">
-                        <Play
-                          className="w-3 h-3 text-primary-foreground ml-0.5"
-                          fill="currentColor"
-                        />
+            <Card className="border border-border/50 bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/50">
+                {showcaseVoices.map((voice) => (
+                  <div
+                    key={voice.name}
+                    className="group bg-card/90 flex items-center gap-4 p-5 hover:bg-muted/50 transition-colors cursor-pointer"
+                  >
+                    <div className="relative">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(var(--primary),0.2)] transition-all duration-300">
+                        <span className="font-semibold text-primary">{voice.avatar}</span>
                       </div>
-                    </button>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate group-hover:text-primary transition-colors">
-                      {voice.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {voice.gender} · {voice.accent}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                        {voice.mood}
-                      </span>
+                      <div className="absolute inset-0 rounded-full bg-primary flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 text-primary-foreground shadow-lg shadow-primary/30">
+                        <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="font-semibold truncate text-foreground group-hover:text-primary transition-colors">
+                          {voice.name}
+                        </p>
+                        <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                          <Activity className="w-3 h-3" /> {voice.plays}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                        {voice.gender} • {voice.accent}
+                      </p>
+                      <div className="mt-2">
+                        <Badge variant="secondary" className="text-[10px] px-2 py-0.5 h-auto bg-muted/80 hover:bg-muted font-medium">
+                          {voice.mood}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs font-medium">{voice.plays}</p>
-                    <p className="text-xs text-muted-foreground">plays</p>
-                  </div>
-                </div>
+                ))}
+              </div>
+            </Card>
+          </section>
+
+          {/* Quick Stats & Upgrades */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+              Activity Overview
+            </h2>
+            <div className="grid gap-4">
+              {stats.map((stat, i) => (
+                <Card key={stat.label} className="border border-border/50 bg-card/40 backdrop-blur-xl relative overflow-hidden group">
+                  <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <CardContent className="p-5 relative z-10 flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-1">{stat.label}</p>
+                      <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
+                    </div>
+                    <div className="text-right flex flex-col items-end justify-end h-full">
+                      <div className={`flex items-center gap-1 text-xs font-semibold ${i === 0 ? "text-emerald-500" : "text-primary"}`}>
+                        {i !== 2 && <TrendingUp className="w-3.5 h-3.5" />}
+                        {stat.change}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
+
+              <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden mt-2 border-dashed">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <Zap className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Upgrade to Pro</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Unlock ultra-realistic models and 100+ exclusive voices.</p>
+                  <Button variant="default" className="w-full shadow-lg shadow-primary/20">
+                    View Plans
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
+          </div>
+        </div>
+
+        {/* Global Languages Tooltip section */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-3">
+            <Globe className="w-6 h-6 text-primary" />
+            <h2 className="text-2xl font-semibold tracking-tight">Global Reach</h2>
+          </div>
+          <Card className="border border-border/50 bg-card/40 backdrop-blur-xl overflow-hidden shadow-sm relative">
+             <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-card/80 to-transparent z-10 pointer-events-none" />
+             <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-card/80 to-transparent z-10 pointer-events-none" />
+            <CardContent className="p-0">
+              <div className="flex py-8">
+                {/* Simulated CSS Marquee with Flex */}
+                <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] hover:[animation-play-state:paused] gap-4 px-4 w-fit">
+                  {[
+                    "English (US, UK, AU)", "Spanish", "French", "German", "Italian", "Portuguese", 
+                    "Japanese", "Korean", "Chinese", "Arabic", "Hindi", "Russian", "Dutch", 
+                    "Polish", "Swedish", "Turkish", "Vietnamese", "Thai", "Indonesian", "Filipino"
+                  ].map((lang) => (
+                    <div
+                      key={lang}
+                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/50 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
+                    >
+                      {lang}
+                    </div>
+                  ))}
+                  {[
+                    "English (US, UK, AU)", "Spanish", "French", "German", "Italian", "Portuguese", 
+                    "Japanese", "Korean", "Chinese", "Arabic", "Hindi", "Russian", "Dutch", 
+                    "Polish", "Swedish", "Turkish", "Vietnamese", "Thai", "Indonesian", "Filipino"
+                  ].map((lang) => (
+                    <div
+                      key={`${lang}-dup`}
+                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/50 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
+                    >
+                      {lang}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
           </Card>
         </section>
 
-        <section className="max-w-6xl mx-auto space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {stats.map((stat) => (
-              <Card
-                key={stat.label}
-                className="relative overflow-hidden border-0 shadow-lg shadow-black/5"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5" />
-                <CardContent className="relative z-10 p-6">
-                  <p className="text-sm text-muted-foreground mb-1">
-                    {stat.label}
-                  </p>
-                  <p className="text-3xl font-bold tracking-tight">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs text-primary mt-2 flex items-center gap-1">
-                    <TrendingUp className="w-3 h-3" />
-                    {stat.change}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        <section className="max-w-6xl mx-auto space-y-8">
+        {/* Templates Section (Compact) */}
+        <section className="space-y-6 pb-12">
           <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Quick Start Templates
-              </h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Jump-start your next project
-              </p>
-            </div>
+             <h2 className="text-2xl font-semibold tracking-tight">Ready-to-use Templates</h2>
           </div>
-
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {templates.map((template) => (
               <Card
                 key={template.title}
-                className="group cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 border-0 bg-gradient-to-b from-card to-card/50"
+                className="group border border-border/50 bg-card/40 backdrop-blur-xl hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer h-full flex flex-col"
               >
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <Wand2 className="w-4 h-4 text-primary-foreground" />
+                <CardContent className="p-5 flex-1 flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center border border-border group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
+                      <Wand2 className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="text-xs text-muted-foreground">
-                      {template.duration}
-                    </span>
+                    <Badge variant="outline" className="font-mono text-xs bg-background/50">{template.duration}</Badge>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <CardTitle className="text-base mb-1">
-                    {template.title}
-                  </CardTitle>
-                  <CardDescription className="text-xs">
-                    {template.desc}
-                  </CardDescription>
-                  <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
-                    <Volume2 className="w-3 h-3" />
-                    <span>{template.voice}</span>
+                  <CardTitle className="text-base mb-2 group-hover:text-primary transition-colors">{template.title}</CardTitle>
+                  <p className="text-xs text-muted-foreground flex-1 line-clamp-2 leading-relaxed">{template.desc}</p>
+                  
+                  <div className="mt-5 pt-4 border-t border-border/50 flex items-center justify-between text-xs font-medium">
+                    <span className="flex items-center gap-1.5 text-muted-foreground group-hover:text-foreground transition-colors">
+                      <Volume2 className="w-3.5 h-3.5" />
+                      {template.voice}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-transform text-primary" />
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
-
-        <section className="max-w-6xl mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Supported Languages
-              </h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Create content in any language
-              </p>
-            </div>
-          </div>
-
-          <Card className="border-0 shadow-xl shadow-black/5 overflow-hidden">
-            <CardContent className="p-8">
-              <div className="flex flex-wrap gap-3">
-                {[
-                  "English",
-                  "Spanish",
-                  "French",
-                  "German",
-                  "Italian",
-                  "Portuguese",
-                  "Japanese",
-                  "Korean",
-                  "Chinese",
-                  "Arabic",
-                  "Hindi",
-                  "Russian",
-                  "Dutch",
-                  "Polish",
-                  "Swedish",
-                  "Turkish",
-                  "Vietnamese",
-                  "Thai",
-                  "Indonesian",
-                  "Filipino",
-                  "Yoruba",
-                  "Igbo",
-                  "Portuguese (Brazil)",
-                  "Spanish (Mexico)",
-                  "French (Canada)",
-                  "Cantonese",
-                  "Mandarin",
-                  "Arabic (Gulf)",
-                  "Hindi (Devanagari)",
-                  "Bengali",
-                  "Urdu",
-                ].map((lang) => (
-                  <span
-                    key={lang}
-                    className="px-4 py-2 rounded-full text-sm font-medium bg-muted/50 hover:bg-primary/10 hover:text-primary transition-all duration-300 cursor-default"
-                  >
-                    {lang}
-                  </span>
-                ))}
-                <span className="px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-primary to-primary/70 text-primary-foreground">
-                  +110 more
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="max-w-6xl mx-auto space-y-8">
-          <Card className="relative overflow-hidden border-0">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary/90 to-primary/80" />
-            <div className="absolute inset-[1px] bg-gradient-to-br from-primary via-primary/90 to-primary/80" />
-            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9Ii4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-30" />
-
-            <CardContent className="relative z-10 p-10">
-              <div className="max-w-2xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <Star className="w-5 h-5 text-primary-foreground/80" />
-                  <span className="text-sm font-medium text-primary-foreground/80">
-                    Pro Tip
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold text-primary-foreground mb-3">
-                  Create your custom voice clone
-                </h3>
-                <p className="text-primary-foreground/70 mb-6 leading-relaxed">
-                  Upload 30 seconds of audio and our AI will create a digital
-                  replica that maintains the character and emotion of the
-                  original voice. Perfect for consistent brand presence across
-                  all your content.
-                </p>
-                <div className="flex items-center gap-4">
-                  <Button className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 gap-2 shadow-xl">
-                    <Mic2 className="w-4 h-4" />
-                    Try Voice Cloning
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="text-primary-foreground hover:bg-primary-foreground/10 gap-2"
-                  >
-                    Learn more <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        <section className="max-w-6xl mx-auto space-y-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-semibold tracking-tight">
-                Recent Activity
-              </h2>
-              <p className="text-muted-foreground text-sm mt-1">
-                Your latest voice generations
-              </p>
-            </div>
-            <Link
-              href="/history"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
-            >
-              View all <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <Card className="border-0 shadow-xl shadow-black/5">
-            <CardContent className="p-0 divide-y divide-border/50">
-              {[
-                {
-                  title: "Product Demo Script",
-                  voice: "Marcus",
-                  duration: "3:24",
-                  date: "2 hours ago",
-                  status: "Ready",
-                },
-                {
-                  title: "Tutorial Part 3",
-                  voice: "Elara",
-                  duration: "8:12",
-                  date: "Yesterday",
-                  status: "Ready",
-                },
-                {
-                  title: "Podcast Outro",
-                  voice: "Kai",
-                  duration: "0:45",
-                  date: "3 days ago",
-                  status: "Ready",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="flex items-center justify-between p-5 hover:bg-muted/30 transition-colors cursor-pointer group"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-                      <AudioLines className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium group-hover:text-primary transition-colors">
-                        {item.title}
-                      </p>
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="text-xs text-muted-foreground">
-                          {item.voice}
-                        </span>
-                        <span className="text-xs text-muted-foreground">·</span>
-                        <span className="text-xs text-muted-foreground">
-                          {item.duration}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs text-muted-foreground">
-                      {item.date}
-                    </span>
-                    <div className="flex items-center gap-2">
-                      <Button size="sm" variant="ghost" className="gap-1">
-                        <Play className="w-3 h-3" fill="currentColor" />
-                        Play
-                      </Button>
-                      <Button size="sm" variant="ghost" className="gap-1">
-                        <ChevronRight className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
       </div>
+      
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes marquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+      `}} />
     </div>
   );
 }
