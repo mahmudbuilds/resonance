@@ -130,11 +130,14 @@ export default function DashboardSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-              <ModeToggle className="my-4 w-[65%] group-data-[collapsible=icon]:w-[100%]" />
-          </SidebarMenuItem>
+         
           <SidebarMenuItem>
             <UserButton
+              appearance={{
+                elements: {
+                  
+                }
+              }}
               showName={state === "expanded"}
               fallback={
                 <Skeleton className="w-full h-8 group-data-[collapsible=icon]:size-8 border border-border border-white" />
