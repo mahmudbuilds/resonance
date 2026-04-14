@@ -199,10 +199,11 @@ export default function TextToSpeechPage() {
               <div className="flex-1 flex flex-col relative p-4 w-full max-w-full overflow-hidden">
                 <Textarea 
                   placeholder="Enter the text you want to bring to life. Try adding some feeling or specific punctuation..."
-                  className="flex-1 resize-none border-0 shadow-none focus-visible:ring-0 bg-transparent text-foreground placeholder:text-muted-foreground/50 text-base md:text-lg leading-relaxed p-2 w-full max-w-full break-words"
+                  className="flex-1 resize-none border-0 shadow-none focus-visible:ring-0 bg-transparent text-foreground placeholder:text-muted-foreground/50 text-base md:text-lg leading-relaxed p-2 w-full max-w-full break-words overflow-y-scroll rows-10"
                   value={text}
                   onChange={(e) => setText(e.target.value)}
                   maxLength={5000}
+                  
                 />
                 
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-5 group-hover:opacity-10 transition-opacity duration-500 hidden sm:block">

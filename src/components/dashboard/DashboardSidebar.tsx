@@ -52,14 +52,14 @@ export default function DashboardSidebar() {
     { title: "Dashboard", url: "/", icon: Home },
     { title: "Explore Voices", url: "/voices", icon: LayoutGrid },
     { title: "Text to Speech", url: "/text-to-speech", icon: AudioLines },
-    { title: "Voice Cloning", icon: Volume2 },
+    { title: "Voice Cloning", url: "/voice-cloning", icon: Volume2 },
   ];
 
   const otherMenuItems: MenuItem[] = [
     { title: "Settings", url: "/settings", icon: Settings },
     {
-      title: "Help and Support",
-      url: "mailto:akinadetella@gmail.com",
+      title: "Help & Support",
+      url: "/support",
       icon: Headphones,
     },
   ];
