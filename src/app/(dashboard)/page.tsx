@@ -97,7 +97,10 @@ export default function Home() {
       <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 space-y-20 max-w-[1400px] mx-auto">
         {/* Header Section */}
         <header className="flex flex-col space-y-6">
-          <Badge variant="outline" className="w-fit bg-background/50 backdrop-blur-md border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]">
+          <Badge
+            variant="outline"
+            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+          >
             <Sparkles className="w-3.5 h-3.5 mr-2" />
             Vocal Synthesis Engine v2.0
           </Badge>
@@ -113,13 +116,13 @@ export default function Home() {
                 </span>
                 .
                 <br />
-                <span className="text-muted-foreground/60 font-medium">
+                <span className="text-muted-foreground/80 dark:text-muted-foreground/60 font-medium">
                   What will we build today?
                 </span>
               </span>
             )}
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground/90 dark:text-muted-foreground max-w-2xl leading-relaxed">
             Harness the power of neural text-to-speech. Generate stunningly lifelike audio, 
             clone voices with surgical precision, and amplify your creative workflow.
           </p>
@@ -136,7 +139,7 @@ export default function Home() {
             </div>
             <Link
               href="/text-to-speech"
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
+              className="text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
             >
               Start Creating 
               <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
@@ -146,12 +149,12 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-3">
             {features.map((feature) => (
               <Link key={feature.title} href={feature.href} className="group outline-none">
-                <Card className="relative h-full overflow-hidden border border-border/50 bg-card/40 backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-1">
+                <Card className="relative h-full overflow-hidden border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl transition-all duration-500 hover:shadow-2xl hover:border-primary/40 dark:hover:border-primary/30 hover:-translate-y-1">
                   <div className={`absolute top-0 right-0 w-32 h-32 blur-[80px] rounded-full transition-opacity duration-500 opacity-0 group-hover:opacity-100 ${feature.glow}`} />
                   
                   <CardHeader className="p-6 pb-4">
                     <div className="flex items-center justify-between mb-4">
-                      <div className={`w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center border border-border/50 group-hover:scale-110 transition-transform duration-500 shadow-sm relative overflow-hidden`}>
+                      <div className={`w-12 h-12 rounded-2xl bg-muted/70 dark:bg-muted/50 flex items-center justify-center border border-border/70 dark:border-border/50 group-hover:scale-110 transition-transform duration-500 shadow-sm relative overflow-hidden`}>
                         <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-current ${feature.color}`} />
                         <feature.icon className={`w-5 h-5 ${feature.color} relative z-10`} />
                       </div>
@@ -182,17 +185,17 @@ export default function Home() {
               </h2>
               <Link
                 href="/voices"
-                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
+                className="text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
               >
                 View Library <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
-            <Card className="border border-border/50 bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden">
+            <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/50">
                 {showcaseVoices.map((voice) => (
                   <div
                     key={voice.name}
-                    className="group bg-card/90 flex items-center gap-4 p-5 hover:bg-muted/50 transition-colors cursor-pointer"
+                    className="group bg-card/95 dark:bg-card/90 flex items-center gap-4 p-5 hover:bg-muted/70 dark:hover:bg-muted/50 transition-colors cursor-pointer"
                   >
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(var(--primary),0.2)] transition-all duration-300">
@@ -211,7 +214,7 @@ export default function Home() {
                           <Activity className="w-3 h-3" /> {voice.plays}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                      <p className="text-xs text-muted-foreground/90 dark:text-muted-foreground mt-0.5 truncate">
                         {voice.gender} • {voice.accent}
                       </p>
                       <div className="mt-2">
@@ -233,11 +236,11 @@ export default function Home() {
             </h2>
             <div className="grid gap-4">
               {stats.map((stat, i) => (
-                <Card key={stat.label} className="border border-border/50 bg-card/40 backdrop-blur-xl relative overflow-hidden group">
+                <Card key={stat.label} className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl relative overflow-hidden group">
                   <div className="absolute right-0 top-0 h-full w-1/2 bg-gradient-to-l from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                   <CardContent className="p-5 relative z-10 flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">{stat.label}</p>
+                      <p className="text-sm font-medium text-muted-foreground/90 dark:text-muted-foreground mb-1">{stat.label}</p>
                       <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
                     </div>
                     <div className="text-right flex flex-col items-end justify-end h-full">
@@ -256,7 +259,7 @@ export default function Home() {
                     <Zap className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="font-semibold mb-2">Upgrade to Pro</h3>
-                  <p className="text-sm text-muted-foreground mb-4">Unlock ultra-realistic models and 100+ exclusive voices.</p>
+                  <p className="text-sm text-muted-foreground/90 dark:text-muted-foreground mb-4">Unlock ultra-realistic models and 100+ exclusive voices.</p>
                   <Button variant="default" className="w-full shadow-lg shadow-primary/20">
                     View Plans
                   </Button>
@@ -272,7 +275,7 @@ export default function Home() {
             <Globe className="w-6 h-6 text-primary" />
             <h2 className="text-2xl font-semibold tracking-tight">Global Reach</h2>
           </div>
-          <Card className="border border-border/50 bg-card/40 backdrop-blur-xl overflow-hidden shadow-sm relative">
+          <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl overflow-hidden shadow-sm relative">
              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-card/80 to-transparent z-10 pointer-events-none" />
              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-card/80 to-transparent z-10 pointer-events-none" />
             <CardContent className="p-0">
@@ -286,7 +289,7 @@ export default function Home() {
                   ].map((lang) => (
                     <div
                       key={lang}
-                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/50 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
+                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/70 dark:border-border/50 bg-background/80 dark:bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
                     >
                       {lang}
                     </div>
@@ -298,7 +301,7 @@ export default function Home() {
                   ].map((lang) => (
                     <div
                       key={`${lang}-dup`}
-                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/50 bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
+                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/70 dark:border-border/50 bg-background/80 dark:bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
                     >
                       {lang}
                     </div>
@@ -318,17 +321,17 @@ export default function Home() {
             {templates.map((template) => (
               <Card
                 key={template.title}
-                className="group border border-border/50 bg-card/40 backdrop-blur-xl hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer h-full flex flex-col"
+                className="group border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl hover:shadow-xl hover:border-primary/40 dark:hover:border-primary/30 transition-all cursor-pointer h-full flex flex-col"
               >
                 <CardContent className="p-5 flex-1 flex flex-col">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-muted/50 flex items-center justify-center border border-border group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-muted/70 dark:bg-muted/50 flex items-center justify-center border border-border/70 dark:border-border group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors">
                       <Wand2 className="w-4 h-4 text-primary" />
                     </div>
-                    <Badge variant="outline" className="font-mono text-xs bg-background/50">{template.duration}</Badge>
+                    <Badge variant="outline" className="font-mono text-xs bg-background/80 dark:bg-background/50">{template.duration}</Badge>
                   </div>
                   <CardTitle className="text-base mb-2 group-hover:text-primary transition-colors">{template.title}</CardTitle>
-                  <p className="text-xs text-muted-foreground flex-1 line-clamp-2 leading-relaxed">{template.desc}</p>
+                  <p className="text-xs text-muted-foreground/90 dark:text-muted-foreground flex-1 line-clamp-2 leading-relaxed">{template.desc}</p>
                   
                   <div className="mt-5 pt-4 border-t border-border/50 flex items-center justify-between text-xs font-medium">
                     <span className="flex items-center gap-1.5 text-muted-foreground group-hover:text-foreground transition-colors">
