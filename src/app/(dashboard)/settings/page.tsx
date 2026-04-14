@@ -3,12 +3,9 @@
 import {
   Settings,
   User,
-  CreditCard,
-  Key,
   Shield,
   Bell,
   Mail,
-  Zap,
   CheckCircle2,
   AlertCircle
 } from "lucide-react";
@@ -60,21 +57,13 @@ export default function SettingsPage() {
 
         {/* Main Layout */}
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="mb-8 grid w-full grid-cols-2 md:grid-cols-4 lg:w-[600px] bg-card/50 backdrop-blur-md border border-border/50 p-1 h-auto rounded-xl">
-            <TabsTrigger value="profile" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary py-2 text-sm">
-              <User className="w-4 h-4 mr-2" />
+          <TabsList className="mb-8 flex w-full sm:w-[300px] h-12 bg-card/50 backdrop-blur-md border border-border/50 p-1 rounded-xl">
+            <TabsTrigger value="profile" className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm">
+              <User className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="billing" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary py-2 text-sm">
-              <CreditCard className="w-4 h-4 mr-2" />
-              Billing
-            </TabsTrigger>
-            <TabsTrigger value="api-keys" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary py-2 text-sm">
-              <Key className="w-4 h-4 mr-2" />
-              API Keys
-            </TabsTrigger>
-            <TabsTrigger value="appearance" className="rounded-lg data-[state=active]:bg-primary/20 data-[state=active]:text-primary py-2 text-sm">
-              <Bell className="w-4 h-4 mr-2" />
+            <TabsTrigger value="appearance" className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm">
+              <Bell className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
               Preferences
             </TabsTrigger>
           </TabsList>
@@ -131,81 +120,7 @@ export default function SettingsPage() {
                 </Card>
               </TabsContent>
 
-              {/* Billing Tab */}
-              <TabsContent value="billing" className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12">
-                <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl relative">
-                  <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] -mr-40 -mt-40 pointer-events-none" />
-                  <CardHeader className="relative z-10">
-                    <CardTitle className="text-xl flex items-center gap-2">
-                      <Zap className="w-5 h-5 text-primary" />
-                      Current Plan
-                    </CardTitle>
-                    <CardDescription>You are currently on the Pro tier.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6 relative z-10">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between p-5 bg-background/50 border border-primary/20 rounded-xl shadow-sm gap-4">
-                      <div>
-                        <div className="flex items-center gap-3 mb-1">
-                          <h3 className="font-semibold text-lg">Pro Creator Plan</h3>
-                          <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-0">Active</Badge>
-                        </div>
-                        <p className="text-sm text-muted-foreground">Unlimited generation, premium voices, and priority support.</p>
-                      </div>
-                      <div className="text-left sm:text-right">
-                        <p className="text-2xl font-bold">$29<span className="text-sm font-normal text-muted-foreground">/month</span></p>
-                        <p className="text-xs text-muted-foreground mt-1">Renews on Oct 24, 2026</p>
-                      </div>
-                    </div>
 
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between text-sm">
-                         <span className="font-medium text-muted-foreground">Monthly Usage</span>
-                         <span className="font-mono">82% <span className="text-muted-foreground/70 text-xs"> (820k / 1M chars)</span></span>
-                      </div>
-                      <div className="h-2.5 w-full bg-muted rounded-full overflow-hidden">
-                        <div className="h-full bg-gradient-to-r from-primary to-purple-500 w-[82%] rounded-full" />
-                      </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="bg-muted/10 border-t border-border/50 py-4 flex gap-3 z-10 relative">
-                    <Button className="rounded-xl shadow-[0_0_15px_rgba(var(--primary),0.2)] transition-shadow hover:shadow-[0_0_25px_rgba(var(--primary),0.4)]">Manage Subscription</Button>
-                    <Button variant="outline" className="rounded-xl bg-background/50">View Invoices</Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
-
-              {/* API Keys Tab */}
-              <TabsContent value="api-keys" className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12">
-                 <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
-                  <CardHeader>
-                    <CardTitle className="text-xl flex items-center gap-2">
-                       <Key className="w-5 h-5 text-primary" />
-                       API Keys
-                    </CardTitle>
-                    <CardDescription>Manage keys to authenticate with the developer API.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="pt-2">
-                       <div className="flex items-center justify-between p-4 border border-border/50 bg-background/30 rounded-xl">
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium">Production Key</span>
-                              <Badge variant="outline" className="text-[10px] uppercase font-mono text-emerald-500 border-emerald-500/30 bg-emerald-500/10">Active</Badge>
-                            </div>
-                            <code className="text-xs text-muted-foreground bg-muted/50 px-2 py-0.5 rounded">sk_live_v2...a8f9</code>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="ghost" size="sm" className="h-8 text-xs rounded-lg hover:text-primary">Reveal</Button>
-                            <Button variant="outline" size="sm" className="h-8 text-xs rounded-lg bg-background/50">Revoke</Button>
-                          </div>
-                       </div>
-                    </div>
-                  </CardContent>
-                  <CardFooter className="bg-muted/10 border-t border-border/50 py-4">
-                    <Button className="rounded-xl shadow-[0_0_15px_rgba(var(--primary),0.2)]">Create new secret key</Button>
-                  </CardFooter>
-                </Card>
-              </TabsContent>
 
               {/* Preferences Tab */}
               <TabsContent value="appearance" className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12">
@@ -276,10 +191,6 @@ export default function SettingsPage() {
                      <Button variant="outline" className="w-full justify-start rounded-xl bg-background/50 border-border/50 hover:bg-muted/50 hover:text-primary transition-colors">
                        <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
                        Contact Support
-                     </Button>
-                     <Button variant="outline" className="w-full justify-start rounded-xl bg-background/50 border-border/50 hover:bg-muted/50 hover:text-primary transition-colors">
-                       <Settings className="w-4 h-4 mr-2 text-muted-foreground" />
-                       View Documentation
                      </Button>
                   </div>
                 </CardContent>
