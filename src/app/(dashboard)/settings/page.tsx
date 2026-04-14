@@ -177,7 +177,7 @@ export default function SettingsPage() {
             </div>
 
              {/* Support Sidebar Side Widget */}
-            <div className="lg:col-span-1 hidden lg:block">
+            <div className="lg:col-span-1">
               <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden rounded-2xl sticky top-24 shadow-xl backdrop-blur-xl bg-card/40">
                 <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                 <CardContent className="p-6 flex flex-col pt-8">

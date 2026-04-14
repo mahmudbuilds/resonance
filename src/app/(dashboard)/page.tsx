@@ -1,5 +1,6 @@
 "use client";
 
+import UserGreeting from "@/components/dashboard/UserGreeting";
 import { useUser } from "@clerk/nextjs";
 import {
   ArrowRight,
@@ -105,23 +106,7 @@ export default function Home() {
             Vocal Synthesis Engine v2.0
           </Badge>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
-            {!isLoaded ? (
-              <Spinner className="w-8 h-8 md:w-12 md:h-12 text-primary" />
-            ) : (
-              <span className="block leading-[1.1]">
-                Welcome back,{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-blue-500">
-                  {userFirstName || "Creator"}
-                </span>
-                .
-                <br />
-                <span className="text-muted-foreground/80 dark:text-muted-foreground font-medium">
-                  What will we build today?
-                </span>
-              </span>
-            )}
-          </h1>
+          <UserGreeting />
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
             Harness the power of neural text-to-speech. Generate stunningly lifelike audio, 
             clone voices with surgical precision, and amplify your creative workflow.
