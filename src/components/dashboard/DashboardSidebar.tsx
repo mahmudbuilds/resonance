@@ -90,6 +90,7 @@ export default function DashboardSidebar() {
                     }
                     onClick={function () {
                       isMobile && setOpen(false);
+                      isMobile && console.log(state)
                       item.onClick;
                     }}
                     tooltip={item.title}
