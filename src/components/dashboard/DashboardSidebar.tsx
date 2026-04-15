@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Sidebar,
   SidebarContent,
@@ -47,7 +48,8 @@ interface NavSectionProps {
 export default function DashboardSidebar() {
   const pathname = usePathname();
   const clerk = useClerk();
-  const { state } = useSidebar();
+  const { state, setOpen } = useSidebar();
+  const isMobile = useIsMobile()
   const mainMenuItems: MenuItem[] = [
     { title: "Dashboard", url: "/", icon: Home },
     { title: "Explore Voices", url: "/voices", icon: LayoutGrid },
@@ -86,7 +88,10 @@ export default function DashboardSidebar() {
                           : pathname.startsWith(item.url)
                         : false
                     }
-                    onClick={item.onClick}
+                    onClick={function () {
+                      isMobile && setOpen(false);
+                      item.onClick;
+                    }}
                     tooltip={item.title}
                     className="my-2"
                   >
@@ -130,13 +135,10 @@ export default function DashboardSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
-         
           <SidebarMenuItem>
             <UserButton
               appearance={{
-                elements: {
-                  
-                }
+                elements: {},
               }}
               showName={state === "expanded"}
               fallback={
