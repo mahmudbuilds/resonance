@@ -4,13 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { cn } from "@/lib/utils";
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import UserSync from "@/components/UserSync";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -39,6 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       className={cn(
         "h-full",
@@ -50,7 +46,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ClerkProvider>
+        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
           <ConvexClientProvider>
             <ThemeProvider
               attribute="class"
@@ -58,7 +54,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              
+              <UserSync />
               {children}
             </ThemeProvider>
           </ConvexClientProvider>
