@@ -10,7 +10,13 @@ export default function UserSync() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            storeUser();
+            try {
+                storeUser();
+            }
+
+            catch (error) {
+                console.error("Failed to sync user:", error)
+            }
         }
     }, [storeUser, isAuthenticated]);
 

@@ -1,7 +1,6 @@
 "use client";
 
 import UserGreeting from "@/components/dashboard/UserGreeting";
-import { useUser } from "@clerk/nextjs";
 import {
   ArrowRight,
   AudioLines,
@@ -30,8 +29,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
-  const { user, isLoaded } = useUser();
-  const userFirstName = user?.firstName;
 
   const features = [
     {

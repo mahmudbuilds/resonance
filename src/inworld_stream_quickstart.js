@@ -4,7 +4,7 @@ import fs from 'fs';
 const tts = InworldTTS();
 
 const audio = await tts.generate({
-    text: 'What a wonderful day to be a text-to-speech model!',
+    text: 'Hi Mahmud',
     voice: 'Sarah',
     model: "inworld-tts-1.5-mini"
 });

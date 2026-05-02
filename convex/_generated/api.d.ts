@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as inworld from "../inworld.js";
 import type * as test from "../test.js";
 import type * as users from "../users.js";
 
@@ -18,6 +19,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  inworld: typeof inworld;
   test: typeof test;
   users: typeof users;
 }>;
