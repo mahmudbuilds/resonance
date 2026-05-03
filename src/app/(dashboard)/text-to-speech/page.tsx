@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   AudioLines,
   Wand2,
@@ -13,8 +14,11 @@ import {
   Type,
   Mic2,
   History,
+  Thermometer,
+  Gauge,
+  Sparkles,
 } from "lucide-react";
-import { useQuery, useAction } from "convex/react";
+import { useAction } from "convex/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -41,22 +45,31 @@ import type { VoiceInfo } from "@inworld/tts";
 import { useEffect } from "react";
 
 export default function TextToSpeechPage() {
-  const [selectedVoice, setSelectedVoice] = useState<string | null>(null);
-  const [model, setModel] = useState<string | null> (null);
+  const [selectedVoice, setSelectedVoice, mounted] = useLocalStorage<
+  string | null
+  >("selectedVoice", null);
+  const [model, setModel, modelMounted] = useLocalStorage<string>(
+    "model",
+    "inworld-tts-1.5-mini",
+  );
   const voicesAction = useAction(api.inworld.listVoices);
   const [voices, setVoices] = useState<VoiceInfo[] | null>(null);
   useEffect(() => {
+    if (!mounted) return;
     const fetchVoices = async () => {
       const voices = await voicesAction();
       setVoices(voices);
-    }
+      if (!selectedVoice && voices?.[0]?.voiceId) {
+        setSelectedVoice(voices?.[0]?.voiceId);
+      }
+    };
     fetchVoices();
-  }, [])
+  }, [mounted]);
   const [text, setText] = useState("");
-  const [stability, setStability] = useState([50]);
-  const [similarity, setSimilarity] = useState([75]);
-  const [styleExag, setStyleExag] = useState([0]);
-
+  const [speakingRate, setSpeakingRate] = useState([1.0]);
+  const [temperature, setTemperature] = useState([0.7]);
+  
+  const isReady = mounted && !!voices
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-background">
       {/* Ambient Background Elements */}
@@ -93,139 +106,140 @@ export default function TextToSpeechPage() {
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 w-full max-w-full">
           {/* Settings Sidebar */}
           <div className="lg:col-span-4 space-y-6 w-full max-w-full">
-            <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl flex flex-col group transition-all duration-500 hover:border-primary/30 w-full max-w-full">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl flex items-center justify-between gap-2 overflow-hidden">
-                  <span className="truncate">Voice Configuration</span>
-                  <div className="w-8 h-8 shrink-0 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Mic2 className="w-4 h-4 text-primary shrink-0" />
+            <Card className="border border-border/30 bg-transparent backdrop-blur-2xl shadow-none overflow-hidden rounded-3xl flex flex-col group transition-all duration-500 w-full max-w-full relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <CardHeader className="pb-6 relative z-10">
+                <CardTitle className="text-xl flex items-center justify-between gap-2 overflow-hidden font-bold">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 shrink-0 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center border border-primary/10 shadow-inner">
+                      <Mic2 className="w-5 h-5 text-primary shrink-0" />
+                    </div>
+                    <span className="truncate text-foreground">Configuration</span>
                   </div>
                 </CardTitle>
-                <CardDescription className="truncate">
-                  Select and fine-tune your vocal model
+                <CardDescription className="truncate text-sm mt-2 ml-1">
+                  Fine-tune your synthetic voice parameters
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <Label className="text-sm font-semibold flex items-center justify-between">
-                    Synthetic Voice
-                    <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                      Pro
-                    </span>
+              
+              <CardContent className="space-y-8 relative z-10">
+                <div className="space-y-4">
+                  <Label className="text-sm font-semibold flex items-center gap-2 text-foreground/80">
+                    <AudioLines className="w-4 h-4 text-primary/70" />
+                    Voice Identity
                   </Label>
-                  <Select defaultValue="Alex" onValueChange={(value) => setSelectedVoice(value)}>
-                    <SelectTrigger className="w-full min-w-0 bg-background/50 border-border/50 h-12 rounded-xl focus:ring-primary/20 [&>span]:truncate [&>span]:min-w-0">
-                      <SelectValue placeholder="Select a voice" />
+                  <Select
+                    value={isReady ? (selectedVoice ?? "") : ""}
+                    onValueChange={(value) => setSelectedVoice(value)}
+                    disabled={!isReady}
+                  >
+                    <SelectTrigger className="w-full min-w-0 bg-card/50 border-border/40 h-14 rounded-2xl focus:ring-primary/20 hover:bg-card/80 transition-colors [&>span]:truncate [&>span]:min-w-0 shadow-sm">
+                      <SelectValue
+                        placeholder={
+                          isReady ? "Select a voice" : "Loading voices..."
+                        }
+                      />
                     </SelectTrigger>
-                    <SelectContent>
-                      {voices ? (
-                        voices.map((voice) => (
-                          <SelectItem key={voice.voiceId} value={voice.voiceId} >
-                            {voice.displayName}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="loading">
-                          Loading voices...
+                    <SelectContent className="rounded-xl border-border/40 shadow-xl backdrop-blur-xl bg-card/95">
+                      {voices?.map((voice) => (
+                        <SelectItem key={voice.voiceId} value={voice.voiceId} className="rounded-lg my-0.5 cursor-pointer">
+                          {voice.displayName}
                         </SelectItem>
-                      )}
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t border-border/50">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label className="text-sm font-semibold">
+                    <Label className="text-sm font-semibold flex items-center gap-2 text-foreground/80">
+                      <Sparkles className="w-4 h-4 text-purple-500/70" />
                       Model Version
                     </Label>
                     <Badge
                       variant="secondary"
-                      className="bg-muted hover:bg-muted font-medium text-[10px]"
+                      className="bg-purple-500/10 text-purple-600 dark:text-purple-400 hover:bg-purple-500/20 font-medium text-[10px] rounded-full px-2"
                     >
                       v2.0 Turbo
                     </Badge>
                   </div>
-                  <Select defaultValue="inworld-tts-1.5-mini" onValueChange={(value) => {setModel(value)}}>
-                    <SelectTrigger className="w-full min-w-0 bg-background/50 border-border/50 rounded-xl focus:ring-primary/20 [&>span]:truncate [&>span]:min-w-0">
+                  <Select
+                    value={model}
+                    onValueChange={(value) => {
+                      setModel(value);
+                    }}
+                  >
+                    <SelectTrigger className="w-full min-w-0 bg-card/50 border-border/40 h-12 rounded-xl focus:ring-purple-500/20 hover:bg-card/80 transition-colors [&>span]:truncate [&>span]:min-w-0 shadow-sm">
                       <SelectValue placeholder="Select model" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="inworld-tts-1.5-mini">
+                    <SelectContent className="rounded-xl border-border/40 shadow-xl backdrop-blur-xl bg-card/95">
+                      <SelectItem value="inworld-tts-1.5-mini" className="rounded-lg cursor-pointer">
                         inworld-tts-1.5-mini
                       </SelectItem>
-                      <SelectItem value="inworld-tts-1.5-max">
+                      <SelectItem value="inworld-tts-1.5-max" className="rounded-lg cursor-pointer">
                         inworld-tts-1.5-max
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
-                <div className="space-y-5 pt-4 border-t border-border/50">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Settings2 className="w-4 h-4 text-muted-foreground" />
-                    <Label className="text-sm font-semibold">
-                      Voice Settings
+                <div className="space-y-6 pt-6 border-t border-border/30">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="p-1.5 rounded-lg bg-emerald-500/10">
+                      <Settings2 className="w-4 h-4 text-emerald-500" />
+                    </div>
+                    <Label className="text-sm font-semibold text-foreground/80">
+                      Generation Parameters
                     </Label>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-4 bg-card/30 p-4 rounded-2xl border border-border/20 shadow-sm transition-all hover:bg-card/50">
                     <div className="flex items-center justify-between">
-                      <Label className="text-xs text-muted-foreground">
-                        Stability
+                      <Label className="text-sm font-medium flex items-center gap-2">
+                        <Gauge className="w-4 h-4 text-blue-500/70" />
+                        Speaking Rate
                       </Label>
-                      <span className="text-xs font-mono text-muted-foreground">
-                        {stability[0]}%
+                      <span className="text-xs font-mono font-medium text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-md">
+                        {speakingRate[0].toFixed(1)}x
                       </span>
                     </div>
                     <Slider
-                      value={stability}
-                      onValueChange={setStability}
-                      max={100}
-                      step={1}
-                      className="cursor-pointer"
+                      value={speakingRate}
+                      onValueChange={setSpeakingRate}
+                      min={0.5}
+                      max={2.0}
+                      step={0.1}
+                      className="cursor-pointer py-1"
                     />
-                    <p className="text-[10px] text-muted-foreground/70 text-right">
-                      More variable vs. More stable
-                    </p>
+                    <div className="flex justify-between text-[10px] font-medium text-muted-foreground/60 px-1">
+                      <span>Slow</span>
+                      <span>Fast</span>
+                    </div>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-4 bg-card/30 p-4 rounded-2xl border border-border/20 shadow-sm transition-all hover:bg-card/50">
                     <div className="flex items-center justify-between">
-                      <Label className="text-xs text-muted-foreground">
-                        Clarity + Similarity
+                      <Label className="text-sm font-medium flex items-center gap-2">
+                        <Thermometer className="w-4 h-4 text-orange-500/70" />
+                        Temperature
                       </Label>
-                      <span className="text-xs font-mono text-muted-foreground">
-                        {similarity[0]}%
+                      <span className="text-xs font-mono font-medium text-orange-600 dark:text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-md">
+                        {temperature[0].toFixed(2)}
                       </span>
                     </div>
                     <Slider
-                      value={similarity}
-                      onValueChange={setSimilarity}
-                      max={100}
-                      step={1}
-                      className="cursor-pointer"
+                      value={temperature}
+                      onValueChange={setTemperature}
+                      min={0}
+                      max={1}
+                      step={0.05}
+                      className="cursor-pointer py-1"
                     />
-                    <p className="text-[10px] text-muted-foreground/70 text-right">
-                      Low (artifacts) vs. High (clone exact)
-                    </p>
-                  </div>
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label className="text-xs text-muted-foreground">
-                        Style Exaggeration
-                      </Label>
-                      <span className="text-xs font-mono text-muted-foreground">
-                        {styleExag[0]}%
-                      </span>
+                    <div className="flex justify-between text-[10px] font-medium text-muted-foreground/60 px-1">
+                      <span>Focused</span>
+                      <span>Creative</span>
                     </div>
-                    <Slider
-                      value={styleExag}
-                      onValueChange={setStyleExag}
-                      max={100}
-                      step={1}
-                      className="cursor-pointer"
-                    />
                   </div>
                 </div>
               </CardContent>
