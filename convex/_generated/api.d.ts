@@ -11,6 +11,7 @@
 import type * as inworld from "../inworld.js";
 import type * as test from "../test.js";
 import type * as users from "../users.js";
+import type * as voice from "../voice.js";
 
 import type {
   ApiFromModules,
@@ -22,6 +23,7 @@ declare const fullApi: ApiFromModules<{
   inworld: typeof inworld;
   test: typeof test;
   users: typeof users;
+  voice: typeof voice;
 }>;
 
 /**
