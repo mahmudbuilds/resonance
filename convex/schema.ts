@@ -21,7 +21,7 @@ export default defineSchema({
     langCode: v.optional(v.string()),
     description: v.optional(v.string()),
     tags: v.optional(v.array(v.string()))
-  }).index("by_user", ["userId"]),
+  }).index("by_user", ["userId"]).index("by_voiceID", ["inworldVoiceId"]),
 
   // 3. Generation History
   generations: defineTable({

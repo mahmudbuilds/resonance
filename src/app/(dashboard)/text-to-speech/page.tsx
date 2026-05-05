@@ -18,7 +18,8 @@ import {
   Gauge,
   Sparkles,
 } from "lucide-react";
-import { useAction } from "convex/react";
+import { Doc } from "../../../../convex/_generated/dataModel";
+import { useQuery } from "convex/react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -52,15 +53,12 @@ export default function TextToSpeechPage() {
     "model",
     "inworld-tts-1.5-mini",
   );
-  const voicesAction = useAction(api.inworld.listVoices);
-  const [voices, setVoices] = useState<VoiceInfo[] | null>(null);
+  const voices = useQuery(api.voice.getUserVoices)
   useEffect(() => {
     if (!mounted) return;
     const fetchVoices = async () => {
-      const voices = await voicesAction();
-      setVoices(voices);
-      if (!selectedVoice && voices?.[0]?.voiceId) {
-        setSelectedVoice(voices?.[0]?.voiceId);
+      if (!selectedVoice && voices?.[0]?.inworldVoiceId) {
+        setSelectedVoice(voices?.[0]?.inworldVoiceId);
       }
     };
     fetchVoices();
@@ -143,7 +141,7 @@ export default function TextToSpeechPage() {
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 shadow-xl backdrop-blur-xl bg-card/95">
                       {voices?.map((voice) => (
-                        <SelectItem key={voice.voiceId} value={voice.voiceId} className="rounded-lg my-0.5 cursor-pointer">
+                        <SelectItem key={voice.inworldVoiceId} value={voice.inworldVoiceId!} className="rounded-lg my-0.5 cursor-pointer">
                           {voice.displayName}
                         </SelectItem>
                       ))}
