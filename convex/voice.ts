@@ -1,4 +1,4 @@
-import { action, internalMutation, internalQuery, query } from "./_generated/server";
+import { action, internalMutation, internalQuery, query, QueryCtx } from "./_generated/server";
 import { api, internal } from "./_generated/api";
 import { v } from "convex/values";
 import { InworldTTS } from "@inworld/tts";
@@ -64,9 +64,23 @@ export const addDefaultVoices = internalMutation({
   },
 });
 
+
+export const getCurrentUser = async (ctx: QueryCtx) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw "User not authenticated";
+  const tokenIdentifier = identity.tokenIdentifier;
+  const user = await ctx.db.query("users").withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier)).unique();
+  if (!user) throw "User not found";
+  return user;
+}
+
 export const getUserVoices = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("voices").collect();
+    const user = await getCurrentUser(ctx);
+    if (!user) throw new Error("User not found");
+    const userOwnedVoices = await ctx.db.query("voices").withIndex("by_user", (q) => q.eq("userId", user._id)).collect();
+    const publicVoices = await ctx.db.query("voices").withIndex("by_public", (q) => q.eq("isPublic", true)).collect();
+    return [...userOwnedVoices, ...publicVoices];
   },
 });
