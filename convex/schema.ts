@@ -31,8 +31,8 @@ export default defineSchema({
     userId: v.id("users"),
     voiceId: v.string(),
     prompt: v.string(),
-    // Store the audio in Convex's built-in file storage
-    storageId: v.id("_storage"),
+    storageId: v.id("_storage"), // Store the audio in Convex's built-in file storage
+    audioUrl: v.string(),
     format: v.string(), // e.g., "mp3" or "wav"
   }).index("by_user", ["userId"]),
 });

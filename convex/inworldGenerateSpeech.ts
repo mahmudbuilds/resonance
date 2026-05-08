@@ -56,6 +56,7 @@ export const generateSpeech = action({
       voiceId: voice,
       prompt: text,
       storageId: storedAudioBlobUrl,
+      audioUrl: audioUrl!,
     });
     return [storedAudioBlobUrl, audioUrl];
   },

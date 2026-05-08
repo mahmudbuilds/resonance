@@ -20,14 +20,16 @@ export const saveAudio = mutation({
     voiceId: v.string(),
     prompt: v.string(),
     storageId: v.id("_storage"),
+    audioUrl: v.string(),
   },
-  handler: async (ctx, { userId, voiceId, prompt, storageId }) => {
+  handler: async (ctx, { userId, voiceId, prompt, storageId, audioUrl }) => {
     return await ctx.db.insert("generations", {
       userId,
       voiceId,
       prompt,
       storageId,
       format: "mp3",
+      audioUrl,
     });
   },
 });

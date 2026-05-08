@@ -7,6 +7,8 @@ import {
   Wand2,
   Settings2,
   Play,
+  Pause,
+  Loader2,
   Volume2,
   Clock,
   Download,
@@ -66,7 +68,9 @@ export default function TextToSpeechPage() {
   const [text, setText] = useState("");
   const [speakingRate, setSpeakingRate] = useState([1.0]);
   const [temperature, setTemperature] = useState([0.7]);
-  const listUserGenerations = useQuery(api.inworld.listUserGenerations);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const userGenerations = useQuery(api.inworld.listUserGenerations);
   const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
   const handleGenerateSpeech = async () => {
     const [storedAudioBlobUrl, audioUrl] = await generateSpeech({
@@ -350,91 +354,124 @@ export default function TextToSpeechPage() {
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="divide-y divide-border/50">
-                  {/* Mock Item */}
-                  <div className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors gap-2 min-w-0">
-                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                      <Button
-                        size="icon"
-                        className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105 transition-all outline-none border border-primary/20"
-                      >
-                        <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
-                      </Button>
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate w-full pr-2 text-foreground">
-                          Welcome to the future of voice generation. This is an
-                          incredible snippet that sounds very realistic.
-                        </p>
-                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 mt-1 text-xs text-muted-foreground">
-                          <span className="bg-background/80 border border-border/50 px-2 py-0.5 rounded-full font-medium shrink-0">
-                            Marcus
-                          </span>
-                          <span className="hidden sm:inline">•</span>
-                          <span className="shrink-0">4 seconds</span>
-                          <span className="hidden sm:inline">•</span>
-                          <span className="shrink-0">Today, 2:41 PM</span>
-                        </div>
-                      </div>
+                {!userGenerations || userGenerations.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                    <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4 border border-border/50 shadow-inner">
+                      <History className="w-8 h-8 text-muted-foreground/60" />
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No history yet</h3>
+                    <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
+                      Your generated audio clips will appear here. Try creating something magical using the script editor above.
+                    </p>
                   </div>
-                  {/* Mock Item 2 */}
-                  <div className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors gap-2 min-w-0">
-                    <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                      <Button
-                        size="icon"
-                        className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105 transition-all outline-none border border-primary/20"
-                      >
-                        <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
-                      </Button>
-                      <div className="flex flex-col min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate w-full pr-2 text-foreground">
-                          Generate stunningly lifelike audio instantly.
-                        </p>
-                        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 mt-1 text-xs text-muted-foreground">
-                          <span className="bg-background/80 border border-border/50 px-2 py-0.5 rounded-full font-medium shrink-0">
-                            Elara
-                          </span>
-                          <span className="hidden sm:inline">•</span>
-                          <span className="shrink-0">2 seconds</span>
-                          <span className="hidden sm:inline">•</span>
-                          <span className="shrink-0">Yesterday, 11:20 AM</span>
+                ) : (
+                  <div className="divide-y divide-border/50 max-h-[500px] overflow-y-auto custom-scrollbar">
+                    {userGenerations.map((generation) => {
+                      const date = new Date(generation._creationTime);
+                      const isToday = new Date().toDateString() === date.toDateString();
+                      const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                      const dateString = isToday ? `Today, ${timeString}` : `${date.toLocaleDateString()}, ${timeString}`;
+                      
+                      const voice = voices?.find((v) => v.inworldVoiceId === generation.voiceId);
+                      const voiceName = voice?.displayName || generation.voiceId || "Unknown Voice";
+
+                      return (
+                        <div key={generation._id} className="p-4 flex items-center justify-between hover:bg-muted/30 transition-colors gap-2 min-w-0 group/item">
+                          <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <Button
+                              size="icon"
+                              className="h-10 w-10 shrink-0 rounded-full bg-primary/10 text-primary hover:bg-primary/20 hover:scale-105 transition-all outline-none border border-primary/20"
+                              onClick={() => {
+                                const audio = document.getElementById(`audio-${generation._id}`) as HTMLAudioElement;
+                                if (audio) {
+                                  if (audio.paused) {
+                                    document.querySelectorAll('audio').forEach(a => {
+                                      if (a.id !== `audio-${generation._id}`) a.pause();
+                                    });
+                                    audio.play();
+                                  } else {
+                                    audio.pause();
+                                  }
+                                }
+                              }}
+                            >
+                              {playingId === generation._id ? (
+                                <Pause className="w-4 h-4" fill="currentColor" />
+                              ) : (
+                                <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                              )}
+                            </Button>
+                            <audio 
+                              id={`audio-${generation._id}`} 
+                              src={generation.audioUrl} 
+                              className="hidden" 
+                              onPlay={() => setPlayingId(generation._id)}
+                              onPause={() => {
+                                setPlayingId(current => current === generation._id ? null : current);
+                              }}
+                              onEnded={() => {
+                                setPlayingId(current => current === generation._id ? null : current);
+                              }}
+                            />
+                            <div className="flex flex-col min-w-0 flex-1">
+                              <p className="text-sm font-medium truncate w-full pr-2 text-foreground">
+                                {generation.prompt}
+                              </p>
+                              <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 mt-1 text-xs text-muted-foreground">
+                                <span className="bg-background/80 border border-border/50 px-2 py-0.5 rounded-full font-medium shrink-0">
+                                  {voiceName}
+                                </span>
+                                <span className="hidden sm:inline">•</span>
+                                <span className="shrink-0">{dateString}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1 sm:gap-2 shrink-0 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
+                              disabled={downloadingId === generation._id || !generation.audioUrl}
+                              onClick={async () => {
+                                if (!generation.audioUrl) return;
+                                try {
+                                  setDownloadingId(generation._id);
+                                  const response = await fetch(generation.audioUrl);
+                                  const blob = await response.blob();
+                                  const url = window.URL.createObjectURL(blob);
+                                  const a = document.createElement('a');
+                                  a.style.display = 'none';
+                                  a.href = url;
+                                  a.download = `voice-${generation._id}.mp3`;
+                                  document.body.appendChild(a);
+                                  a.click();
+                                  window.URL.revokeObjectURL(url);
+                                } catch (error) {
+                                  console.error("Download failed:", error);
+                                } finally {
+                                  setDownloadingId(null);
+                                }
+                              }}
+                            >
+                              {downloadingId === generation._id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Download className="w-4 h-4" />
+                              )}
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
+                            >
+                              <MoreVertical className="w-4 h-4" />
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground"
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
-                    </div>
+                      );
+                    })}
                   </div>
-                </div>
+                )}
               </CardContent>
             </Card>
           </div>
