@@ -9,6 +9,7 @@
  */
 
 import type * as inworld from "../inworld.js";
+import type * as inworldGenerateSpeech from "../inworldGenerateSpeech.js";
 import type * as test from "../test.js";
 import type * as users from "../users.js";
 import type * as voice from "../voice.js";
@@ -21,6 +22,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   inworld: typeof inworld;
+  inworldGenerateSpeech: typeof inworldGenerateSpeech;
   test: typeof test;
   users: typeof users;
   voice: typeof voice;

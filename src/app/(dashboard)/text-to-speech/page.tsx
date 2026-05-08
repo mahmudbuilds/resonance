@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { api } from "../../../../convex/_generated/api";
-import type { VoiceInfo } from "@inworld/tts";
+import { useAction } from "convex/react";
 import { useEffect } from "react";
 
 export default function TextToSpeechPage() {
@@ -66,7 +66,18 @@ export default function TextToSpeechPage() {
   const [text, setText] = useState("");
   const [speakingRate, setSpeakingRate] = useState([1.0]);
   const [temperature, setTemperature] = useState([0.7]);
-  
+  const listUserGenerations = useQuery(api.inworld.listUserGenerations);
+  const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
+  const handleGenerateSpeech = async () => {
+    const [storedAudioBlobUrl, audioUrl] = await generateSpeech({
+      text,
+      voice: selectedVoice!,
+      model,
+      speakingRate: speakingRate[0],
+      temperature: temperature[0],
+    });
+    console.log(audioUrl)
+  }
   const isReady = mounted && !!voices
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-background">
@@ -320,7 +331,7 @@ export default function TextToSpeechPage() {
                     <History className="w-4 h-4 sm:mr-2" />
                     <span className="hidden sm:inline">Preview</span>
                   </Button>
-                  <Button className="rounded-xl flex-[2] sm:flex-none h-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_25px_rgba(var(--primary),0.5)] transition-all px-4">
+                  <Button onClick={handleGenerateSpeech} className="rounded-xl flex-[2] sm:flex-none h-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_25px_rgba(var(--primary),0.5)] transition-all px-4">
                     <Wand2 className="w-4 h-4 mr-2" />
                     Generate
                   </Button>
