@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { Search, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Navbar() {
   const pathname = usePathname();   
@@ -45,9 +46,9 @@ export default function Navbar() {
 
         {/* Right: Actions & Profile */}
         <div className="flex items-center gap-3 sm:gap-5 min-w-[200px] justify-end">
-          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 hidden sm:flex">
-            <Bell className="w-4 h-4" />
-          </Button>
+          <div className="hidden sm:flex">
+            <ModeToggle className="h-9 w-9 rounded-full border-border/50 text-muted-foreground hover:bg-muted/50 transition-colors" />
+          </div>
           
           <div className="h-5 w-px bg-border/50 hidden sm:block" />
           
