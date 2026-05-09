@@ -20,10 +20,10 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/60 backdrop-blur-xl border-b border-border/40 supports-[backdrop-filter]:bg-background/40">
-      <div className="flex h-16 items-center justify-between px-6 lg:px-10 w-full">
+      <div className="flex h-16 items-center justify-between px-4 md:px-6 lg:px-10 w-full">
         
         {/* Left: Branding & Breadcrumbs */}
-        <div className="flex items-center gap-4 lg:gap-6 min-w-[200px]">
+        <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
           <SidebarTrigger className="text-muted-foreground hover:text-foreground transition-colors" />
           
           <div className="hidden md:flex items-center gap-3 text-sm font-medium">
@@ -45,9 +45,9 @@ export default function Navbar() {
         </div>
 
         {/* Right: Actions & Profile */}
-        <div className="flex items-center gap-3 sm:gap-5 min-w-[200px] justify-end">
-          <div className="hidden sm:flex">
-            <ModeToggle className="h-9 w-9 rounded-full border-border/50 text-muted-foreground hover:bg-muted/50 transition-colors" />
+        <div className="flex items-center gap-3 sm:gap-5 justify-end">
+          <div className="flex">
+            <ModeToggle className="h-8 w-8 sm:h-9 sm:w-9 rounded-full border-border/50 text-muted-foreground hover:bg-muted/50 transition-colors" />
           </div>
           
           <div className="h-5 w-px bg-border/50 hidden sm:block" />

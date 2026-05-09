@@ -130,19 +130,19 @@ export default function TextToSpeechPage() {
         <header className="flex flex-col space-y-4 mb-10">
           <Badge
             variant="outline"
-            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)] text-xs sm:text-sm"
           >
-            <AudioLines className="w-3.5 h-3.5 mr-2 text-primary" />
-            Studio Generation
+            <AudioLines className="w-3.5 h-3.5 mr-2 text-primary shrink-0" />
+            <span className="truncate">Studio Generation</span>
           </Badge>
 
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             Text to{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-emerald-500">
               Speech
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
             Transform text into lifelike speech with extreme precision. Select
             your voice, adjust the nuances, and synthesize instantly.
           </p>

@@ -97,14 +97,14 @@ export default function Home() {
         <header className="flex flex-col space-y-6">
           <Badge
             variant="outline"
-            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)] text-xs sm:text-sm"
           >
-            <Sparkles className="w-3.5 h-3.5 mr-2 text-primary" />
-            Vocal Synthesis Engine v2.0
+            <Sparkles className="w-3.5 h-3.5 mr-2 text-primary shrink-0" />
+            <span className="truncate">Vocal Synthesis Engine v2.0</span>
           </Badge>
           
           <UserGreeting />
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
             Harness the power of neural text-to-speech. Generate stunningly lifelike audio, 
             clone voices with surgical precision, and amplify your creative workflow.
           </p>
@@ -112,19 +112,19 @@ export default function Home() {
 
         {/* Feature Grid */}
         <section className="space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-row items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
                 Core Capabilities
                 <div className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-primary to-transparent rounded-full" />
               </h2>
             </div>
             <Link
               href="/text-to-speech"
-              className="text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
+              className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
             >
               Start Creating 
-              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
@@ -161,15 +161,15 @@ export default function Home() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Trending Voices */}
           <section className="col-span-2 space-y-6 flex flex-col">
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+            <div className="flex flex-row items-center justify-between gap-4">
+              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
                 Trending Voices
               </h2>
               <Link
                 href="/voices"
-                className="text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group"
+                className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
               >
-                View Library <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                View Library <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
             <Card className="flex-1 border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl flex flex-col">
@@ -215,7 +215,7 @@ export default function Home() {
 
           {/* Activity Overview */}
           <section className="space-y-6 flex flex-col">
-            <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
               Activity Overview
             </h2>
             <div className="grid gap-5 flex-1">
@@ -251,8 +251,8 @@ export default function Home() {
         {/* Global Languages Tooltip section */}
         <section className="space-y-6">
           <div className="flex items-center gap-3">
-            <Globe className="w-6 h-6 text-primary" />
-            <h2 className="text-2xl font-semibold tracking-tight">Global Reach</h2>
+            <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Global Reach</h2>
           </div>
           <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl overflow-hidden shadow-sm relative">
              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-card/80 to-transparent z-10 pointer-events-none" />
@@ -294,7 +294,7 @@ export default function Home() {
         {/* Templates Section */}
         <section className="space-y-6 pb-12">
           <div className="flex items-center justify-between">
-             <h2 className="text-2xl font-semibold tracking-tight relative inline-block">
+             <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
                Ready-to-use Templates
              </h2>
           </div>
