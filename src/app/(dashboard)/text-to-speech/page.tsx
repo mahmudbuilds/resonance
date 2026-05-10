@@ -230,6 +230,9 @@ export default function TextToSpeechPage() {
                       <SelectValue placeholder="Select model" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl border-border/40 shadow-xl backdrop-blur-xl bg-card/95">
+                    <SelectItem value="inworld-tts-2" className="rounded-lg cursor-pointer">
+                    inworld-tts-2
+                    </SelectItem>
                       <SelectItem value="inworld-tts-1.5-mini" className="rounded-lg cursor-pointer">inworld-tts-1.5-mini</SelectItem>
                       <SelectItem value="inworld-tts-1.5-max" className="rounded-lg cursor-pointer">inworld-tts-1.5-max</SelectItem>
                     </SelectContent>
@@ -361,10 +364,7 @@ export default function TextToSpeechPage() {
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                  <Button variant="secondary" className="rounded-xl flex-1 sm:flex-none h-10 hover:bg-secondary/80 text-secondary-foreground shadow-sm px-3">
-                    <History className="w-4 h-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Preview</span>
-                  </Button>
+                  
                   <Button onClick={handleGenerateSpeech} disabled={isGenerating || !text.trim()} className="rounded-xl flex-[2] sm:flex-none h-10 bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(var(--primary),0.3)] hover:shadow-[0_0_25px_rgba(var(--primary),0.5)] transition-all px-4 disabled:opacity-50 disabled:shadow-none">
                     {isGenerating ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
