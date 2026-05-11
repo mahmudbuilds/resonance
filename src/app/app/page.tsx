@@ -36,7 +36,7 @@ export default function Home() {
       description:
         "Craft studio-quality voiceovers with emotional depth and natural inflection. Bring your scripts to life.",
       icon: AudioLines,
-      href: "/text-to-speech",
+      href: "/app/text-to-speech",
       color: "text-blue-500",
       glow: "bg-blue-500/20",
     },
@@ -45,7 +45,7 @@ export default function Home() {
       description:
         "Explore hundreds of handcrafted voices spanning dozens of languages, accents, and unique personalities.",
       icon: Volume2,
-      href: "/voices",
+      href: "/app/voices",
       color: "text-purple-500",
       glow: "bg-purple-500/20",
     },
@@ -54,7 +54,7 @@ export default function Home() {
       description:
         "Create an uncanny AI replica of any voice from a brief sample. Establish powerful brand consistency.",
       icon: Mic2,
-      href: "/voice-cloning",
+      href: "/app/voice-cloning",
       color: "text-emerald-500",
       glow: "bg-emerald-500/20",
     },
@@ -120,7 +120,7 @@ export default function Home() {
               </h2>
             </div>
             <Link
-              href="/text-to-speech"
+              href="/app/text-to-speech"
               className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
             >
               Start Creating 
@@ -166,7 +166,7 @@ export default function Home() {
                 Trending Voices
               </h2>
               <Link
-                href="/voices"
+                href="/app/voices"
                 className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
               >
                 View Library <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />

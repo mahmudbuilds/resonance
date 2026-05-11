@@ -27,8 +27,30 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
+
+const LANG_CODES = [
+  "EN_US", "ZH_CN", "KO_KR", "JA_JP", "RU_RU", "AUTO", 
+  "IT_IT", "ES_ES", "PT_BR", "DE_DE", "FR_FR", "AR_SA", 
+  "PL_PL", "NL_NL", "HI_IN", "HE_IL"
+];
+
+const RECORDING_SENTENCES = [
+  "Custom (Read anything)",
+  "Are you ready to save big? Get set for the sale of the century! Deals and discounts like never before! You won’t want to miss this.",
+  "Every challenge we face is an opportunity in disguise. Wouldn’t you agree? So cheer up! It’ll all be okay.",
+  "How have you been? It’s been way too long since we last caught up. By the way, I heard about your recent promotion. Congratulations! I’m so excited for you!",
+  "The quick brown fox jumps over the lazy dog, a classic sentence that contains every letter of the English alphabet.",
+  "We are thrilled to announce our latest product update, which brings a host of new features designed to make your workflow faster and more efficient."
+];
 
 function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
@@ -39,6 +61,7 @@ function formatTime(seconds: number) {
 export default function VoiceCloningPage() {
   const [activeTab, setActiveTab] = useState("upload");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [selectedSentence, setSelectedSentence] = useState(RECORDING_SENTENCES[0]);
   
   // WaveSurfer refs
   const containerRef = useRef<HTMLDivElement>(null);
@@ -216,21 +239,40 @@ export default function VoiceCloningPage() {
             <CardContent className="space-y-6 pt-6">
               
               <div className="space-y-2">
-                <Label htmlFor="voiceName" className="font-semibold">Voice Name</Label>
+                <Label htmlFor="voiceName" className="font-semibold">Voice Name <span className="text-red-500">*</span></Label>
                 <Input id="voiceName" placeholder="e.g. My Podcast Voice" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20" />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="desc" className="font-semibold">Description <span className="text-muted-foreground font-normal text-xs">(optional)</span></Label>
+                <Label htmlFor="desc" className="font-semibold">Description <span className="text-red-500">*</span></Label>
                 <Textarea id="desc" placeholder="Notes about this clone's specific tone..." className="resize-none bg-background/50 border-border/50 h-24 rounded-xl focus-visible:ring-emerald-500/20 w-full max-w-full break-words" />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="langCode" className="font-semibold">Language Code</Label>
+                <Select defaultValue="EN_US">
+                  <SelectTrigger id="langCode" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20">
+                    <SelectValue placeholder="Select Language Code" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {LANG_CODES.map(code => (
+                      <SelectItem key={code} value={code}>{code}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="tags" className="font-semibold">Tags</Label>
+                <Input id="tags" placeholder="e.g. narration, friendly, energetic (comma separated)" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20" />
               </div>
 
               <div className="space-y-3 pt-2">
                 <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); clearAudio(); }} className="w-full">
                   <div className="flex items-center justify-between mb-4">
                     <Label className="font-semibold flex items-center">
-                      Training Audio
-                      <span className="text-xs text-muted-foreground rounded-full px-2 py-0.5 border border-border/50 bg-background/50 shrink-0 ml-2">~30s needed</span>
+                      Training Audio <span className="text-red-500 ml-1">*</span>
+                      <span className="text-xs text-muted-foreground rounded-full px-2 py-0.5 border border-border/50 bg-background/50 shrink-0 ml-2">10-15s max</span>
                     </Label>
                     <TabsList className="bg-muted/50 p-1 rounded-xl h-10 border border-border/50">
                       <TabsTrigger value="upload" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm text-xs">
@@ -260,7 +302,28 @@ export default function VoiceCloningPage() {
                     ) : null}
                   </TabsContent>
 
-                  <TabsContent value="record" className="mt-0 outline-none">
+                  <TabsContent value="record" className="mt-0 outline-none space-y-4">
+                    <div className="space-y-2 mb-4">
+                      <Label className="font-semibold">Text to Read (English only)</Label>
+                      <Select value={selectedSentence} onValueChange={setSelectedSentence}>
+                        <SelectTrigger className="bg-background/50 border-border/50 h-12 rounded-xl">
+                          <SelectValue placeholder="Select a sentence to read" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {RECORDING_SENTENCES.map((sentence, i) => (
+                            <SelectItem key={i} value={sentence}>
+                              {i === 0 ? sentence : `Sentence ${i}: ${sentence.substring(0, 40)}...`}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {selectedSentence !== "Custom (Read anything)" && (
+                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50 text-sm italic text-foreground mt-2">
+                          "{selectedSentence}"
+                        </div>
+                      )}
+                    </div>
+
                     {!audioUrl && !isRecording && (
                       <div className="border border-border/70 bg-muted/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center overflow-hidden min-h-[160px]">
                         <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 relative">
@@ -338,20 +401,50 @@ export default function VoiceCloningPage() {
               <h3 className="text-lg font-bold flex items-center gap-2 mb-4 text-emerald-500">
                 <CheckCircle2 className="w-5 h-5 shrink-0" /> Best Practices
               </h3>
-              <ul className="space-y-4 text-sm text-muted-foreground/90 w-full min-w-0">
-                <li className="flex items-start gap-3 w-full min-w-0">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                  <span className="flex-1 min-w-0 break-words leading-relaxed"><strong>Audio Quality:</strong> Use raw, uncompressed files (WAV) if possible. Avoid audio with heavy echo, reverb, or background music.</span>
-                </li>
-                <li className="flex items-start gap-3 w-full min-w-0">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                  <span className="flex-1 min-w-0 break-words leading-relaxed"><strong>Length:</strong> 30 seconds to 3 minutes of speaking is the sweet spot. Returns diminish after 5 minutes of input.</span>
-                </li>
-                <li className="flex items-start gap-3 w-full min-w-0">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                  <span className="flex-1 min-w-0 break-words leading-relaxed"><strong>Tone:</strong> Speak exactly how you want the clone to sound. Do not mix energetic talking with whispering in the same sample.</span>
-                </li>
-              </ul>
+              <div className="space-y-6 w-full min-w-0">
+                <div>
+                  <h4 className="font-semibold text-sm text-foreground mb-2">General Best Practices</h4>
+                  <ul className="space-y-3 text-sm text-muted-foreground/90">
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Capture full expression:</strong> Cover the emotions you want. If flat, the clone will sound monotone.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Speak clearly:</strong> Pronounce carefully, avoid sighs/coughs, and don't pause unnaturally mid-recording.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Minimize noise:</strong> Record in a quiet environment, keep reasonable distance from mic to reduce echo and plosives.</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-sm text-foreground mb-2">Instant Voice Cloning</h4>
+                  <ul className="space-y-3 text-sm text-muted-foreground/90">
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Keep clip short:</strong> 5-15s total length for enough context while keeping consistency.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>High-quality audio:</strong> At least 22 kHz sample rate and 16-bit depth.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Vary emotion:</strong> Combine short clips; use short pauses/crossfades to avoid abrupt cuts.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Normalize volume:</strong> Avoid clipping due to very high dB.</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
+                      <span className="leading-relaxed"><strong>Avoid mid-word cuts:</strong> Don't use samples that break mid-word.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </Card>
             
             <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-lg rounded-2xl overflow-hidden w-full max-w-full opacity-50 pointer-events-none">

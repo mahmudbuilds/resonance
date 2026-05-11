@@ -42,7 +42,7 @@ export default function RootLayout({
         "antialiased",
         geistSans.variable,
         geistMono.variable,
-        "font-mono",
+        "font-sans",
         jetbrainsMono.variable,
       )}
     >

@@ -51,17 +51,17 @@ export default function DashboardSidebar() {
   const { state, setOpen } = useSidebar();
   const isMobile = useIsMobile()
   const mainMenuItems: MenuItem[] = [
-    { title: "Dashboard", url: "/", icon: Home },
-    { title: "Explore Voices", url: "/voices", icon: LayoutGrid },
-    { title: "Text to Speech", url: "/text-to-speech", icon: AudioLines },
-    { title: "Voice Cloning", url: "/voice-cloning", icon: Volume2 },
+    { title: "Dashboard", url: "/app", icon: Home },
+    { title: "Explore Voices", url: "/app/voices", icon: LayoutGrid },
+    { title: "Text to Speech", url: "/app/text-to-speech", icon: AudioLines },
+    { title: "Voice Cloning", url: "/app/voice-cloning", icon: Volume2 },
   ];
 
   const otherMenuItems: MenuItem[] = [
-    { title: "Settings", url: "/settings", icon: Settings },
+    { title: "Settings", url: "/app/settings", icon: Settings },
     {
       title: "Help & Support",
-      url: "/support",
+      url: "/app/support",
       icon: Headphones,
     },
   ];
@@ -83,8 +83,8 @@ export default function DashboardSidebar() {
                     asChild={!!item.url}
                     isActive={
                       item.url
-                        ? item.url === "/"
-                          ? pathname === "/"
+                        ? item.url === "/app"
+                          ? pathname === "/app"
                           : pathname.startsWith(item.url)
                         : false
                     }
