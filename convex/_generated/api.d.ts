@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as cloneVoice from "../cloneVoice.js";
 import type * as inworld from "../inworld.js";
 import type * as inworldGenerateSpeech from "../inworldGenerateSpeech.js";
 import type * as test from "../test.js";
@@ -21,6 +22,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  cloneVoice: typeof cloneVoice;
   inworld: typeof inworld;
   inworldGenerateSpeech: typeof inworldGenerateSpeech;
   test: typeof test;
