@@ -29,7 +29,8 @@ export const cloneVoice = action({
         description,
         removeBackgroundNoise: true,
       });
-      const clonedVoiceId = clonedVoice.voice.voiceId
+      const clonedVoiceId = clonedVoice.voice.voiceId;
+      console.log(clonedVoiceId)
       if (clonedVoice) {
         await ctx.runMutation(internal.cloneVoice.saveClonedVoice, {
           voiceId: clonedVoiceId,

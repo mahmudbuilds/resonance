@@ -1,29 +1,29 @@
 "use client";
 
 import {
-  Settings,
-  User,
-  Shield,
+  AlertCircle,
   Bell,
-  Mail,
   CheckCircle2,
-  AlertCircle
+  Mail,
+  Settings,
+  Shield,
+  User,
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function SettingsPage() {
   return (
@@ -41,28 +41,38 @@ export default function SettingsPage() {
         <header className="flex flex-col space-y-4 mb-10">
           <Badge
             variant="outline"
-            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(var(--primary),0.1)]"
+            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_var(--shadow-primary-sm)]"
           >
             <Settings className="w-3.5 h-3.5 mr-2 text-primary" />
             System Preferences
           </Badge>
-          
+
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Account <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-emerald-500">Settings</span>
+            Account{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-emerald-500">
+              Settings
+            </span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Manage your account details, subscriptions, API keys, and notification preferences all in one place.
+            Manage your account details, subscriptions, API keys, and
+            notification preferences all in one place.
           </p>
         </header>
 
         {/* Main Layout */}
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="mb-8 flex w-full sm:w-[300px] h-12 bg-card/50 backdrop-blur-md border border-border/50 p-1 rounded-xl">
-            <TabsTrigger value="profile" className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm">
+            <TabsTrigger
+              value="profile"
+              className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm"
+            >
               <User className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
               Profile
             </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm">
+            <TabsTrigger
+              value="appearance"
+              className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm"
+            >
               <Bell className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
               Preferences
             </TabsTrigger>
@@ -70,133 +80,179 @@ export default function SettingsPage() {
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              
               {/* Profile Tab */}
-              <TabsContent value="profile" className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12">
+              <TabsContent
+                value="profile"
+                className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12"
+              >
                 <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
                   <CardHeader>
                     <CardTitle className="text-xl flex items-center gap-2">
-                       <User className="w-5 h-5 text-primary" />
-                       Personal Information
+                      <User className="w-5 h-5 text-primary" />
+                      Personal Information
                     </CardTitle>
-                    <CardDescription>Update your personal details and public profile.</CardDescription>
+                    <CardDescription>
+                      Update your personal details and public profile.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" defaultValue="Alex" className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20" />
+                        <Input
+                          id="firstName"
+                          defaultValue="Alex"
+                          className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" defaultValue="Mercer" className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20" />
+                        <Input
+                          id="lastName"
+                          defaultValue="Mercer"
+                          className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input id="email" type="email" defaultValue="alex@founder.ai" className="pl-10 bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20" />
+                        <Input
+                          id="email"
+                          type="email"
+                          defaultValue="alex@founder.ai"
+                          className="pl-10 bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                        />
                       </div>
                     </div>
                   </CardContent>
                   <CardFooter className="bg-muted/10 border-t border-border/50 py-4 flex justify-end">
-                    <Button className="rounded-xl px-8 shadow-[0_0_15px_rgba(var(--primary),0.2)] hover:shadow-[0_0_25px_rgba(var(--primary),0.4)] transition-all">Save Changes</Button>
+                    <Button className="rounded-xl px-8 shadow-[0_0_15px_var(--shadow-primary)] hover:shadow-[0_0_25px_var(--shadow-primary-lg)] transition-all">
+                      Save Changes
+                    </Button>
                   </CardFooter>
                 </Card>
 
                 <Card className="border border-destructive/20 bg-destructive/5 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl">
                   <CardHeader>
                     <CardTitle className="text-xl text-destructive flex items-center gap-2">
-                       <Shield className="w-5 h-5" />
-                       Danger Zone
+                      <Shield className="w-5 h-5" />
+                      Danger Zone
                     </CardTitle>
-                    <CardDescription>Permanently delete your account and all associated data.</CardDescription>
+                    <CardDescription>
+                      Permanently delete your account and all associated data.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                     <p className="text-sm text-muted-foreground mb-4">Once your account is deleted, all of your generated voices, projects, and credits will be permanently destroyed. This action cannot be reversed.</p>
-                     <Button variant="destructive" className="rounded-xl">Delete Account</Button>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Once your account is deleted, all of your generated
+                      voices, projects, and credits will be permanently
+                      destroyed. This action cannot be reversed.
+                    </p>
+                    <Button variant="destructive" className="rounded-xl">
+                      Delete Account
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-
-
               {/* Preferences Tab */}
-              <TabsContent value="appearance" className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12">
-                 <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
+              <TabsContent
+                value="appearance"
+                className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12"
+              >
+                <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
                   <CardHeader>
                     <CardTitle className="text-xl flex items-center gap-2">
-                       <Bell className="w-5 h-5 text-primary" />
-                       Preferences
+                      <Bell className="w-5 h-5 text-primary" />
+                      Preferences
                     </CardTitle>
-                    <CardDescription>Manage how the application looks and what notifications you receive.</CardDescription>
+                    <CardDescription>
+                      Manage how the application looks and what notifications
+                      you receive.
+                    </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    
                     <div className="flex items-center justify-between p-4 border border-border/50 bg-background/30 rounded-xl">
-                       <div className="space-y-1">
-                          <p className="font-medium">Appearance / Theme</p>
-                          <p className="text-sm text-muted-foreground">Toggle between light and dark modes.</p>
-                       </div>
-                       <ModeToggle />
+                      <div className="space-y-1">
+                        <p className="font-medium">Appearance / Theme</p>
+                        <p className="text-sm text-muted-foreground">
+                          Toggle between light and dark modes.
+                        </p>
+                      </div>
+                      <ModeToggle />
                     </div>
 
                     <div className="space-y-4">
-                      <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Email Notifications</h4>
-                      
+                      <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                        Email Notifications
+                      </h4>
+
                       <div className="flex items-center justify-between">
-                         <div className="space-y-0.5">
-                           <Label className="text-base">Product Updates</Label>
-                           <p className="text-sm text-muted-foreground">Receive news about new features and voices.</p>
-                         </div>
-                         <Switch defaultChecked />
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Product Updates</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive news about new features and voices.
+                          </p>
+                        </div>
+                        <Switch defaultChecked />
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
-                         <div className="space-y-0.5">
-                           <Label className="text-base">Usage Alerts</Label>
-                           <p className="text-sm text-muted-foreground">Get notified when you approach your quota limit.</p>
-                         </div>
-                         <Switch defaultChecked />
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Usage Alerts</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Get notified when you approach your quota limit.
+                          </p>
+                        </div>
+                        <Switch defaultChecked />
                       </div>
-                      
+
                       <div className="flex items-center justify-between">
-                         <div className="space-y-0.5">
-                           <Label className="text-base">Promotional Offers</Label>
-                           <p className="text-sm text-muted-foreground">Special discounts and early access.</p>
-                         </div>
-                         <Switch />
+                        <div className="space-y-0.5">
+                          <Label className="text-base">
+                            Promotional Offers
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Special discounts and early access.
+                          </p>
+                        </div>
+                        <Switch />
                       </div>
                     </div>
-
                   </CardContent>
                 </Card>
               </TabsContent>
-
             </div>
 
-             {/* Support Sidebar Side Widget */}
+            {/* Support Sidebar Side Widget */}
             <div className="lg:col-span-1">
               <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden rounded-2xl sticky top-24 shadow-xl backdrop-blur-xl bg-card/40">
                 <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
                 <CardContent className="p-6 flex flex-col pt-8">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-5 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.15)]">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-5 border border-primary/20 shadow-[0_0_15px_var(--shadow-primary-sm)]">
                     <AlertCircle className="w-5 h-5 text-primary" />
                   </div>
                   <h3 className="font-semibold text-lg mb-2">Need Help?</h3>
-                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed">Our support team is available 24/7. Reach out if you're experiencing issues with billing, API integrations, or generation quality.</p>
-                  
+                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                    Our support team is available 24/7. Reach out if you're
+                    experiencing issues with billing, API integrations, or
+                    generation quality.
+                  </p>
+
                   <div className="space-y-3">
-                     <Button variant="outline" className="w-full justify-start rounded-xl bg-background/50 border-border/50 hover:bg-muted/50 hover:text-primary transition-colors">
-                       <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
-                       Contact Support
-                     </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start rounded-xl bg-background/50 border-border/50 hover:bg-muted/50 hover:text-primary transition-colors"
+                    >
+                      <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
+                      Contact Support
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
             </div>
-
           </div>
         </Tabs>
       </div>
