@@ -1,5 +1,4 @@
 "use client";
-import { ModeToggle } from "../ui/mode-toggle";
 import { UserButton, useClerk } from "@clerk/nextjs";
 import {
   AudioLines,
@@ -9,8 +8,8 @@ import {
   type LucideIcon,
   Settings,
   Volume2,
+  Terminal,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -26,7 +25,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -47,20 +45,19 @@ interface NavSectionProps {
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-  const clerk = useClerk();
   const { state, setOpen } = useSidebar();
-  const isMobile = useIsMobile()
+  const isMobile = useIsMobile();
   const mainMenuItems: MenuItem[] = [
     { title: "Dashboard", url: "/app", icon: Home },
-    { title: "Explore Voices", url: "/app/voices", icon: LayoutGrid },
+    { title: "Voice Registry", url: "/app/voices", icon: LayoutGrid },
     { title: "Text to Speech", url: "/app/text-to-speech", icon: AudioLines },
     { title: "Voice Cloning", url: "/app/voice-cloning", icon: Volume2 },
   ];
 
   const otherMenuItems: MenuItem[] = [
-    { title: "Settings", url: "/app/settings", icon: Settings },
+    { title: "System Config", url: "/app/settings", icon: Settings },
     {
-      title: "Help & Support",
+      title: "Support Comm",
       url: "/app/support",
       icon: Headphones,
     },
@@ -68,49 +65,55 @@ export default function DashboardSidebar() {
 
   function NavSection({ label, items, pathname }: NavSectionProps) {
     return (
-      <SidebarGroup className="border-b border-dashed">
+      <SidebarGroup className="border-b border-[#222] rounded-none py-4">
         {label && (
-          <SidebarGroupLabel className="text-[13px] uppercase text-muted-foreground">
+          <SidebarGroupLabel className="font-mono text-[10px] uppercase text-[#666] tracking-widest px-4 mb-2 h-auto flex items-center gap-2">
+            <Terminal className="w-3 h-3 text-[#444]" />
             {label}
           </SidebarGroupLabel>
         )}
         <SidebarGroupContent>
           <SidebarMenu>
-            {items.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <TooltipProvider>
-                  <SidebarMenuButton
-                    asChild={!!item.url}
-                    isActive={
-                      item.url
-                        ? item.url === "/app"
-                          ? pathname === "/app"
-                          : pathname.startsWith(item.url)
-                        : false
-                    }
-                    onClick={function () {
-                      isMobile && setOpen(false);
-                      isMobile && console.log(state)
-                      item.onClick;
-                    }}
-                    tooltip={item.title}
-                    className="my-2"
-                  >
-                    {item.url ? (
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </Link>
-                    ) : (
-                      <>
-                        <item.icon />
-                        <span>{item.title}</span>
-                      </>
-                    )}
-                  </SidebarMenuButton>
-                </TooltipProvider>
-              </SidebarMenuItem>
-            ))}
+            {items.map((item) => {
+              const isActive = item.url
+                ? item.url === "/app"
+                  ? pathname === "/app"
+                  : pathname.startsWith(item.url)
+                : false;
+
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <TooltipProvider>
+                    <SidebarMenuButton
+                      asChild={!!item.url}
+                      isActive={isActive}
+                      onClick={() => {
+                        if (isMobile) setOpen(false);
+                        item.onClick?.();
+                      }}
+                      tooltip={item.title}
+                      className={`my-1 font-mono text-xs tracking-wider uppercase h-10 rounded-none border border-transparent ${
+                        isActive 
+                          ? "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20 hover:text-primary" 
+                          : "text-[#888] hover:text-white hover:bg-[#111] hover:border-[#333]"
+                      }`}
+                    >
+                      {item.url ? (
+                        <Link href={item.url} className="flex items-center gap-3 w-full px-2">
+                          <item.icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-[#555]"}`} />
+                          <span>{item.title}</span>
+                        </Link>
+                      ) : (
+                        <div className="flex items-center gap-3 w-full px-2">
+                          <item.icon className={`w-4 h-4 ${isActive ? "text-primary" : "text-[#555]"}`} />
+                          <span>{item.title}</span>
+                        </div>
+                      )}
+                    </SidebarMenuButton>
+                  </TooltipProvider>
+                </SidebarMenuItem>
+              );
+            })}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -118,32 +121,43 @@ export default function DashboardSidebar() {
   }
 
   return (
-    <Sidebar variant="inset" collapsible="icon">
-      <SidebarHeader className="flex flex-col gap-4 pt-4">
-        <div className="flex items-center gap-2 pl-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
-          <Image src="/logo.png" alt="Resonance Logo" width={45} height={45} />
-          <span className="group-data-[collapsible=icon]:hidden tracking-tighter">
-            Resonance
-          </span>
+    <Sidebar variant="inset" collapsible="icon" className="border-r border-[#222] bg-black">
+      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 border-b border-[#222]">
+        <div className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+          <div className="w-8 h-8 bg-primary flex items-center justify-center shrink-0">
+            <AudioLines className="w-5 h-5 text-black" />
+          </div>
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
+            <span className="font-heading font-black tracking-widest uppercase text-white text-sm">
+              RESONANCE
+            </span>
+            <span className="font-mono text-[8px] text-primary tracking-widest uppercase">
+              SYS.ONLINE // V2.0.4
+            </span>
+          </div>
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-black scrollbar-none">
         <NavSection items={mainMenuItems} pathname={pathname} />
-        <NavSection label="Others" items={otherMenuItems} pathname={pathname} />
+        <NavSection label="Parameters" items={otherMenuItems} pathname={pathname} />
       </SidebarContent>
+      
       <SidebarRail />
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-[#222] p-4 bg-[#050505]">
         <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton
               appearance={{
-                elements: {},
+                elements: {
+                  avatarBox: "rounded-none w-8 h-8 border border-[#444] hover:border-primary transition-colors",
+                  userButtonPopoverCard: "rounded-none border border-[#222] bg-[#050505] font-mono",
+                },
               }}
               showName={state === "expanded"}
               fallback={
-                <Skeleton className="w-full h-8 group-data-[collapsible=icon]:size-8 border border-border border-white" />
+                <Skeleton className="w-8 h-8 rounded-none border border-[#333] bg-[#111]" />
               }
             />
           </SidebarMenuItem>

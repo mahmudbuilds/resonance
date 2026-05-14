@@ -7,26 +7,19 @@ import {
   Sparkles, 
   Volume2, 
   Zap, 
-  Globe
+  Globe,
+  Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background relative selection:bg-primary/30 selection:text-primary font-sans text-foreground">
-      {/* Background Effects */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Glows */}
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[40vh] bg-primary/20 blur-[120px] rounded-[100%] opacity-50" />
-        <div className="absolute top-1/4 -left-[20%] w-[50vw] h-[50vh] bg-blue-500/10 blur-[120px] rounded-[100%] opacity-40 mix-blend-screen" />
-        <div className="absolute bottom-0 right-0 w-[40vw] h-[40vh] bg-purple-500/10 blur-[120px] rounded-[100%] opacity-30 mix-blend-screen" />
-        
-        {/* Noise Texture */}
-        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
-        
-        {/* Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,#000_70%,transparent_100%)] dark:bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)]" />
+    <div className="min-h-screen bg-black relative selection:bg-primary selection:text-black font-sans text-white overflow-hidden">
+      {/* Brutalist Grid Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]" />
+        {/* Noise overlay */}
+        <div className="absolute inset-0 opacity-[0.05] mix-blend-screen" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
@@ -35,69 +28,101 @@ export default function LandingPage() {
           100% { transform: translateX(-50%); }
         }
         .animate-marquee {
-          animation: marquee 40s linear infinite;
+          animation: marquee 30s linear infinite;
         }
-        /* Override global font for the landing page to look sleek */
-        .landing-wrapper {
-          font-family: var(--font-sans, system-ui, sans-serif);
+        .brutal-border {
+          border: 1px solid #222;
         }
       `}}></style>
 
       {/* Navigation */}
-      <nav className="relative z-50 w-full px-6 py-6 max-w-[1400px] mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20 shadow-[0_0_15px_rgba(var(--primary),0.2)]">
-            <Mic className="w-5 h-5 text-primary" />
+      <nav className="relative z-50 w-full border-b border-[#222] bg-black/80 backdrop-blur-md">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between px-6 h-20">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-primary flex items-center justify-center">
+              <Mic className="w-6 h-6 text-black" />
+            </div>
+            <span className="text-2xl font-heading font-bold uppercase tracking-widest text-white">RESONANCE</span>
           </div>
-          <span className="text-2xl font-bold tracking-tighter">Resonance</span>
-        </div>
-        <div>
-          <Link href="/app">
-            <Button className="bg-foreground text-background hover:bg-foreground/90 transition-all rounded-full px-8 h-12 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:-translate-y-0.5 active:translate-y-0 font-bold gap-2 text-base">
-              Enter App <ArrowRight className="w-4 h-4" />
-            </Button>
-          </Link>
+          <div className="flex items-center gap-6">
+            <span className="hidden md:inline-flex font-mono text-xs text-muted-foreground uppercase tracking-widest">
+              SYS.STATUS: <span className="text-primary ml-2 flex items-center gap-1"><span className="w-2 h-2 bg-primary rounded-none animate-pulse"></span> ONLINE</span>
+            </span>
+            <Link href="/app">
+              <Button className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-mono text-xs uppercase tracking-widest h-12 px-8 border border-primary transition-colors">
+                Initialize <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </nav>
 
-      <main className="relative z-10 flex flex-col items-center landing-wrapper">
+      <main className="relative z-10">
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center px-4 pt-24 md:pt-32 pb-32 text-center max-w-5xl mx-auto min-h-[75vh]">
-          <Badge variant="outline" className="mb-8 rounded-full border-primary/30 bg-primary/5 text-primary py-2 px-5 shadow-[0_0_20px_rgba(var(--primary),0.1)] backdrop-blur-md text-sm">
-            <Sparkles className="w-4 h-4 mr-2" />
-            Vocal Synthesis Engine v2.0
-          </Badge>
+        <section className="relative px-6 pt-32 pb-40 max-w-[1600px] mx-auto border-x border-[#222] min-h-[85vh] flex flex-col justify-center">
+          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary to-transparent" />
           
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold tracking-tighter mb-8 leading-[1.05] drop-shadow-sm">
-            Give your ideas a <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground to-foreground/40 pb-2">
-              voice that resonates.
-            </span>
-          </h1>
-          
-          <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mb-12 leading-relaxed font-medium">
-            Ultra-realistic text-to-speech and instant voice cloning. 
-            Built for creators, developers, and visionary teams.
-          </p>
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-8 relative">
+              <div className="inline-flex items-center gap-3 border border-[#222] bg-[#050505] px-4 py-2 mb-12">
+                <Activity className="w-4 h-4 text-primary" />
+                <span className="font-mono text-xs uppercase tracking-widest text-primary">Vocal Synthesis Engine v2.0.4</span>
+              </div>
+              
+              <h1 className="text-6xl sm:text-8xl md:text-[8rem] font-heading font-black uppercase leading-[0.85] tracking-tighter mb-10 text-white">
+                SYNTHESIZE <br />
+                <span className="text-primary">REALITY.</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl font-sans text-[#888] max-w-2xl mb-12 leading-relaxed">
+                Hyper-realistic text-to-speech and neural voice cloning. Built for industrial-scale creation. Precision audio engineering meets deep learning.
+              </p>
 
-          <Link href="/app">
-            <Button size="lg" className="h-16 px-10 text-lg rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 shadow-[0_0_40px_rgba(var(--primary),0.3)] hover:shadow-[0_0_60px_rgba(var(--primary),0.5)] hover:-translate-y-1 font-bold group">
-              Launch Console
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
+              <div className="flex flex-col sm:flex-row gap-6">
+                <Link href="/app">
+                  <Button size="lg" className="rounded-none h-16 px-10 bg-primary text-black hover:bg-white hover:text-black font-mono uppercase tracking-widest text-sm transition-colors border border-primary w-full sm:w-auto">
+                    Launch Console
+                    <ArrowRight className="w-5 h-5 ml-3" />
+                  </Button>
+                </Link>
+                <div className="flex items-center gap-4 px-6 border border-[#222] bg-[#050505] h-16">
+                  <span className="font-mono text-xs text-[#888]">LATENCY</span>
+                  <span className="font-mono text-sm text-white">{"<"} 400ms</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="lg:col-span-4 hidden lg:block">
+              <div className="w-full aspect-square border border-[#222] relative bg-[#050505] overflow-hidden group">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(204,255,0,0.1)_0,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                <div className="absolute top-4 left-4 font-mono text-[10px] text-[#555]">FIG. 1 - NEURAL WAVEFORM</div>
+                <div className="absolute bottom-4 right-4 font-mono text-[10px] text-primary animate-pulse">RECORDING...</div>
+                
+                {/* Simulated Audio Visualizer */}
+                <div className="absolute inset-0 flex items-center justify-center gap-1 px-8">
+                  {[...Array(24)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      className="w-full bg-primary/20 sound-wave-bar origin-bottom group-hover:bg-primary transition-colors"
+                      style={{ 
+                        height: `${Math.random() * 60 + 10}%`,
+                        animationDelay: `${i * 0.05}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Marquee */}
-        <section className="w-full py-12 border-y border-border/10 bg-black/10 backdrop-blur-md overflow-hidden relative">
-          <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-          <p className="text-center text-sm font-semibold text-muted-foreground mb-8 uppercase tracking-widest">Trusted by innovative teams worldwide</p>
+        <section className="w-full border-y border-[#222] bg-[#050505] py-8 overflow-hidden relative">
           <div className="flex w-max animate-marquee">
-            {[...Array(2)].map((_, i) => (
-              <div key={i} className="flex gap-24 items-center px-12">
-                {['Acme Corp', 'GlobalNet', 'Nexus AI', 'Quantum Studios', 'Vanguard', 'Starlight Media', 'Pinnacle'].map((brand, j) => (
-                  <span key={j} className="text-3xl md:text-4xl font-black text-muted-foreground/20 uppercase tracking-tighter whitespace-nowrap">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="flex gap-20 items-center px-10">
+                {['ACME_CORP', 'GLOBAL_NET', 'NEXUS_AI', 'QUANTUM_STD', 'VANGUARD', 'STARLIGHT', 'PINNACLE'].map((brand, j) => (
+                  <span key={j} className="text-2xl font-heading font-bold text-[#333] uppercase tracking-widest whitespace-nowrap hover:text-primary transition-colors cursor-default">
                     {brand}
                   </span>
                 ))}
@@ -106,68 +131,70 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Bento Grid Features */}
-        <section className="py-32 px-6 max-w-[1400px] mx-auto w-full">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Engineered for Excellence</h2>
-            <p className="text-muted-foreground text-xl max-w-2xl mx-auto">Everything you need to produce studio-grade audio experiences, packed into a blazing-fast dashboard.</p>
+        {/* Features Grid */}
+        <section className="py-40 px-6 max-w-[1600px] mx-auto border-x border-[#222]">
+          <div className="mb-24 flex flex-col md:flex-row justify-between items-end gap-8">
+            <div>
+              <span className="font-mono text-primary text-sm tracking-widest uppercase mb-4 block">01 // Architecture</span>
+              <h2 className="text-5xl md:text-7xl font-heading font-black uppercase tracking-tighter text-white">System Specs</h2>
+            </div>
+            <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed">
+              Industrial-grade infrastructure engineered for zero-compromise audio generation and manipulation.
+            </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6 auto-rows-[320px]">
-            {/* Main feature */}
-            <div className="md:col-span-2 relative rounded-[2rem] border border-border/30 bg-card/10 backdrop-blur-xl p-10 overflow-hidden group hover:border-primary/40 transition-colors duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 blur-[80px] rounded-full translate-x-1/2 -translate-y-1/2 group-hover:bg-primary/10 transition-colors duration-700" />
-              <div className="relative z-10 flex flex-col h-full justify-end">
-                <Volume2 className="w-12 h-12 text-primary mb-6" />
-                <h3 className="text-3xl md:text-4xl font-bold mb-4">Neural Text-to-Speech</h3>
-                <p className="text-muted-foreground text-lg md:text-xl max-w-lg">Generate lifelike speech with natural intonation. Our AI understands context to emphasize the right words at the right time.</p>
-              </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0 border border-[#222]">
+            {/* Feature 1 */}
+            <div className="group border-b lg:border-b-0 lg:border-r border-[#222] p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
+              <div className="font-mono text-xs text-[#555] mb-8 group-hover:text-primary transition-colors">MDL.001</div>
+              <Volume2 className="w-12 h-12 text-white mb-8 group-hover:text-primary transition-colors" />
+              <h3 className="text-3xl font-heading font-bold uppercase mb-4 text-white">Neural TTS</h3>
+              <p className="font-sans text-[#888] leading-relaxed">
+                Parametric voice synthesis with complete emotional control. 
+                Adjust intonation, pacing, and timber with surgical precision.
+              </p>
             </div>
             
-            {/* Small feature 1 */}
-            <div className="relative rounded-[2rem] border border-border/30 bg-card/10 backdrop-blur-xl p-8 overflow-hidden group hover:border-purple-500/40 transition-colors duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10 flex flex-col h-full justify-end">
-                <Mic className="w-10 h-10 text-purple-400 mb-6" />
-                <h3 className="text-2xl font-bold mb-3">Voice Cloning</h3>
-                <p className="text-muted-foreground text-lg">Create a perfect digital replica of any voice using just a 10-second sample.</p>
-              </div>
+            {/* Feature 2 */}
+            <div className="group border-b lg:border-b-0 lg:border-r border-[#222] p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
+              <div className="font-mono text-xs text-[#555] mb-8 group-hover:text-primary transition-colors">MDL.002</div>
+              <Mic className="w-12 h-12 text-white mb-8 group-hover:text-primary transition-colors" />
+              <h3 className="text-3xl font-heading font-bold uppercase mb-4 text-white">Voice Cloning</h3>
+              <p className="font-sans text-[#888] leading-relaxed">
+                Extract acoustic features from a 10-second sample. 
+                Generate a perfect digital replica indistinguishable from the source.
+              </p>
             </div>
 
-            {/* Small feature 2 */}
-            <div className="relative rounded-[2rem] border border-border/30 bg-card/10 backdrop-blur-xl p-8 overflow-hidden group hover:border-blue-500/40 transition-colors duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="relative z-10 flex flex-col h-full justify-end">
-                <Zap className="w-10 h-10 text-blue-400 mb-6" />
-                <h3 className="text-2xl font-bold mb-3">Ultra-Low Latency</h3>
-                <p className="text-muted-foreground text-lg">Stream high-fidelity audio in real-time, perfect for interactive AI agents.</p>
-              </div>
-            </div>
-
-            {/* Main feature 2 */}
-            <div className="md:col-span-2 relative rounded-[2rem] border border-border/30 bg-card/10 backdrop-blur-xl p-10 overflow-hidden group hover:border-emerald-500/40 transition-colors duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-              <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/5 blur-[80px] rounded-full translate-x-1/3 translate-y-1/3 group-hover:bg-emerald-500/10 transition-colors duration-700" />
-              <div className="relative z-10 flex flex-col h-full justify-end">
-                <Globe className="w-12 h-12 text-emerald-400 mb-6" />
-                <h3 className="text-3xl md:text-4xl font-bold mb-4">Global Reach</h3>
-                <p className="text-muted-foreground text-lg md:text-xl max-w-lg">Break language barriers. Access over 40 languages and a multitude of localized accents to reach a worldwide audience.</p>
-              </div>
+            {/* Feature 3 */}
+            <div className="group p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
+              <div className="font-mono text-xs text-[#555] mb-8 group-hover:text-primary transition-colors">MDL.003</div>
+              <Zap className="w-12 h-12 text-white mb-8 group-hover:text-primary transition-colors" />
+              <h3 className="text-3xl font-heading font-bold uppercase mb-4 text-white">Zero Latency</h3>
+              <p className="font-sans text-[#888] leading-relaxed">
+                Optimized inference pipeline. Stream generated audio packets 
+                in real-time for interactive AI agents and dynamic content.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Footer CTA */}
-        <section className="w-full py-32 border-t border-border/10 bg-black/20 backdrop-blur-md relative overflow-hidden mt-10">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary/10 blur-[150px] rounded-full pointer-events-none" />
-          <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-3xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 tracking-tighter">Ready to create?</h2>
-            <p className="text-xl text-muted-foreground mb-10">Step into the studio and transform your text into lifelike speech in seconds.</p>
+        {/* CTA */}
+        <section className="border-t border-[#222] bg-primary relative overflow-hidden">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000015_1px,transparent_1px),linear-gradient(to_bottom,#00000015_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+          <div className="max-w-[1600px] mx-auto px-6 py-32 border-x border-[#222] relative z-10 flex flex-col items-center text-center">
+            <h2 className="text-6xl md:text-8xl font-heading font-black uppercase text-black mb-8 tracking-tighter">
+              INITIALIZE <br /> SYSTEM
+            </h2>
+            <p className="font-mono text-black/70 mb-12 max-w-xl uppercase tracking-widest text-sm">
+              Deploy the resonance engine to your workflow today.
+            </p>
             <Link href="/app">
-              <Button size="lg" className="rounded-full h-16 px-12 text-lg font-bold bg-foreground text-background hover:bg-foreground/90 shadow-[0_0_30px_rgba(255,255,255,0.1)] hover:shadow-[0_0_50px_rgba(255,255,255,0.15)] transition-all hover:-translate-y-1 group">
-                Open App Now
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <Button size="lg" className="rounded-none h-20 px-16 bg-black text-white hover:bg-white hover:text-black font-mono uppercase tracking-widest text-lg transition-colors border border-black shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[10px] hover:translate-y-[10px]">
+                Access Terminal
               </Button>
             </Link>
           </div>

@@ -5,21 +5,14 @@ import {
   Filter,
   Globe2,
   LayoutGrid,
-  MoreVertical,
   Play,
   Plus,
   Search,
   Star,
+  Terminal
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -33,248 +26,216 @@ export default function VoicesPage() {
   const library = [
     {
       name: "Marcus",
-      gender: "Male",
-      accent: "American",
-      mood: "Authoritative",
-      type: "Pro",
+      gender: "MALE",
+      accent: "EN-US",
+      mood: "AUTHORITATIVE",
+      type: "PRO",
       plays: "2.4M",
-      desc: "A deep, resonant voice perfect for trailers and authoritative narrations.",
-      color: "from-blue-500/20 to-cyan-500/20",
-      borderColor: "border-blue-500/30",
+      desc: "Deep, resonant acoustic profile. Ideal for heavy exposition.",
+      id: "VOX-01"
     },
     {
       name: "Elara",
-      gender: "Female",
-      accent: "British",
-      mood: "Warm",
-      type: "Standard",
+      gender: "FEMALE",
+      accent: "EN-UK",
+      mood: "WARM",
+      type: "STD",
       plays: "1.8M",
-      desc: "A naturally warm and conversational British voice ideal for podcasts.",
-      color: "from-purple-500/20 to-pink-500/20",
-      borderColor: "border-purple-500/30",
+      desc: "High fidelity conversational tone with natural mid-range.",
+      id: "VOX-02"
     },
     {
       name: "Kai",
-      gender: "Neutral",
-      accent: "Australian",
-      mood: "Casual",
-      type: "Standard",
+      gender: "NEUTRAL",
+      accent: "EN-AU",
+      mood: "CASUAL",
+      type: "STD",
       plays: "1.2M",
-      desc: "Energetic and friendly, perfect for YouTube and social media content.",
-      color: "from-emerald-500/20 to-green-500/20",
-      borderColor: "border-emerald-500/30",
+      desc: "Energetic frequency response. Optimized for broadcast.",
+      id: "VOX-03"
     },
     {
       name: "Nadia",
-      gender: "Female",
-      accent: "Russian",
-      mood: "Professional",
-      type: "Pro",
+      gender: "FEMALE",
+      accent: "RU-RU",
+      mood: "PROFESSIONAL",
+      type: "PRO",
       plays: "980K",
-      desc: "Strict and professional tempo for corporate training and news reads.",
-      color: "from-rose-500/20 to-red-500/20",
-      borderColor: "border-rose-500/30",
+      desc: "Strict timing parameters. Perfect for corporate instruction.",
+      id: "VOX-04"
     },
     {
       name: "Theo",
-      gender: "Male",
-      accent: "French",
-      mood: "Romantic",
-      type: "Standard",
+      gender: "MALE",
+      accent: "FR-FR",
+      mood: "ROMANTIC",
+      type: "STD",
       plays: "875K",
-      desc: "Smooth and velvety voice suitable for audiobooks and dramatic setups.",
-      color: "from-amber-500/20 to-orange-500/20",
-      borderColor: "border-amber-500/30",
+      desc: "Smooth velocity curve. Designed for narrative immersion.",
+      id: "VOX-05"
     },
     {
       name: "Zara",
-      gender: "Female",
-      accent: "Nigerian",
-      mood: "Energetic",
-      type: "Pro",
+      gender: "FEMALE",
+      accent: "NG-NG",
+      mood: "ENERGETIC",
+      type: "PRO",
       plays: "762K",
-      desc: "High-energy, enthusiastic delivery for commercials and fast-paced ads.",
-      color: "from-yellow-500/20 to-lime-500/20",
-      borderColor: "border-yellow-500/30",
+      desc: "High-amplitude delivery. Sharp transients for commercial impact.",
+      id: "VOX-06"
     },
     {
       name: "Jin",
-      gender: "Male",
-      accent: "Korean",
-      mood: "Calm",
-      type: "Standard",
+      gender: "MALE",
+      accent: "KO-KR",
+      mood: "CALM",
+      type: "STD",
       plays: "640K",
-      desc: "Soft-spoken and relaxing, great for meditation videos or guides.",
-      color: "from-indigo-500/20 to-blue-500/20",
-      borderColor: "border-indigo-500/30",
+      desc: "Low-noise, subdued output. Calibrated for ambient contexts.",
+      id: "VOX-07"
     },
     {
       name: "Sofia",
-      gender: "Female",
-      accent: "Spanish",
-      mood: "Upbeat",
-      type: "Standard",
+      gender: "FEMALE",
+      accent: "ES-ES",
+      mood: "UPBEAT",
+      type: "STD",
       plays: "590K",
-      desc: "Clear conversational Spanish tone suitable for language learning.",
-      color: "from-fuchsia-500/20 to-purple-500/20",
-      borderColor: "border-fuchsia-500/30",
+      desc: "Clear articulation index. Suitable for semantic analysis tasks.",
+      id: "VOX-08"
     },
   ];
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-background">
-      {/* Ambient Background */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-        <div className="absolute top-[10%] left-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/10 opacity-40 blur-[100px] mix-blend-screen" />
-        <div className="absolute bottom-[20%] right-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white font-sans selection:bg-primary selection:text-black pb-20">
+      
+      {/* Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 mx-auto max-w-[1400px] space-y-8">
+      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
+        
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
-          <div className="space-y-4">
-            <Badge
-              variant="outline"
-              className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_var(--shadow-primary-sm)]"
-            >
-              <LayoutGrid className="w-3.5 h-3.5 mr-2 text-primary" />
-              Voice Library
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Explore{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-blue-500">
-                Voices
-              </span>
+        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+              <Terminal className="w-3 h-3" />
+              Database: Acoustic Models
+            </div>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+              VOICE <span className="text-primary">REGISTRY</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              Discover hundreds of premium, lifelike voices for any project.
-            </p>
           </div>
-          <div className="flex gap-3 shrink-0">
-            <Button className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_var(--shadow-primary)] hover:shadow-[0_0_25px_var(--shadow-primary-lg)] transition-all h-11 px-6">
-              <Plus className="w-4 h-4 mr-2" /> Custom Clone
+          <div className="flex flex-col items-start md:items-end gap-4">
+            <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+              Access the global repository of parameterized neural voices.
+            </p>
+            <Button className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-xs uppercase tracking-widest h-10 px-6 transition-colors">
+              <Plus className="w-4 h-4 mr-2" /> ADD_MODEL
             </Button>
           </div>
         </header>
 
         {/* Filters */}
-        <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-sm rounded-2xl p-2 w-full max-w-full">
-          <div className="flex flex-col md:flex-row gap-3">
+        <div className="border border-[#222] bg-[#050505] p-6 mb-10">
+          <div className="flex flex-col md:flex-row gap-6">
             <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
               <Input
-                placeholder="Search voices by name or style..."
-                className="pl-9 bg-background/50 border-0 h-12 rounded-xl focus-visible:ring-1 focus-visible:ring-primary/30 w-full min-w-0"
+                placeholder="QUERY_DATABASE..."
+                className="pl-12 bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary w-full font-mono uppercase placeholder:text-[#555] text-white"
               />
             </div>
-            <div className="flex gap-3 overflow-x-auto pb-2 md:pb-0 hide-scrollbar shrink-0 min-w-0">
+            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 shrink-0 min-w-0">
               <Select defaultValue="all">
-                <SelectTrigger className="w-[140px] shrink-0 bg-background/80 border-border/50 h-12 rounded-xl focus:ring-primary/20 [&>span]:truncate [&>span]:min-w-0">
+                <SelectTrigger className="w-[160px] shrink-0 bg-[#111] border-[#333] h-14 rounded-none focus:ring-primary font-mono uppercase text-white">
                   <div className="flex items-center gap-2 overflow-hidden min-w-0">
                     <Globe2 className="w-4 h-4 text-primary shrink-0" />{" "}
-                    <SelectValue placeholder="Language" />
+                    <SelectValue placeholder="LOCALE" />
                   </div>
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Languages</SelectItem>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Spanish</SelectItem>
+                <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                  <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ALL_LOCALES</SelectItem>
+                  <SelectItem value="en" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">EN_US</SelectItem>
+                  <SelectItem value="es" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ES_ES</SelectItem>
                 </SelectContent>
               </Select>
 
               <Select defaultValue="all">
-                <SelectTrigger className="w-[140px] shrink-0 bg-background/80 border-border/50 h-12 rounded-xl focus:ring-primary/20 [&>span]:truncate [&>span]:min-w-0">
+                <SelectTrigger className="w-[160px] shrink-0 bg-[#111] border-[#333] h-14 rounded-none focus:ring-primary font-mono uppercase text-white">
                   <div className="flex items-center gap-2 overflow-hidden min-w-0">
                     <Filter className="w-4 h-4 text-primary shrink-0" />{" "}
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder="CLASS" />
                   </div>
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  <SelectItem value="pro">Pro Voices</SelectItem>
-                  <SelectItem value="standard">Standard</SelectItem>
+                <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                  <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ALL_CLASSES</SelectItem>
+                  <SelectItem value="pro" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">PRO_TIER</SelectItem>
+                  <SelectItem value="standard" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">STD_TIER</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Voices Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-full">
+        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 w-full max-w-full">
           {library.map((voice) => (
-            <Card
+            <div
               key={voice.name}
-              className="group relative border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 flex flex-col w-full max-w-full min-w-0"
+              className="group relative border border-[#222] bg-[#050505] hover:bg-[#0a0a0a] transition-colors flex flex-col w-full max-w-full overflow-hidden"
             >
-              {/* Internal Header Background */}
-              <div
-                className={`h-24 w-full bg-gradient-to-br ${voice.color} relative overflow-hidden`}
-              >
-                <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:10px_10px]" />
-                <div className="absolute top-4 right-4 flex gap-1.5">
-                  {voice.type === "Pro" && (
-                    <Badge
-                      variant="secondary"
-                      className="bg-background/90 text-primary border-primary/20 text-[10px] uppercase font-bold backdrop-blur-sm"
-                    >
-                      Pro
-                    </Badge>
+              {/* Top Banner */}
+              <div className="h-10 w-full border-b border-[#222] bg-[#111] flex items-center justify-between px-4">
+                <span className="font-mono text-[10px] text-[#666] uppercase">{voice.id}</span>
+                <div className="flex items-center gap-2">
+                  {voice.type === "PRO" && (
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-black bg-primary px-1.5 py-0.5">
+                      PRO
+                    </span>
                   )}
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="h-6 w-6 rounded-full bg-background/50 hover:bg-background/80 hover:text-primary transition-colors text-muted-foreground backdrop-blur-sm"
-                  >
-                    <Star className="w-3.5 h-3.5" />
-                  </Button>
+                  <Star className="w-3.5 h-3.5 text-[#555] group-hover:text-primary transition-colors cursor-pointer" />
                 </div>
               </div>
 
-              {/* Avatar overlap */}
-              <div className="px-6 relative flex-1 flex flex-col min-w-0 w-full">
-                <div
-                  className={`w-16 h-16 rounded-2xl bg-card border-2 ${voice.borderColor} -mt-8 mb-3 flex items-center justify-center shadow-md relative group-hover:scale-110 transition-transform duration-500 z-10 overflow-hidden`}
-                >
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${voice.color} opacity-20`}
-                  />
-                  <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-foreground to-foreground/50">
+              {/* Main Content */}
+              <div className="p-6 flex flex-col flex-1">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="w-16 h-16 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-2xl text-white group-hover:border-primary transition-colors">
                     {voice.name[0]}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between gap-2 overflow-hidden mb-1 min-w-0 w-full">
-                  <h3 className="text-xl font-bold truncate">{voice.name}</h3>
+                  </div>
                   <Button
                     size="icon"
-                    className="h-8 w-8 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground hover:scale-105 transition-all outline-none border border-primary/20 hover:shadow-[0_0_15px_var(--shadow-primary-lg)] shrink-0"
+                    className="h-10 w-10 rounded-none bg-primary hover:bg-white text-black transition-colors outline-none border border-primary"
                   >
                     <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                   </Button>
                 </div>
 
-                <p className="text-sm font-medium text-primary mb-3 truncate w-full">
-                  {voice.accent} • {voice.gender}
-                </p>
-                <p className="text-sm text-muted-foreground/90 line-clamp-2 leading-relaxed flex-1 w-full min-w-0">
+                <h3 className="font-heading text-2xl font-bold uppercase text-white mb-2 group-hover:text-primary transition-colors">{voice.name}</h3>
+                
+                <div className="flex gap-2 mb-4">
+                  <span className="font-mono text-[10px] text-primary border border-primary/30 px-1.5 py-0.5">{voice.accent}</span>
+                  <span className="font-mono text-[10px] text-[#888] border border-[#333] px-1.5 py-0.5">{voice.gender}</span>
+                </div>
+
+                <p className="font-mono text-xs text-[#888] uppercase leading-relaxed flex-1">
                   {voice.desc}
                 </p>
               </div>
 
-              <div className="px-6 py-4 mt-4 border-t border-border/50 bg-muted/10 flex items-center justify-between text-xs font-semibold w-full min-w-0">
-                <Badge
-                  variant="outline"
-                  className="bg-background/50 border-border/50 text-muted-foreground"
-                >
+              {/* Footer */}
+              <div className="px-6 py-4 border-t border-[#222] bg-[#0a0a0a] flex items-center justify-between">
+                <span className="font-mono text-[10px] text-[#555] border border-[#333] px-2 py-1">
                   {voice.mood}
-                </Badge>
-                <span className="flex items-center gap-1.5 text-muted-foreground">
-                  <Activity className="w-3.5 h-3.5 text-primary" />{" "}
-                  {voice.plays} views
+                </span>
+                <span className="flex items-center gap-2 font-mono text-[10px] text-[#666]">
+                  <Activity className="w-3 h-3 text-primary" />
+                  {voice.plays}
                 </span>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

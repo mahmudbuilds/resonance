@@ -11,20 +11,13 @@ import {
   Square,
   Sparkles,
   Waves,
-  Trash2
+  Trash2,
+  Terminal,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -44,7 +37,7 @@ const LANG_CODES = [
 ];
 
 const RECORDING_SENTENCES = [
-  "Custom (Read anything)",
+  "CUSTOM (READ_ANYTHING)",
   "Are you ready to save big? Get set for the sale of the century! Deals and discounts like never before! You won’t want to miss this.",
   "Every challenge we face is an opportunity in disguise. Wouldn’t you agree? So cheer up! It’ll all be okay.",
   "How have you been? It’s been way too long since we last caught up. By the way, I heard about your recent promotion. Congratulations! I’m so excited for you!",
@@ -63,34 +56,30 @@ export default function VoiceCloningPage() {
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [selectedSentence, setSelectedSentence] = useState(RECORDING_SENTENCES[0]);
   
-  // WaveSurfer refs
   const containerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const recordPluginRef = useRef<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Playback state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // Recording state
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordTime, setRecordTime] = useState(0);
 
-  // Initialize WaveSurfer
   useEffect(() => {
     if (!containerRef.current) return;
 
     const ws = WaveSurfer.create({
       container: containerRef.current,
-      waveColor: 'rgba(16, 185, 129, 0.4)',
-      progressColor: 'rgba(16, 185, 129, 1)',
-      cursorColor: 'rgba(16, 185, 129, 1)',
+      waveColor: 'rgba(204, 255, 0, 0.4)',
+      progressColor: 'rgba(204, 255, 0, 1)',
+      cursorColor: 'rgba(204, 255, 0, 1)',
       barWidth: 3,
       barGap: 3,
-      barRadius: 3,
+      barRadius: 0,
       height: 80,
       normalize: true,
       cursorWidth: 2,
@@ -203,86 +192,119 @@ export default function VoiceCloningPage() {
   };
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-background">
-      {/* Ambient Background Elements */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-        <div className="absolute top-[30%] left-[20%] h-[400px] w-[400px] rounded-full bg-emerald-500/10 opacity-30 blur-[100px] mix-blend-screen" />
-        <div className="absolute -bottom-[10%] right-[10%] h-[500px] w-[500px] rounded-full bg-primary/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-black pb-20">
+      
+      {/* Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 mx-auto max-w-[1200px] space-y-8">
+      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
         
         {/* Header Section */}
-        <header className="flex flex-col space-y-4 mb-4 text-center items-center">
-          <Badge variant="outline" className="w-fit bg-emerald-500/5 backdrop-blur-md border-emerald-500/20 text-emerald-500 px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.1)]">
-            <Volume2 className="w-3.5 h-3.5 mr-2" />
-            Neural Voice Cloning
-          </Badge>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Clone any <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-primary">Voice</span>
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Create a perfect digital replica of a voice using just 30 seconds of high-quality audio. Ideal for podcast hosting, character consistency, or brand identity.
+        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+              <Terminal className="w-3 h-3" />
+              Module: Voice Extraction
+            </div>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+              CLONE <span className="text-primary">VOICE</span>
+            </h1>
+          </div>
+          <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+            Initialize neural extraction protocol. Provide high-fidelity audio samples to map acoustic topography.
           </p>
         </header>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 w-full max-w-full pt-8">
+        <div className="grid lg:grid-cols-12 gap-8 w-full max-w-full">
           
-          {/* Form & Upload/Record */}
-          <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl flex flex-col group transition-all duration-500 w-full max-w-full min-w-0">
-            <CardHeader className="pb-4 border-b border-border/50 bg-muted/5">
-              <CardTitle className="text-xl">Clone Setup</CardTitle>
-              <CardDescription>Provide details and audio for your voice clone.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              
-              <div className="space-y-2">
-                <Label htmlFor="voiceName" className="font-semibold">Voice Name <span className="text-red-500">*</span></Label>
-                <Input id="voiceName" placeholder="e.g. My Podcast Voice" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20" />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="desc" className="font-semibold">Description <span className="text-red-500">*</span></Label>
-                <Textarea id="desc" placeholder="Notes about this clone's specific tone..." className="resize-none bg-background/50 border-border/50 h-24 rounded-xl focus-visible:ring-emerald-500/20 w-full max-w-full break-words" />
+          {/* Main Workspace */}
+          <div className="lg:col-span-8 flex flex-col gap-8">
+            
+            <div className="border border-[#222] bg-[#050505] p-8 relative">
+              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+                Configuration
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="langCode" className="font-semibold">Language Code</Label>
-                <Select defaultValue="EN_US">
-                  <SelectTrigger id="langCode" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20">
-                    <SelectValue placeholder="Select Language Code" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {LANG_CODES.map(code => (
-                      <SelectItem key={code} value={code}>{code}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+              <div className="space-y-8 mt-4">
+                <div className="space-y-3">
+                  <Label htmlFor="voiceName" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                    Voice Designation <span className="text-primary">*</span>
+                  </Label>
+                  <Input 
+                    id="voiceName" 
+                    placeholder="E.G. MARK_01" 
+                    className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]" 
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <Label htmlFor="desc" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                    Acoustic Profile <span className="text-primary">*</span>
+                  </Label>
+                  <Textarea 
+                    id="desc" 
+                    placeholder="DEFINE_TONE_PARAMETERS..." 
+                    className="resize-none bg-[#111] border-[#333] h-28 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] w-full" 
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="tags" className="font-semibold">Tags</Label>
-                <Input id="tags" placeholder="e.g. narration, friendly, energetic (comma separated)" className="bg-background/50 border-border/50 h-12 rounded-xl focus-visible:ring-emerald-500/20" />
-              </div>
-
-              <div className="space-y-3 pt-2">
-                <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); clearAudio(); }} className="w-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <Label className="font-semibold flex items-center">
-                      Training Audio <span className="text-red-500 ml-1">*</span>
-                      <span className="text-xs text-muted-foreground rounded-full px-2 py-0.5 border border-border/50 bg-background/50 shrink-0 ml-2">10-15s max</span>
+                <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="langCode" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                      Locale Code
                     </Label>
-                    <TabsList className="bg-muted/50 p-1 rounded-xl h-10 border border-border/50">
-                      <TabsTrigger value="upload" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm text-xs">
-                        <UploadCloud className="w-3.5 h-3.5 mr-1.5" /> Upload
-                      </TabsTrigger>
-                      <TabsTrigger value="record" className="rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-sm text-xs">
-                        <Mic className="w-3.5 h-3.5 mr-1.5" /> Record
-                      </TabsTrigger>
-                    </TabsList>
+                    <Select defaultValue="EN_US">
+                      <SelectTrigger id="langCode" className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white">
+                        <SelectValue placeholder="LOCALE" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                        {LANG_CODES.map(code => (
+                          <SelectItem key={code} value={code} className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
+                            {code}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
+
+                  <div className="space-y-3">
+                    <Label htmlFor="tags" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                      Metadata Tags
+                    </Label>
+                    <Input 
+                      id="tags" 
+                      placeholder="TAG_1, TAG_2..." 
+                      className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]" 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Audio Input Module */}
+            <div className="border border-[#222] bg-[#050505] p-8 relative">
+              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+                Input Source
+              </div>
+
+              <div className="mt-4">
+                <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); clearAudio(); }} className="w-full">
+                  <TabsList className="bg-transparent p-0 rounded-none h-14 w-full flex border border-[#333] mb-8">
+                    <TabsTrigger 
+                      value="upload" 
+                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
+                    >
+                      <UploadCloud className="w-4 h-4 mr-2" /> Upload Stream
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="record" 
+                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
+                    >
+                      <Mic className="w-4 h-4 mr-2" /> Live Input
+                    </TabsTrigger>
+                  </TabsList>
 
                   <TabsContent value="upload" className="mt-0 outline-none">
                     {!audioUrl ? (
@@ -290,95 +312,98 @@ export default function VoiceCloningPage() {
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
                         onClick={() => fileInputRef.current?.click()}
-                        className="border-2 border-dashed border-border/70 hover:border-emerald-500/50 bg-muted/10 hover:bg-emerald-500/5 rounded-2xl p-8 transition-colors flex flex-col items-center justify-center text-center cursor-pointer group/dropzone overflow-hidden min-h-[160px]"
+                        className="border border-dashed border-[#444] hover:border-primary bg-[#111] hover:bg-primary/5 p-12 transition-colors flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[250px]"
                       >
-                         <div className="w-14 h-14 rounded-full bg-background flex items-center justify-center shadow-sm mb-4 border border-border/50 group-hover/dropzone:scale-110 transition-transform shrink-0">
-                            <UploadCloud className="w-6 h-6 text-muted-foreground group-hover/dropzone:text-emerald-500 transition-colors" />
+                         <div className="w-16 h-16 bg-[#000] border border-[#333] flex items-center justify-center mb-6 group-hover/dropzone:border-primary transition-colors">
+                            <UploadCloud className="w-6 h-6 text-[#666] group-hover/dropzone:text-primary transition-colors" />
                          </div>
-                         <p className="font-medium text-foreground mb-1 truncate max-w-full">Click to upload or drag & drop</p>
-                         <p className="text-sm text-muted-foreground max-w-[250px] leading-relaxed break-words">MP3, WAV, ~10MB max.</p>
+                         <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">Initialize Data Transfer</p>
+                         <p className="text-xs font-mono text-[#666] uppercase tracking-wider max-w-xs">MP3/WAV. 10MB MAX. DROP PACKETS HERE.</p>
                          <input type="file" className="hidden" accept="audio/*" ref={fileInputRef} onChange={handleFileUpload} />
                       </div>
                     ) : null}
                   </TabsContent>
 
-                  <TabsContent value="record" className="mt-0 outline-none space-y-4">
-                    <div className="space-y-2 mb-4">
-                      <Label className="font-semibold">Text to Read (English only)</Label>
+                  <TabsContent value="record" className="mt-0 outline-none space-y-6">
+                    <div className="space-y-3">
+                      <Label className="font-mono text-xs uppercase tracking-widest text-[#888]">Calibration Script</Label>
                       <Select value={selectedSentence} onValueChange={setSelectedSentence}>
-                        <SelectTrigger className="bg-background/50 border-border/50 h-12 rounded-xl">
-                          <SelectValue placeholder="Select a sentence to read" />
+                        <SelectTrigger className="bg-[#111] border-[#333] h-14 rounded-none font-mono text-white focus-visible:ring-primary focus-visible:border-primary">
+                          <SelectValue placeholder="SELECT_SCRIPT" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
                           {RECORDING_SENTENCES.map((sentence, i) => (
-                            <SelectItem key={i} value={sentence}>
-                              {i === 0 ? sentence : `Sentence ${i}: ${sentence.substring(0, 40)}...`}
+                            <SelectItem key={i} value={sentence} className="focus:bg-primary focus:text-black rounded-none cursor-pointer text-xs py-3">
+                              {i === 0 ? sentence : `SEQ_${i}: ${sentence.substring(0, 40)}...`}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      {selectedSentence !== "Custom (Read anything)" && (
-                        <div className="p-4 rounded-xl bg-muted/30 border border-border/50 text-sm italic text-foreground mt-2">
-                          "{selectedSentence}"
+                      
+                      {selectedSentence !== "CUSTOM (READ_ANYTHING)" && (
+                        <div className="p-6 bg-[#111] border border-[#333] font-mono text-sm text-primary uppercase leading-relaxed">
+                          &gt; {selectedSentence}
                         </div>
                       )}
                     </div>
 
                     {!audioUrl && !isRecording && (
-                      <div className="border border-border/70 bg-muted/10 rounded-2xl p-8 flex flex-col items-center justify-center text-center overflow-hidden min-h-[160px]">
-                        <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 relative">
-                           <div className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping opacity-70" style={{ animationDuration: '3s' }} />
-                           <Button onClick={startRecording} size="icon" className="w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg hover:scale-105 transition-transform z-10">
-                             <Mic className="w-5 h-5" />
-                           </Button>
-                        </div>
-                        <p className="font-medium text-foreground mb-1">Record from Microphone</p>
-                        <p className="text-sm text-muted-foreground max-w-[250px]">Click the microphone to start recording your voice.</p>
+                      <div className="border border-[#333] bg-[#111] p-12 flex flex-col items-center justify-center text-center min-h-[250px]">
+                        <Button 
+                          onClick={startRecording} 
+                          className="w-20 h-20 rounded-none bg-primary hover:bg-white text-black transition-colors mb-6 flex items-center justify-center border border-primary relative group"
+                        >
+                           <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 blur-xl transition-opacity" />
+                           <Mic className="w-8 h-8" />
+                        </Button>
+                        <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">Engage Microphone</p>
+                        <p className="font-mono text-xs text-[#666] uppercase tracking-wider">AWAITING VOCAL INPUT...</p>
                       </div>
                     )}
                   </TabsContent>
                 </Tabs>
 
                 {/* Audio Waveform Visualization */}
-                <div className={`relative border border-border/50 bg-background/50 rounded-2xl p-4 overflow-hidden ${(audioUrl || isRecording) ? 'block' : 'hidden'}`}>
+                <div className={`mt-8 border border-[#333] bg-[#111] p-6 relative ${(audioUrl || isRecording) ? 'block' : 'hidden'}`}>
                   
                   {isRecording && (
-                    <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-background/80 backdrop-blur border border-red-500/20 px-3 py-1 rounded-full shadow-sm">
-                       <div className={`w-2 h-2 rounded-full bg-red-500 ${!isPaused ? 'animate-pulse' : ''}`} />
-                       <span className="text-xs font-medium text-red-500">{formatTime(recordTime)}</span>
-                       {isPaused && <span className="text-xs font-medium text-muted-foreground ml-1">(Paused)</span>}
+                    <div className="absolute top-4 left-4 z-10 flex items-center gap-3">
+                       <div className={`w-3 h-3 bg-red-500 rounded-none ${!isPaused ? 'animate-pulse' : ''}`} />
+                       <span className="font-mono text-xs text-red-500 uppercase tracking-widest">{formatTime(recordTime)} REC</span>
+                       {isPaused && <span className="font-mono text-xs text-[#888] uppercase tracking-widest">[PAUSED]</span>}
                     </div>
                   )}
 
                   {!isRecording && audioUrl && (
-                     <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
-                        <span className="text-xs font-medium text-muted-foreground bg-background/80 backdrop-blur px-2 py-1 rounded-md border border-border/50">
+                     <div className="absolute top-4 right-4 z-10">
+                        <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-1 uppercase tracking-widest">
                           {formatTime(currentTime)} / {formatTime(duration)}
                         </span>
                      </div>
                   )}
 
                   {/* WaveSurfer Container */}
-                  <div ref={containerRef} className="w-full mt-8 mb-4 h-[80px]" />
+                  <div ref={containerRef} className="w-full mt-10 mb-6 h-[80px]" />
 
                   {/* Controls */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border/30">
+                  <div className="flex items-center justify-between pt-4 border-t border-[#333]">
                     {isRecording ? (
-                      <div className="flex items-center gap-2 w-full justify-center">
-                        <Button onClick={pauseRecording} variant="outline" size="sm" className="rounded-full w-10 h-10 p-0 border-border/50 hover:bg-muted">
-                           {isPaused ? <Play className="w-4 h-4" /> : <Pause className="w-4 h-4" />}
+                      <div className="flex items-center gap-4">
+                        <Button onClick={pauseRecording} variant="outline" className="rounded-none border-[#444] bg-[#222] hover:bg-[#333] text-white font-mono uppercase tracking-widest text-xs h-10 px-4">
+                           {isPaused ? <Play className="w-4 h-4 mr-2" /> : <Pause className="w-4 h-4 mr-2" />}
+                           {isPaused ? "RESUME" : "PAUSE"}
                         </Button>
-                        <Button onClick={stopRecording} variant="default" size="sm" className="rounded-full h-10 px-6 bg-red-500 hover:bg-red-600 text-white shadow-md">
-                           <Square className="w-4 h-4 mr-2" /> Stop Recording
+                        <Button onClick={stopRecording} className="rounded-none border border-red-500 bg-red-500/10 hover:bg-red-500 hover:text-black text-red-500 font-mono uppercase tracking-widest text-xs h-10 px-6 transition-colors">
+                           <Square className="w-4 h-4 mr-2" /> HALT
                         </Button>
                       </div>
                     ) : audioUrl ? (
                       <div className="flex items-center justify-between w-full">
-                        <Button onClick={togglePlayback} variant="outline" size="sm" className="rounded-full w-10 h-10 p-0 border-border/50 bg-background hover:bg-muted shadow-sm transition-transform hover:scale-105">
-                          {isPlaying ? <Pause className="w-4 h-4 text-emerald-500" /> : <Play className="w-4 h-4 text-emerald-500 ml-1" />}
+                        <Button onClick={togglePlayback} className="rounded-none bg-primary text-black hover:bg-white h-10 w-16 flex items-center justify-center transition-colors">
+                          {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                         </Button>
-                        <Button onClick={clearAudio} variant="ghost" size="sm" className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-full h-8 px-3 text-xs">
-                           <Trash2 className="w-3.5 h-3.5 mr-1.5" /> Discard
+                        <Button onClick={clearAudio} variant="ghost" className="rounded-none hover:bg-red-500/10 text-[#888] hover:text-red-500 font-mono text-xs uppercase tracking-widest">
+                           <Trash2 className="w-4 h-4 mr-2" /> JETTISON
                         </Button>
                       </div>
                     ) : null}
@@ -386,80 +411,68 @@ export default function VoiceCloningPage() {
                 </div>
 
               </div>
-            </CardContent>
-            <CardFooter className="border-t border-border/50 bg-muted/10 p-6 mt-auto">
-               <Button disabled={!audioUrl || isRecording} className="w-full text-base h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-all overflow-hidden disabled:opacity-50 disabled:shadow-none">
-                 <Sparkles className="w-5 h-5 mr-2 shrink-0" /> <span className="truncate">Start Cloning Process</span>
-               </Button>
-            </CardFooter>
-          </Card>
+            </div>
 
-           {/* Guidelines / Status side */}
-          <div className="space-y-6 w-full max-w-full min-w-0">
-            <Card className="border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-xl shadow-lg rounded-2xl p-4 sm:p-6 relative overflow-hidden w-full max-w-full min-w-0">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[40px] -mr-16 -mt-16 pointer-events-none" />
-              <h3 className="text-lg font-bold flex items-center gap-2 mb-4 text-emerald-500">
-                <CheckCircle2 className="w-5 h-5 shrink-0" /> Best Practices
+            {/* Execute Action */}
+            <Button disabled={!audioUrl || isRecording} className="w-full h-20 rounded-none bg-primary hover:bg-white text-black font-mono text-lg uppercase tracking-widest transition-colors border border-primary disabled:opacity-30 disabled:hover:bg-primary">
+              <Sparkles className="w-6 h-6 mr-3" /> Execute Cloning Protocol
+            </Button>
+          </div>
+
+          {/* Sidebar Guidelines */}
+          <div className="lg:col-span-4 flex flex-col gap-8">
+            <div className="border border-[#222] bg-[#050505] p-8">
+              <h3 className="font-heading text-lg font-bold uppercase text-primary mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
+                <AlertTriangle className="w-5 h-5" /> Protocol Directives
               </h3>
-              <div className="space-y-6 w-full min-w-0">
+              
+              <div className="space-y-8">
                 <div>
-                  <h4 className="font-semibold text-sm text-foreground mb-2">General Best Practices</h4>
-                  <ul className="space-y-3 text-sm text-muted-foreground/90">
+                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-[#666] mb-4">Acoustic Parameters</h4>
+                  <ul className="space-y-4 font-mono text-xs uppercase text-[#aaa]">
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Capture full expression:</strong> Cover the emotions you want. If flat, the clone will sound monotone.</span>
+                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
+                      <span className="leading-relaxed">Full tonal spectrum required. Monotone input = monotone output.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Speak clearly:</strong> Pronounce carefully, avoid sighs/coughs, and don't pause unnaturally mid-recording.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Minimize noise:</strong> Record in a quiet environment, keep reasonable distance from mic to reduce echo and plosives.</span>
+                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
+                      <span className="leading-relaxed">Zero ambient interference. Clean signals only.</span>
                     </li>
                   </ul>
                 </div>
+                
                 <div>
-                  <h4 className="font-semibold text-sm text-foreground mb-2">Instant Voice Cloning</h4>
-                  <ul className="space-y-3 text-sm text-muted-foreground/90">
+                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-[#666] mb-4">Extraction Limits</h4>
+                  <ul className="space-y-4 font-mono text-xs uppercase text-[#aaa]">
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Keep clip short:</strong> 5-15s total length for enough context while keeping consistency.</span>
+                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
+                      <span className="leading-relaxed">Optimal window: 5-15 seconds.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>High-quality audio:</strong> At least 22 kHz sample rate and 16-bit depth.</span>
+                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
+                      <span className="leading-relaxed">Min SR: 22kHz / 16-bit depth.</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Vary emotion:</strong> Combine short clips; use short pauses/crossfades to avoid abrupt cuts.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Normalize volume:</strong> Avoid clipping due to very high dB.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-2 shrink-0" />
-                      <span className="leading-relaxed"><strong>Avoid mid-word cuts:</strong> Don't use samples that break mid-word.</span>
+                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
+                      <span className="leading-relaxed">Peak limit: Avoid 0dB clipping.</span>
                     </li>
                   </ul>
                 </div>
               </div>
-            </Card>
-            
-            <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-lg rounded-2xl overflow-hidden w-full max-w-full opacity-50 pointer-events-none">
-               <CardHeader className="pb-3 border-b border-border/50 bg-muted/5">
-                 <CardTitle className="text-base font-semibold flex items-center gap-2">
-                   <Waves className="w-4 h-4 text-foreground/50 shrink-0" /> Active Clones
-                 </CardTitle>
-               </CardHeader>
-               <CardContent className="p-6 text-center flex flex-col items-center justify-center">
-                  <Mic className="w-12 h-12 text-muted-foreground/30 mb-3" />
-                  <p className="text-sm font-medium text-muted-foreground truncate max-w-full">You haven't cloned any voices yet.</p>
-                  <p className="text-xs text-muted-foreground/70 mt-1">Upload or record audio to begin.</p>
-               </CardContent>
-            </Card>
+            </div>
+
+            {/* Inactive Database */}
+            <div className="border border-[#222] bg-[#050505] p-8 opacity-40">
+              <h3 className="font-mono text-sm uppercase text-[#888] mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
+                <Waves className="w-4 h-4" /> Local Storage
+              </h3>
+              <div className="text-center py-8">
+                <Terminal className="w-8 h-8 text-[#444] mx-auto mb-4" />
+                <p className="font-mono text-xs text-[#666] uppercase tracking-widest">REGISTRY_EMPTY</p>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

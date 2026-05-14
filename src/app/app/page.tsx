@@ -8,489 +8,231 @@ import {
   Globe,
   Mic2,
   Play,
-  Sparkles,
-  Star,
-  TrendingUp,
   Volume2,
   Wand2,
-  Zap,
+  Terminal,
+  Cpu,
+  Radio
 } from "lucide-react";
 import Link from "next/link";
 import UserGreeting from "@/components/dashboard/UserGreeting";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function Home() {
   const features = [
     {
       title: "Text to Speech",
-      description:
-        "Craft studio-quality voiceovers with emotional depth and natural inflection. Bring your scripts to life.",
+      description: "Parametric synthesis engine. Generate studio-quality audio with precise emotional control.",
       icon: AudioLines,
       href: "/app/text-to-speech",
-      color: "text-blue-500",
-      glow: "bg-blue-500/20",
+      id: "MDL-01"
     },
     {
       title: "Voice Library",
-      description:
-        "Explore hundreds of handcrafted voices spanning dozens of languages, accents, and unique personalities.",
+      description: "Access a global registry of 140+ neural voice models spanning 40+ languages.",
       icon: Volume2,
       href: "/app/voices",
-      color: "text-purple-500",
-      glow: "bg-purple-500/20",
+      id: "MDL-02"
     },
     {
       title: "Voice Cloning",
-      description:
-        "Create an uncanny AI replica of any voice from a brief sample. Establish powerful brand consistency.",
+      description: "Neural acoustic extraction. Replicate vocal signatures from minimal sample data.",
       icon: Mic2,
       href: "/app/voice-cloning",
-      color: "text-emerald-500",
-      glow: "bg-emerald-500/20",
+      id: "MDL-03"
     },
   ];
 
   const showcaseVoices = [
-    {
-      name: "Marcus",
-      gender: "Male",
-      accent: "American",
-      mood: "Authoritative",
-      plays: "2.4M",
-      avatar: "M",
-    },
-    {
-      name: "Elara",
-      gender: "Female",
-      accent: "British",
-      mood: "Warm",
-      plays: "1.8M",
-      avatar: "E",
-    },
-    {
-      name: "Kai",
-      gender: "Neutral",
-      accent: "Australian",
-      mood: "Casual",
-      plays: "1.2M",
-      avatar: "K",
-    },
-    {
-      name: "Nadia",
-      gender: "Female",
-      accent: "Russian",
-      mood: "Professional",
-      plays: "980K",
-      avatar: "N",
-    },
-    {
-      name: "Theo",
-      gender: "Male",
-      accent: "French",
-      mood: "Romantic",
-      plays: "875K",
-      avatar: "T",
-    },
-    {
-      name: "Zara",
-      gender: "Female",
-      accent: "Nigerian",
-      mood: "Energetic",
-      plays: "762K",
-      avatar: "Z",
-    },
-  ];
-
-  const templates = [
-    {
-      title: "YouTube Script",
-      voice: "Marcus",
-      duration: "~5 min",
-      desc: "Engaging video narration",
-    },
-    {
-      title: "Podcast Intro",
-      voice: "Elara",
-      duration: "~30 sec",
-      desc: "Hook your listeners",
-    },
-    {
-      title: "E-learning Module",
-      voice: "Kai",
-      duration: "~10 min",
-      desc: "Educational content",
-    },
-    {
-      title: "Commercial",
-      voice: "Nadia",
-      duration: "~60 sec",
-      desc: "High-conversion ads",
-    },
+    { name: "Marcus", class: "ALPHA", freq: "120Hz", plays: "2.4M", code: "US-EN" },
+    { name: "Elara", class: "BETA", freq: "210Hz", plays: "1.8M", code: "UK-EN" },
+    { name: "Kai", class: "GAMMA", freq: "150Hz", plays: "1.2M", code: "AU-EN" },
+    { name: "Nadia", class: "DELTA", freq: "190Hz", plays: "980K", code: "RU-RU" },
   ];
 
   const stats = [
-    { label: "Active Usage", value: "84%", change: "+12% this week" },
-    { label: "Generations", value: "1.2k", change: "+8% this week" },
-    { label: "Library Access", value: "140+", change: "New voices added" },
+    { label: "SYS.LOAD", value: "84%", change: "+12.4%" },
+    { label: "GENERATIONS", value: "1,204", change: "NOMINAL" },
+    { label: "ACTIVE MODELS", value: "142", change: "SYNCED" },
   ];
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-background">
-      {/* Ambient Background Elements */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute top-[20%] -right-[10%] h-[400px] w-[400px] rounded-full bg-purple-500/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute -bottom-[20%] left-[20%] h-[600px] w-[600px] rounded-full bg-blue-500/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-primary selection:text-black pb-20">
+      
+      {/* Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 space-y-20 max-w-[1400px] mx-auto">
+      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
+        
         {/* Header Section */}
-        <header className="flex flex-col space-y-6">
-          <Badge
-            variant="outline"
-            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-3 py-1 sm:px-4 sm:py-1.5 rounded-full shadow-[0_0_15px_var(--shadow-primary-sm)] text-xs sm:text-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 mr-2 text-primary shrink-0" />
-            <span className="truncate">Vocal Synthesis Engine v2.0</span>
-          </Badge>
-
-          <UserGreeting />
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Harness the power of neural text-to-speech. Generate stunningly
-            lifelike audio, clone voices with surgical precision, and amplify
-            your creative workflow.
+        <header className="mb-16 border-b border-[#222] pb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+            <Radio className="w-3 h-3 animate-pulse" />
+            Terminal Session Active
+          </div>
+          <div className="font-heading text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-4 text-white">
+            <UserGreeting />
+          </div>
+          <p className="font-mono text-sm text-[#888] max-w-2xl uppercase leading-relaxed tracking-wider">
+            Welcome to the command center. System telemetry is nominal. 
+            All synthesis modules online and ready for input.
           </p>
         </header>
 
         {/* Feature Grid */}
-        <section className="space-y-6">
-          <div className="flex flex-row items-center justify-between gap-4">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
-                Core Capabilities
-                <div className="absolute -bottom-2 left-0 w-1/3 h-1 bg-gradient-to-r from-primary to-transparent rounded-full" />
-              </h2>
-            </div>
-            <Link
-              href="/app/text-to-speech"
-              className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
-            >
-              Start Creating
-              <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform" />
+        <section className="mb-20">
+          <div className="flex items-center justify-between mb-8 border-b border-[#222] pb-4">
+            <h2 className="font-heading text-2xl font-bold uppercase tracking-widest text-white flex items-center gap-3">
+              <Cpu className="w-6 h-6 text-primary" />
+              Core Modules
+            </h2>
+            <Link href="/app/text-to-speech" className="font-mono text-xs uppercase tracking-widest text-[#888] hover:text-primary transition-colors flex items-center gap-2">
+              Execute <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid md:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <Link
-                key={feature.title}
-                href={feature.href}
-                className="group outline-none"
-              >
-                <Card className="relative h-full overflow-hidden border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl transition-all duration-500 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/50 dark:hover:border-primary/40 hover:-translate-y-1 rounded-2xl">
-                  <div
-                    className={`absolute -top-24 -right-24 w-48 h-48 blur-[80px] rounded-full transition-opacity duration-500 opacity-0 group-hover:opacity-100 ${feature.glow}`}
-                  />
-
-                  <CardHeader className="p-7 pb-5">
-                    <div className="flex items-center justify-between mb-5">
-                      <div
-                        className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-background to-muted flex items-center justify-center border border-border/70 group-hover:scale-110 transition-transform duration-500 shadow-sm relative overflow-hidden`}
-                      >
-                        <div
-                          className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-current ${feature.color}`}
-                        />
-                        <feature.icon
-                          className={`w-6 h-6 ${feature.color} relative z-10`}
-                        />
-                      </div>
-                      <ChevronRight className="w-5 h-5 text-muted-foreground/50 group-hover:text-primary group-hover:translate-x-1.5 transition-all duration-300" />
-                    </div>
-                    <CardTitle className="text-2xl group-hover:text-primary transition-colors duration-300">
-                      {feature.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-7 pt-0">
-                    <CardDescription className="text-base leading-relaxed mb-2 group-hover:text-foreground/90 transition-colors">
-                      {feature.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
+              <Link key={feature.title} href={feature.href} className="group block">
+                <div className="border border-[#222] bg-[#050505] p-8 h-full transition-all duration-300 hover:border-primary hover:bg-[#0a0a0a] relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-4 font-mono text-xs text-[#444] group-hover:text-primary transition-colors">
+                    [{feature.id}]
+                  </div>
+                  
+                  <div className="w-12 h-12 bg-[#111] border border-[#333] flex items-center justify-center mb-6 group-hover:border-primary group-hover:bg-primary/10 transition-colors">
+                    <feature.icon className="w-5 h-5 text-white group-hover:text-primary transition-colors" />
+                  </div>
+                  
+                  <h3 className="font-heading text-xl font-bold uppercase mb-3 text-white group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </h3>
+                  
+                  <p className="font-sans text-sm text-[#888] leading-relaxed">
+                    {feature.description}
+                  </p>
+                  
+                  <div className="mt-8 flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#555] group-hover:text-primary transition-colors">
+                    Initialize <ChevronRight className="w-3 h-3" />
+                  </div>
+                </div>
               </Link>
             ))}
           </div>
         </section>
 
         {/* Dashboard Panels */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-12 gap-6 mb-20">
+          
           {/* Trending Voices */}
-          <section className="col-span-2 space-y-6 flex flex-col">
-            <div className="flex flex-row items-center justify-between gap-4">
-              <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
-                Trending Voices
+          <section className="lg:col-span-8 border border-[#222] bg-[#050505]">
+            <div className="p-6 border-b border-[#222] flex items-center justify-between bg-[#0a0a0a]">
+              <h2 className="font-mono text-sm uppercase tracking-widest text-white flex items-center gap-2">
+                <Terminal className="w-4 h-4 text-primary" />
+                Active Voice Registry
               </h2>
-              <Link
-                href="/app/voices"
-                className="text-xs sm:text-sm font-medium text-foreground/70 dark:text-muted-foreground hover:text-primary transition-colors flex items-center gap-1 group whitespace-nowrap shrink-0"
-              >
-                View Library{" "}
-                <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
+              <Link href="/app/voices" className="font-mono text-xs text-primary hover:underline">
+                VIEW_ALL
               </Link>
             </div>
-            <Card className="flex-1 border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl flex flex-col">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-border/50 flex-1">
-                {showcaseVoices.map((voice) => (
-                  <div
-                    key={voice.name}
-                    className="group bg-card/95 dark:bg-card/90 flex items-center gap-4 p-6 hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent transition-all duration-300 cursor-pointer"
-                  >
-                    <div className="relative">
-                      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 border border-primary/20 flex items-center justify-center group-hover:shadow-[0_0_20px_var(--shadow-primary)] transition-all duration-500 group-hover:scale-105">
-                        <span className="font-bold text-lg text-primary">
-                          {voice.avatar}
-                        </span>
-                      </div>
-                      <div className="absolute inset-0 rounded-full bg-primary flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 text-primary-foreground shadow-lg shadow-primary/40">
-                        <Play className="w-5 h-5 ml-1" fill="currentColor" />
-                      </div>
+            
+            <div className="divide-y divide-[#222]">
+              {showcaseVoices.map((voice, i) => (
+                <div key={voice.name} className="p-4 sm:p-6 hover:bg-[#0a0a0a] transition-colors flex items-center gap-4 group cursor-pointer">
+                  <div className="w-12 h-12 border border-[#333] bg-[#111] flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all">
+                    <span className="font-mono font-bold text-white group-hover:text-black">0{i+1}</span>
+                  </div>
+                  
+                  <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4 items-center">
+                    <div>
+                      <div className="font-heading font-bold uppercase text-white group-hover:text-primary transition-colors">{voice.name}</div>
+                      <div className="font-mono text-[10px] text-[#666]">ID: {voice.code}</div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="font-semibold text-base truncate text-foreground group-hover:text-primary transition-colors">
-                          {voice.name}
-                        </p>
-                        <span className="text-xs font-semibold text-muted-foreground bg-muted/80 px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <Activity className="w-3 h-3 text-primary" />{" "}
-                          {voice.plays}
-                        </span>
+                    
+                    <div className="hidden sm:block font-mono text-xs text-[#888]">
+                      CLS: <span className="text-white">{voice.class}</span>
+                    </div>
+                    
+                    <div className="hidden sm:block font-mono text-xs text-[#888]">
+                      FRQ: <span className="text-white">{voice.freq}</span>
+                    </div>
+                    
+                    <div className="flex justify-end sm:justify-start items-center gap-2 font-mono text-xs">
+                      <Activity className="w-3 h-3 text-[#555] group-hover:text-primary" />
+                      <span className="text-[#888]">{voice.plays}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Activity Overview */}
+          <section className="lg:col-span-4 flex flex-col gap-6">
+            <div className="border border-[#222] bg-[#050505] p-6 h-full flex flex-col">
+              <h2 className="font-mono text-sm uppercase tracking-widest text-white mb-6 border-b border-[#222] pb-4 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-primary" />
+                Telemetry
+              </h2>
+              
+              <div className="flex-1 flex flex-col justify-between gap-6">
+                {stats.map((stat, i) => (
+                  <div key={stat.label} className="border border-[#222] p-4 bg-[#0a0a0a] relative overflow-hidden group">
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#222] group-hover:bg-primary transition-colors" />
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <div className="font-mono text-[10px] text-[#666] mb-1">{stat.label}</div>
+                        <div className="font-heading text-3xl font-bold text-white group-hover:text-primary transition-colors">{stat.value}</div>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-0.5 truncate flex items-center gap-2">
-                        <span>{voice.gender}</span>
-                        <span className="w-1 h-1 rounded-full bg-muted-foreground/30" />
-                        <span>{voice.accent}</span>
-                      </p>
-                      <div className="mt-2.5">
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] px-2.5 py-0.5 bg-primary/5 text-primary border-primary/10 hover:bg-primary/10 font-medium transition-colors"
-                        >
-                          {voice.mood}
-                        </Badge>
+                      <div className="font-mono text-[10px] text-primary bg-primary/10 px-2 py-1 border border-primary/20">
+                        {stat.change}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </Card>
-          </section>
-
-          {/* Activity Overview */}
-          <section className="space-y-6 flex flex-col">
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
-              Activity Overview
-            </h2>
-            <div className="grid gap-5 flex-1">
-              {stats.map((stat, i) => (
-                <Card
-                  key={stat.label}
-                  className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl relative overflow-hidden group hover:border-primary/40 dark:hover:border-primary/30 transition-all duration-500 rounded-2xl"
-                >
-                  {/* Subtle hover gradient background */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  {/* Animated shine effect */}
-                  <div className="absolute -inset-full h-full w-full bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:animate-[shimmer_1.5s_infinite] -skew-x-12" />
-
-                  <CardContent className="p-6 relative z-10 flex flex-col justify-center h-full">
-                    <div className="flex justify-between items-start mb-4">
-                      <div
-                        className={`p-2.5 rounded-xl border shadow-sm ${i === 0 ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : i === 1 ? "bg-blue-500/10 text-blue-500 border-blue-500/20" : "bg-purple-500/10 text-purple-500 border-purple-500/20"}`}
-                      >
-                        {i === 0 ? (
-                          <Activity className="w-5 h-5" />
-                        ) : i === 1 ? (
-                          <Wand2 className="w-5 h-5" />
-                        ) : (
-                          <AudioLines className="w-5 h-5" />
-                        )}
-                      </div>
-                      <div
-                        className={`flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border ${i === 0 ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" : "bg-primary/10 text-primary border-primary/20"}`}
-                      >
-                        {i !== 2 && <TrendingUp className="w-3.5 h-3.5" />}
-                        {stat.change}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-4xl font-bold tracking-tight text-foreground">
-                        {stat.value}
-                      </p>
-                      <p className="text-sm font-medium text-muted-foreground mt-1.5">
-                        {stat.label}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </section>
         </div>
 
-        {/* Global Languages Tooltip section */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-3">
-            <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
-              Global Reach
-            </h2>
+        {/* Global Languages */}
+        <section className="border border-[#222] bg-[#050505] overflow-hidden">
+          <div className="border-b border-[#222] p-4 bg-[#0a0a0a] flex items-center gap-2">
+            <Globe className="w-4 h-4 text-primary" />
+            <h2 className="font-mono text-sm uppercase tracking-widest text-white">Supported Locales</h2>
           </div>
-          <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl overflow-hidden shadow-sm relative">
-            <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-card/80 to-transparent z-10 pointer-events-none" />
-            <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-card/80 to-transparent z-10 pointer-events-none" />
-            <CardContent className="p-0">
-              <div className="flex py-8">
-                {/* Simulated CSS Marquee with Flex */}
-                <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] hover:[animation-play-state:paused] gap-4 px-4 w-fit">
-                  {[
-                    "English (US, UK, AU)",
-                    "Spanish",
-                    "French",
-                    "German",
-                    "Italian",
-                    "Portuguese",
-                    "Japanese",
-                    "Korean",
-                    "Chinese",
-                    "Arabic",
-                    "Hindi",
-                    "Russian",
-                    "Dutch",
-                    "Polish",
-                    "Swedish",
-                    "Turkish",
-                    "Vietnamese",
-                    "Thai",
-                    "Indonesian",
-                    "Filipino",
-                  ].map((lang) => (
-                    <div
-                      key={lang}
-                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/70 dark:border-border/50 bg-background/80 dark:bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
-                    >
-                      {lang}
-                    </div>
-                  ))}
-                  {[
-                    "English (US, UK, AU)",
-                    "Spanish",
-                    "French",
-                    "German",
-                    "Italian",
-                    "Portuguese",
-                    "Japanese",
-                    "Korean",
-                    "Chinese",
-                    "Arabic",
-                    "Hindi",
-                    "Russian",
-                    "Dutch",
-                    "Polish",
-                    "Swedish",
-                    "Turkish",
-                    "Vietnamese",
-                    "Thai",
-                    "Indonesian",
-                    "Filipino",
-                  ].map((lang) => (
-                    <div
-                      key={`${lang}-dup`}
-                      className="whitespace-nowrap px-6 py-3 rounded-2xl border border-border/70 dark:border-border/50 bg-background/80 dark:bg-background/50 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-all duration-300 font-medium text-sm flex items-center cursor-default shadow-sm"
-                    >
-                      {lang}
-                    </div>
-                  ))}
+          <div className="py-6 flex">
+            <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] gap-4 px-4">
+              {[
+                "EN-US", "EN-UK", "ES-ES", "FR-FR", "DE-DE", "IT-IT", "PT-BR", "JA-JP", 
+                "KO-KR", "ZH-CN", "AR-SA", "RU-RU", "HI-IN", "NL-NL", "PL-PL", "SV-SE",
+                "TR-TR", "VI-VN", "TH-TH", "ID-ID"
+              ].map((lang, idx) => (
+                <div key={idx} className="font-mono text-xs border border-[#333] bg-[#111] px-4 py-2 text-[#888] hover:text-primary hover:border-primary transition-colors cursor-default">
+                  {lang}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+              {[
+                "EN-US", "EN-UK", "ES-ES", "FR-FR", "DE-DE", "IT-IT", "PT-BR", "JA-JP", 
+                "KO-KR", "ZH-CN", "AR-SA", "RU-RU", "HI-IN", "NL-NL", "PL-PL", "SV-SE",
+                "TR-TR", "VI-VN", "TH-TH", "ID-ID"
+              ].map((lang, idx) => (
+                <div key={`dup-${idx}`} className="font-mono text-xs border border-[#333] bg-[#111] px-4 py-2 text-[#888] hover:text-primary hover:border-primary transition-colors cursor-default">
+                  {lang}
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
-        {/* Templates Section */}
-        <section className="space-y-6 pb-12">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight relative inline-block">
-              Ready-to-use Templates
-            </h2>
-          </div>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {templates.map((template) => (
-              <Card
-                key={template.title}
-                className="group relative overflow-hidden border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:border-primary/40 dark:hover:border-primary/30 transition-all duration-500 cursor-pointer h-full flex flex-col rounded-2xl"
-              >
-                <div className="absolute -top-4 -right-4 p-4 opacity-5 group-hover:opacity-20 transition-opacity duration-500 rotate-12 group-hover:rotate-0">
-                  <Wand2 className="w-24 h-24 text-primary" />
-                </div>
-                <CardContent className="p-6 flex-1 flex flex-col relative z-10">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-muted/80 to-muted/40 flex items-center justify-center border border-border/50 group-hover:bg-primary/10 group-hover:border-primary/30 transition-colors duration-500 shadow-sm">
-                      <Wand2 className="w-5 h-5 text-primary" />
-                    </div>
-                    <Badge
-                      variant="outline"
-                      className="font-mono text-xs bg-background/80 dark:bg-background/50 border-border/50 group-hover:border-primary/30 transition-colors"
-                    >
-                      {template.duration}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-lg mb-2 group-hover:text-primary transition-colors duration-300">
-                    {template.title}
-                  </CardTitle>
-                  <p className="text-sm text-muted-foreground/90 dark:text-muted-foreground flex-1 line-clamp-2 leading-relaxed">
-                    {template.desc}
-                  </p>
-
-                  <div className="mt-6 pt-4 border-t border-border/50 flex items-center justify-between text-sm font-medium">
-                    <span className="flex items-center gap-2 text-muted-foreground group-hover:text-foreground transition-colors">
-                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                        <Volume2 className="w-3 h-3" />
-                      </div>
-                      {template.voice}
-                    </span>
-                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-primary" />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
       </div>
-
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
+      
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes marquee {
           0% { transform: translateX(0%); }
           100% { transform: translateX(-50%); }
         }
-        @keyframes shimmer {
-          100% {
-            transform: translateX(200%);
-          }
-        }
-      `,
-        }}
-      />
+      `}} />
     </div>
   );
 }
