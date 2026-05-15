@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   ArrowRight, 
@@ -13,6 +14,11 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
+  const [waveHeights, setWaveHeights] = useState<number[]>([]);
+
+  useEffect(() => {
+    setWaveHeights(Array.from({ length: 24 }, () => Math.random() * 60 + 10));
+  }, []);
   return (
     <div className="min-h-screen bg-black relative selection:bg-primary selection:text-black font-sans text-white overflow-hidden">
       {/* Brutalist Grid Background */}
@@ -105,7 +111,7 @@ export default function LandingPage() {
                       key={i} 
                       className="w-full bg-primary/20 sound-wave-bar origin-bottom group-hover:bg-primary transition-colors"
                       style={{ 
-                        height: `${Math.random() * 60 + 10}%`,
+                        height: waveHeights[i] ? `${waveHeights[i]}%` : '10%',
                         animationDelay: `${i * 0.05}s`
                       }}
                     />
