@@ -1,25 +1,25 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useAction } from "convex/react";
 import {
-  Volume2,
-  Mic,
-  UploadCloud,
-  CheckCircle2,
-  Play,
-  Pause,
-  Square,
-  Sparkles,
-  Waves,
-  Trash2,
-  Terminal,
   AlertTriangle,
+  Mic,
+  Pause,
+  Play,
+  Sparkles,
+  Square,
+  Terminal,
+  Trash2,
+  UploadCloud,
+  Waves,
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import WaveSurfer from "wavesurfer.js";
+import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -27,11 +27,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import WaveSurfer from "wavesurfer.js";
-import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { api } from "../../../../convex/_generated/api";
-import { useAction } from "convex/react";
-import { toast } from "sonner";
 
 const LANG_CODES = [
   "EN_US",
@@ -61,6 +59,14 @@ const RECORDING_SENTENCES = [
   "We are thrilled to announce our latest product update, which brings a host of new features designed to make your workflow faster and more efficient.",
 ];
 
+function isAbortError(error: unknown) {
+  if (!(error instanceof Error)) return false;
+  return (
+    error.name === "AbortError" ||
+    error.message.toLowerCase().includes("signal is aborted")
+  );
+}
+
 function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
   const secs = Math.floor(seconds % 60);
@@ -68,6 +74,7 @@ function formatTime(seconds: number) {
 }
 
 export default function VoiceCloningPage() {
+  const cloneVoice = useAction(api.cloneVoice.cloneVoice);
   const [activeTab, setActiveTab] = useState("upload");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -75,10 +82,13 @@ export default function VoiceCloningPage() {
     RECORDING_SENTENCES[0],
   );
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [langCode, setLangCode] = useState<string>("EN_US");
 
   const containerRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
-  const recordPluginRef = useRef<any>(null);
+  const recordPluginRef = useRef<ReturnType<typeof RecordPlugin.create> | null>(
+    null,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -90,67 +100,107 @@ export default function VoiceCloningPage() {
   const [recordTime, setRecordTime] = useState(0);
 
   const voiceNameRef = useRef<HTMLInputElement>(null);
-  const langCodeRef = useRef<HTMLButtonElement>(null);
   const tagsRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      if (isAbortError(event.reason)) {
+        event.preventDefault();
+      }
+    };
+
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+    return () => {
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection,
+      );
+    };
+  }, []);
+
+  useEffect(() => {
     if (!containerRef.current) return;
 
-    const ws = WaveSurfer.create({
-      container: containerRef.current,
-      waveColor: "rgba(204, 255, 0, 0.4)",
-      progressColor: "rgba(204, 255, 0, 1)",
-      cursorColor: "rgba(204, 255, 0, 1)",
-      barWidth: 3,
-      barGap: 3,
-      barRadius: 0,
-      height: 80,
-      normalize: true,
-      cursorWidth: 2,
-    });
+    const container = containerRef.current;
+    let ws: WaveSurfer | null = null;
+    let isDestroyed = false;
 
-    const record = ws.registerPlugin(
-      RecordPlugin.create({
-        scrollingWaveform: true,
-        renderRecordedAudio: true,
-      }),
-    );
+    const initWaveSurfer = async () => {
+      try {
+        ws = WaveSurfer.create({
+          container,
+          waveColor: "rgba(204, 255, 0, 0.4)",
+          progressColor: "rgba(204, 255, 0, 1)",
+          cursorColor: "rgba(204, 255, 0, 1)",
+          barWidth: 3,
+          barGap: 3,
+          height: 80,
+          normalize: true,
+        });
 
-    wavesurferRef.current = ws;
-    recordPluginRef.current = record;
+        if (isDestroyed) {
+          ws.destroy();
+          return;
+        }
+        const record = ws.registerPlugin(
+          RecordPlugin.create({
+            scrollingWaveform: true,
+            renderRecordedAudio: true,
+          }),
+        );
 
-    ws.on("play", () => setIsPlaying(true));
-    ws.on("pause", () => setIsPlaying(false));
-    ws.on("finish", () => setIsPlaying(false));
-    ws.on("timeupdate", (currentTime) => setCurrentTime(currentTime));
-    ws.on("ready", (duration) => setDuration(duration));
+        wavesurferRef.current = ws;
+        recordPluginRef.current = record;
 
-    record.on("record-start", () => {
-      setIsRecording(true);
-      setIsPaused(false);
-    });
-    record.on("record-pause", () => setIsPaused(true));
-    record.on("record-resume", () => setIsPaused(false));
-    record.on("record-end", (blob: Blob) => {
-      setAudioBlob(blob);
-      setIsRecording(false);
-      setIsPaused(false);
-      const url = URL.createObjectURL(blob);
-      setAudioUrl(url);
-    });
-    record.on("record-progress", (time: number) => {
-      setRecordTime(time / 1000);
-    });
+        // --- Listeners ---
+        ws.on("play", () => setIsPlaying(true));
+        ws.on("pause", () => setIsPlaying(false));
+        ws.on("finish", () => setIsPlaying(false));
+        ws.on("timeupdate", (time) => setCurrentTime(time));
+        ws.on("ready", (dur) => setDuration(dur));
+
+        record.on("record-start", () => {
+          setIsRecording(true);
+          setIsPaused(false);
+        });
+
+        record.on("record-end", (blob: Blob) => {
+          setAudioBlob(blob);
+          setIsRecording(false);
+          const url = URL.createObjectURL(blob);
+          setAudioUrl(url);
+        });
+
+        record.on("record-progress", (time: number) => {
+          setRecordTime(time / 1000);
+        });
+      } catch (err) {
+        if (isAbortError(err)) return;
+        console.error("WaveSurfer init error:", err);
+      }
+    };
+
+    initWaveSurfer();
 
     return () => {
-      ws.destroy();
+      isDestroyed = true;
+      if (ws) {
+        try {
+          ws.destroy();
+        } catch (e) {}
+      }
+      wavesurferRef.current = null;
+      recordPluginRef.current = null;
     };
   }, []);
 
   useEffect(() => {
     if (audioUrl && wavesurferRef.current && !isRecording) {
-      wavesurferRef.current.load(audioUrl);
+      wavesurferRef.current.load(audioUrl).catch((err) => {
+        if (isAbortError(err)) return;
+        console.error("WaveSurfer load error:", err);
+      });
     }
   }, [audioUrl, isRecording]);
 
@@ -165,8 +215,8 @@ export default function VoiceCloningPage() {
       try {
         setAudioUrl(null);
         await recordPluginRef.current.startRecording();
-      } catch (err) {
-        console.error("Microphone access denied:", err);
+      } catch (error: unknown) {
+        console.error("Microphone access denied:", error);
       }
     }
   };
@@ -192,6 +242,7 @@ export default function VoiceCloningPage() {
       wavesurferRef.current.empty();
     }
     setAudioUrl(null);
+    setAudioBlob(null);
     setIsPlaying(false);
     setCurrentTime(0);
     setDuration(0);
@@ -211,6 +262,7 @@ export default function VoiceCloningPage() {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
     if (file) {
+      setAudioBlob(file);
       const url = URL.createObjectURL(file);
       setAudioUrl(url);
     }
@@ -224,12 +276,15 @@ export default function VoiceCloningPage() {
     if (!audioBlob) return;
     setIsProcessing(true);
 
-    const cloneVoice = useAction(api.cloneVoice.cloneVoice);
+    const toastId = toast.loading("INITIALIZING NEURAL MAP...");
 
     //Getting values from the UI inputs
     const voiceName = voiceNameRef.current?.value;
-    if (!voiceName) {return};
-    const langCode = langCodeRef.current?.value;
+    if (!voiceName) {
+      toast.error("Voice Designation is required", { id: toastId });
+      setIsProcessing(false);
+      return;
+    }
     const tagStrings = tagsRef.current?.value;
     const description = descriptionRef.current?.value;
 
@@ -238,22 +293,22 @@ export default function VoiceCloningPage() {
       : [];
 
     try {
-      const audioArrayBuffer = await audioBlob.arrayBuffer()
+      const audioArrayBuffer = await audioBlob.arrayBuffer();
 
-      const resultId = await cloneVoice({ 
+      await cloneVoice({
         description,
         audioSample: audioArrayBuffer,
         lang_code: langCode,
         tags,
         name: voiceName,
-      })
+      });
 
-      toast.success("Voice Cloned Successfully");
-    }
-    catch (error) {
+      toast.success("CLONING PROTOCOL COMPLETE", { id: toastId });
+    } catch (error: unknown) {
+      if (isAbortError(error)) return;
+      toast.error("CLONING PROTOCOL FAILED. ", { id: toastId });
       console.error("Cloning Protocol Failed: ", error);
-    }
-    finally {
+    } finally {
       setIsProcessing(false);
     }
   };
@@ -330,10 +385,9 @@ export default function VoiceCloningPage() {
                     >
                       Locale Code
                     </Label>
-                    <Select defaultValue="EN_US">
+                    <Select value={langCode} onValueChange={setLangCode}>
                       <SelectTrigger
                         id="langCode"
-                        ref={langCodeRef}
                         className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white"
                       >
                         <SelectValue placeholder="LOCALE" />
@@ -402,21 +456,24 @@ export default function VoiceCloningPage() {
 
                   <TabsContent value="upload" className="mt-0 outline-none">
                     {!audioUrl ? (
-                      <div
-                        onDrop={handleDrop}
-                        onDragOver={handleDragOver}
-                        onClick={() => fileInputRef.current?.click()}
-                        className="border border-dashed border-[#444] hover:border-primary bg-[#111] hover:bg-primary/5 p-12 transition-colors flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[250px]"
-                      >
-                        <div className="w-16 h-16 bg-[#000] border border-[#333] flex items-center justify-center mb-6 group-hover/dropzone:border-primary transition-colors">
-                          <UploadCloud className="w-6 h-6 text-[#666] group-hover/dropzone:text-primary transition-colors" />
-                        </div>
-                        <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">
-                          Initialize Data Transfer
-                        </p>
-                        <p className="text-xs font-mono text-[#666] uppercase tracking-wider max-w-xs">
-                          MP3/WAV. 10MB MAX. DROP PACKETS HERE.
-                        </p>
+                      <>
+                        <button
+                          type="button"
+                          onDrop={handleDrop}
+                          onDragOver={handleDragOver}
+                          onClick={() => fileInputRef.current?.click()}
+                          className="border border-dashed border-[#444] hover:border-primary bg-[#111] hover:bg-primary/5 p-12 transition-colors flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[250px] w-full"
+                        >
+                          <div className="w-16 h-16 bg-[#000] border border-[#333] flex items-center justify-center mb-6 group-hover/dropzone:border-primary transition-colors">
+                            <UploadCloud className="w-6 h-6 text-[#666] group-hover/dropzone:text-primary transition-colors" />
+                          </div>
+                          <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">
+                            Initialize Data Transfer
+                          </p>
+                          <p className="text-xs font-mono text-[#666] uppercase tracking-wider max-w-xs">
+                            MP3/WAV. 10MB MAX. DROP PACKETS HERE.
+                          </p>
+                        </button>
                         <input
                           type="file"
                           className="hidden"
@@ -424,7 +481,7 @@ export default function VoiceCloningPage() {
                           ref={fileInputRef}
                           onChange={handleFileUpload}
                         />
-                      </div>
+                      </>
                     ) : null}
                   </TabsContent>
 
@@ -446,7 +503,7 @@ export default function VoiceCloningPage() {
                         <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
                           {RECORDING_SENTENCES.map((sentence, i) => (
                             <SelectItem
-                              key={i}
+                              key={sentence}
                               value={sentence}
                               className="focus:bg-primary focus:text-black rounded-none cursor-pointer text-xs py-3"
                             >
