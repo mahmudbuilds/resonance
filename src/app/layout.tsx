@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   description: "Advanced AI Voice Generator and Voice Cloning Platform",
 };
 
+import { clerkAppearance } from "@/lib/clerk-config";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,7 +49,10 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary selection:text-black">
-        <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
+        <ClerkProvider 
+          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          appearance={clerkAppearance}
+        >
           <ConvexClientProvider>
             <ThemeProvider
               attribute="class"

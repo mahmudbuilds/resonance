@@ -149,12 +149,6 @@ export default function DashboardSidebar() {
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "rounded-none w-8 h-8 border border-[#444] hover:border-primary transition-colors",
-                  userButtonPopoverCard: "rounded-none border border-[#222] bg-[#050505] font-mono",
-                },
-              }}
               showName={state === "expanded"}
               fallback={
                 <Skeleton className="w-8 h-8 rounded-none border border-[#333] bg-[#111]" />

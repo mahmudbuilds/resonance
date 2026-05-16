@@ -88,14 +88,14 @@
   --sidebar-ring: #ccff00;
 }
 
-/* Clerk Light - but we force dark everywhere for this aesthetic */
+/* Unified Clerk Design System - Brutalist Cyber Aesthetic */
 :root {
   --clerk-color-primary: #ccff00;
   --clerk-color-primary-foreground: #000000;
   --clerk-color-danger: #ff3333;
   --clerk-color-success: #ccff00;
-  --clerk-color-warning: #ffaa00;
-  --clerk-color-neutral: #000000;
+  --clerk-color-warning: #ccff00;
+  --clerk-color-neutral: #ffffff;
   --clerk-color-foreground: #ffffff;
   --clerk-color-muted-foreground: #888888;
   --clerk-color-background: #050505;
@@ -103,9 +103,9 @@
   --clerk-color-input-foreground: #ffffff;
   --clerk-color-ring: #ccff00;
   --clerk-color-shimmer: #ccff00;
-  --clerk-color-modal-backdrop: rgba(0, 0, 0, 0.8);
+  --clerk-color-modal-backdrop: rgba(0, 0, 0, 0.9);
   --clerk-border-radius: 0rem;
-  --clerk-spacing: 1rem;
+  --clerk-spacing: 1.25rem;
   --clerk-color-border: #222222;
 }
 
@@ -143,24 +143,146 @@
   --sidebar-ring: #ccff00;
 }
 
-/* Clerk dark */
-.dark {
-  --clerk-color-primary: #f59e0b;
-  --clerk-color-primary-foreground: #0c0a09;
-  --clerk-color-danger: #ef4444;
-  --clerk-color-success: #22c55e;
-  --clerk-color-warning: #f59e0b;
-  --clerk-color-neutral: #ffffff;
-  --clerk-color-foreground: #a8a29e;
-  --clerk-color-muted-foreground: #78716c;
-  --clerk-color-background: #1c1917;
-  --clerk-color-input: #1c1917;
-  --clerk-color-input-foreground: #fafaf9;
-  --clerk-color-ring: #78350f;
-  --clerk-color-shimmer: #f59e0b;
-  --clerk-color-modal-backdrop: rgba(0, 0, 0, 0.7);
-  --clerk-border-radius: 0.5rem;
-  --clerk-spacing: 1rem;
+/* Ensure Clerk elements follow the brutalist theme */
+.cl-rootBox {
+  --cl-font-family: var(--font-mono);
+}
+
+.cl-card, .cl-userButtonPopoverCard, .cl-navbar, .cl-scrollBox {
+  border-radius: 0 !important;
+  border: 1px solid #222 !important;
+  background-color: #050505 !important;
+  box-shadow: none !important;
+}
+
+.cl-button {
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.cl-formButtonPrimary {
+  background-color: #ccff00 !important;
+  color: #000 !important;
+  border: 1px solid #ccff00 !important;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+.cl-formFieldInput {
+  border-radius: 0 !important;
+  background-color: #111 !important;
+  border: 1px solid #222 !important;
+  color: #fff !important;
+}
+
+.cl-formFieldInput:focus {
+  border-color: #ccff00 !important;
+  box-shadow: 0 0 0 1px #ccff00 !important;
+}
+
+.cl-headerTitle {
+  font-family: var(--font-heading) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 900;
+}
+
+.cl-headerSubtitle {
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.1em;
+  color: #888 !important;
+}
+
+.cl-socialButtonsBlockButton {
+  border-radius: 0 !important;
+  border: 1px solid #222 !important;
+  background-color: #0a0a0a !important;
+}
+
+.cl-socialButtonsBlockButton:hover {
+  background-color: #111 !important;
+  border-color: #333 !important;
+}
+
+.cl-dividerLine {
+  background-color: #222 !important;
+}
+
+.cl-dividerText {
+  color: #444 !important;
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase;
+  font-size: 0.6rem !important;
+}
+
+.cl-footerActionText, .cl-footerActionLink {
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase;
+  font-size: 0.7rem !important;
+}
+
+.cl-footerActionLink {
+  color: #ccff00 !important;
+}
+
+.cl-footerActionLink:hover {
+  color: #fff !important;
+}
+
+.cl-breadcrumbsItem {
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase;
+  font-size: 0.65rem !important;
+}
+
+.cl-userPreviewMainIdentifier {
+  font-family: var(--font-mono) !important;
+  text-transform: uppercase;
+}
+
+.cl-profileSectionTitle {
+  border-bottom: 1px solid #222 !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.cl-profileSectionTitleText {
+  font-family: var(--font-heading) !important;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.cl-activeDeviceIcon {
+  color: #ccff00 !important;
+}
+
+.cl-navbarMobileMenuButton {
+  border-radius: 0 !important;
+}
+
+/* Fix Development Mode Badge Color */
+.cl-internal-b3fm6y, 
+.cl-dev-badge,
+[data-clerk-theme="dark"] .cl-internal-17le6jh,
+.cl-userButtonPopoverFooter p {
+  color: #ccff00 !important;
+}
+
+.cl-avatarBox {
+  padding: 4px !important;
+  background-color: #0a0a0a !important;
+  border-radius: 0 !important;
+}
+
+.cl-avatarImage {
+  border-radius: 0 !important;
 }
 
 @layer base {
