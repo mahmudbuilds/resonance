@@ -8,156 +8,154 @@ import {
   Mail,
   MessageSquare,
   Search,
+  Terminal,
+  Cpu,
+  Globe,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
 export default function SupportPage() {
   const faqs = [
     {
-      q: "How does the Voice Cloning process work?",
-      a: "To clone a voice, navigate to the Voice Cloning tab, provide a 30-second to 5-minute clean, noise-free audio sample of the target voice, and hit submit. Our neural engine maps the unique vocal signatures to create a dedicated profile within seconds.",
+      q: "HOW_DOES_VOICE_CLONING_WORK?",
+      a: "NEURAL EXTRACTION PROTOCOL: Provide 30-300 seconds of clean audio. The engine maps acoustic topography to synthesize a unique vocal profile in < 15s.",
     },
     {
-      q: "What audio formats are supported?",
-      a: "We support MP3, WAV, FLAC, and OGG formats up to 25MB per file.",
+      q: "SUPPORTED_STREAM_FORMATS?",
+      a: "MP3, WAV, FLAC, OGG. MAX_PAYLOAD: 25MB.",
     },
     {
-      q: "Are my cloned voices private?",
-      a: "Yes. Any voice cloned on your account is strictly private to your workspace and is never shared or used to train global base models without explicit permission.",
+      q: "DATA_PRIVACY_ENCRYPTION?",
+      a: "ALL NEURAL MAPS ARE ENCRYPTED AND STORED IN ISOLATED WORKSPACES. NO CROSS-MODEL TRAINING WITHOUT EXPLICIT AUTHORIZATION.",
     },
     {
-      q: "How do I use SSML for precise pronunciation?",
-      a: "Enable SSML mode in the Script Editor. You can then use standard SSML tags like <break time='1s'/> or <phoneme> to guide the AI exactly how to say complex words.",
+      q: "SSML_PRECISION_INPUT?",
+      a: "ENABLE SSML MODE IN SCRIPT_EDITOR. USE <BREAK>, <PHONEME>, AND <PROSODY> TAGS FOR GRANULAR SYNTHESIS CONTROL.",
     },
   ];
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-background">
-      {/* Ambient Background Elements */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-        <div className="absolute top-[0%] left-[50%] -translate-x-1/2 h-[600px] w-[800px] rounded-full bg-primary/10 opacity-30 blur-[150px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-black">
+      {/* Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 mx-auto max-w-[1000px] space-y-12">
+      <div className="relative z-10 px-6 py-12 max-w-[1200px] mx-auto border-x border-[#222] min-h-screen pb-20">
         {/* Header Section */}
-        <header className="flex flex-col space-y-6 items-center text-center">
-          <Badge
-            variant="outline"
-            className="w-fit bg-background/80 backdrop-blur-md border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_var(--shadow-primary-sm)]"
-          >
-            <LifeBuoy className="w-3.5 h-3.5 mr-2 text-primary" />
-            Support Center
-          </Badge>
-
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            How can we help{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500">
-              you?
-            </span>
+        <header className="mb-20 border-b border-[#222] pb-12 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+            <LifeBuoy className="w-3 h-3" />
+            Module: Central Support
+          </div>
+          
+          <h1 className="font-heading text-4xl md:text-7xl font-bold uppercase tracking-tighter text-white mb-8">
+            SYSTEM <span className="text-primary">ASSISTANCE</span>
           </h1>
 
-          <div className="relative w-full max-w-2xl mt-4">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              placeholder="Search for articles, guides, or troubleshooting..."
-              className="pl-12 bg-card/70 backdrop-blur-xl border-border/70 h-14 rounded-2xl shadow-xl focus-visible:ring-primary/20 text-base md:text-lg min-w-0"
+          <div className="relative w-full max-w-2xl group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#444] group-focus-within:text-primary transition-colors" />
+            <input 
+              placeholder="QUERY_KNOWLEDGE_BASE..."
+              className="w-full bg-[#050505] border border-[#333] focus:border-primary/50 outline-none h-16 pl-12 pr-32 font-mono text-xs uppercase tracking-widest transition-all placeholder:text-[#333]"
             />
-            <Button className="absolute right-1.5 top-1/2 -translate-y-1/2 h-11 rounded-xl bg-primary hover:bg-primary/90 hidden sm:flex">
-              Search
+            <Button className="absolute right-2 top-2 bottom-2 px-6 rounded-none bg-primary hover:bg-white text-black font-mono text-xs uppercase tracking-widest transition-colors border border-primary">
+              SEARCH
             </Button>
           </div>
         </header>
 
         {/* Resources Grid */}
-        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-6 w-full max-w-full">
-          <Card className="group border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-lg rounded-2xl overflow-hidden hover:border-primary/40 transition-all duration-300 w-full max-w-full cursor-pointer hover:-translate-y-1 min-w-0">
-            <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-              <div className="w-16 h-16 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20 group-hover:scale-110 transition-transform shadow-sm">
-                <BookOpen className="w-8 h-8 text-primary" />
-              </div>
-              <h2 className="text-xl font-bold truncate max-w-full">
-                Documentation
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed break-words">
-                Comprehensive guides on API integration, billing, and advanced
-                synthesis configurations.
-              </p>
-              <span className="text-sm font-semibold text-primary pt-2 flex items-center shrink-0">
-                Read Docs{" "}
-                <ArrowRight className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-              </span>
-            </CardContent>
-          </Card>
+        <div className="grid md:grid-cols-2 gap-8 mb-20">
+          <div className="group border border-[#222] bg-[#050505] p-10 relative cursor-pointer hover:border-primary/50 transition-colors">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-[#111] border-b border-l border-[#333] font-mono text-[8px] text-[#555] uppercase">
+              DOC_V2.4
+            </div>
+            <div className="w-16 h-16 border border-[#222] bg-[#111] flex items-center justify-center mb-8 group-hover:border-primary/30 transition-colors">
+              <BookOpen className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="font-heading text-2xl font-bold uppercase mb-4">Documentation</h2>
+            <p className="font-mono text-xs text-[#888] uppercase leading-relaxed mb-8">
+              Comprehensive technical specifications for API integration, 
+              synthesis parameters, and authentication protocols.
+            </p>
+            <div className="flex items-center text-primary font-mono text-xs uppercase tracking-widest group-hover:gap-4 gap-2 transition-all">
+              Initialize Access <ArrowRight className="w-4 h-4" />
+            </div>
+          </div>
 
-          <Card className="group border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-lg rounded-2xl overflow-hidden hover:border-primary/40 transition-all duration-300 w-full max-w-full cursor-pointer hover:-translate-y-1 min-w-0">
-            <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-              <div className="w-16 h-16 shrink-0 rounded-2xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 group-hover:scale-110 transition-transform shadow-sm">
-                <MessageSquare className="w-8 h-8 text-purple-500" />
-              </div>
-              <h2 className="text-xl font-bold truncate max-w-full">
-                Community Discord
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed break-words">
-                Join thousands of creators sharing techniques, voice recipes,
-                and troubleshooting tips.
-              </p>
-              <span className="text-sm font-semibold text-purple-500 pt-2 flex items-center shrink-0">
-                Join Server{" "}
-                <ArrowRight className="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
-              </span>
-            </CardContent>
-          </Card>
+          <div className="group border border-[#222] bg-[#050505] p-10 relative cursor-pointer hover:border-primary/50 transition-colors">
+            <div className="absolute top-0 right-0 px-3 py-1 bg-[#111] border-b border-l border-[#333] font-mono text-[8px] text-[#555] uppercase">
+              NET_CORE
+            </div>
+            <div className="w-16 h-16 border border-[#222] bg-[#111] flex items-center justify-center mb-8 group-hover:border-primary/30 transition-colors">
+              <Globe className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="font-heading text-2xl font-bold uppercase mb-4">Community Node</h2>
+            <p className="font-mono text-xs text-[#888] uppercase leading-relaxed mb-8">
+              Join the neural network of creators sharing voice recipes, 
+              custom models, and technical optimization techniques.
+            </p>
+            <div className="flex items-center text-primary font-mono text-xs uppercase tracking-widest group-hover:gap-4 gap-2 transition-all">
+              Connect to Discord <ArrowRight className="w-4 h-4" />
+            </div>
+          </div>
         </div>
 
         {/* FAQs */}
-        <section className="space-y-6 pt-6 w-full max-w-full">
-          <h2 className="text-2xl font-bold tracking-tight px-2">
-            Frequently Asked Questions
-          </h2>
-          <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl rounded-2xl overflow-hidden w-full max-w-full min-w-0">
-            <div className="divide-y divide-border/50">
-              {faqs.map((faq, i) => (
-                <div
-                  key={i}
-                  className="p-6 group cursor-pointer hover:bg-muted/30 transition-colors w-full min-w-0"
-                >
-                  <h3 className="font-semibold text-lg flex items-center justify-between gap-4 text-foreground group-hover:text-primary transition-colors min-w-0 w-full">
-                    <span className="truncate flex-1 min-w-0">{faq.q}</span>
-                    <ChevronDown className="w-5 h-5 text-muted-foreground shrink-0" />
-                  </h3>
-                  {/* Hardcoded opened state for visual flair */}
-                  {i === 0 && (
-                    <p className="mt-3 text-sm text-muted-foreground/90 leading-relaxed break-words pr-4">
+        <section className="space-y-12 mb-20">
+          <div className="flex items-center gap-4">
+            <h2 className="font-heading text-3xl font-bold uppercase">Frequently Asked Queries</h2>
+            <div className="flex-1 h-px bg-[#222]" />
+          </div>
+          
+          <div className="border border-[#222] bg-[#050505] divide-y divide-[#222]">
+            {faqs.map((faq, i) => (
+              <div
+                key={i}
+                className="p-8 group cursor-pointer hover:bg-primary/[0.02] transition-colors"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-[10px] text-[#444]">0{i + 1}</span>
+                    <h3 className="font-mono text-sm uppercase tracking-widest text-white group-hover:text-primary transition-colors">
+                      {faq.q}
+                    </h3>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-[#444] group-hover:text-primary transition-colors" />
+                </div>
+                {i === 0 && (
+                  <div className="mt-8 pl-10 border-l border-primary/20">
+                    <p className="font-mono text-xs text-[#888] uppercase leading-relaxed">
                       {faq.a}
                     </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </Card>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* Contact Block */}
-        <Card className="border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent backdrop-blur-xl shadow-xl rounded-2xl overflow-hidden w-full max-w-full relative min-w-0">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-purple-500 to-transparent" />
-          <CardContent className="p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left min-w-0 w-full">
-            <div className="min-w-0 w-full md:w-auto flex-1">
-              <h3 className="text-2xl font-bold mb-2 truncate">
-                Still need help?
-              </h3>
-              <p className="text-muted-foreground break-words">
-                Our support team is available around the clock to assist you.
+        <div className="border border-primary bg-primary/5 p-12 relative overflow-hidden group">
+          <div className="absolute -right-20 -bottom-20 opacity-5 group-hover:opacity-10 transition-opacity">
+            <Cpu className="w-80 h-80 text-primary" />
+          </div>
+          
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
+            <div className="max-w-xl">
+              <h3 className="font-heading text-3xl font-bold uppercase mb-4">Unresolved Discrepancies?</h3>
+              <p className="font-mono text-xs text-[#aaa] uppercase leading-relaxed">
+                If the automated knowledge base fails to resolve your technical anomaly, 
+                our primary support units are standing by for direct intervention.
               </p>
             </div>
-            <Button className="h-12 px-8 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_var(--shadow-primary)] transition-all shrink-0 w-full md:w-auto">
-              <Mail className="w-4 h-4 mr-2" /> Contact Support
+            <Button className="h-16 px-12 rounded-none bg-primary hover:bg-white text-black font-mono text-sm uppercase tracking-widest transition-colors border border-primary shrink-0 w-full md:w-auto">
+              <Mail className="w-5 h-5 mr-3" /> Open Secure Channel
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

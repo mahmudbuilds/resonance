@@ -1,15 +1,15 @@
 "use client";
 
 import {
-  AlertCircle,
+  AlertTriangle,
   Bell,
-  CheckCircle2,
   Mail,
   Settings,
   Shield,
   User,
+  Terminal,
+  Activity,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,237 +21,220 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ModeToggle } from "@/components/ui/mode-toggle";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SettingsPage() {
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-background">
-      {/* Ambient Background Elements */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden z-0">
-        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-primary/20 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute top-[20%] -right-[10%] h-[400px] w-[400px] rounded-full bg-purple-500/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute -bottom-[20%] left-[20%] h-[600px] w-[600px] rounded-full bg-emerald-500/10 opacity-40 blur-[120px] mix-blend-screen" />
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:50px_50px]" />
+    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-black">
+      {/* Background Grid */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-4 md:px-8 py-10 lg:py-16 mx-auto max-w-[1400px]">
+      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen pb-20">
         {/* Header Section */}
-        <header className="flex flex-col space-y-4 mb-10">
-          <Badge
-            variant="outline"
-            className="w-fit bg-background/80 dark:bg-background/50 backdrop-blur-md border-primary/30 dark:border-primary/20 text-primary px-4 py-1.5 rounded-full shadow-[0_0_15px_var(--shadow-primary-sm)]"
-          >
-            <Settings className="w-3.5 h-3.5 mr-2 text-primary" />
-            System Preferences
-          </Badge>
-
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Account{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-500 to-emerald-500">
-              Settings
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Manage your account details, subscriptions, API keys, and
-            notification preferences all in one place.
+        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+              <Settings className="w-3 h-3" />
+              Module: System Preferences
+            </div>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+              ACCOUNT <span className="text-primary">SETTINGS</span>
+            </h1>
+          </div>
+          <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+            Configure neural parameters and account authorization levels. 
+            Maintain system integrity through precise calibration.
           </p>
         </header>
 
         {/* Main Layout */}
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="mb-8 flex w-full sm:w-[300px] h-12 bg-card/50 backdrop-blur-md border border-border/50 p-1 rounded-xl">
+          <TabsList className="bg-transparent p-0 rounded-none h-14 w-full max-w-md flex border border-[#333] mb-12">
             <TabsTrigger
               value="profile"
-              className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm"
+              className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
             >
-              <User className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
-              Profile
+              <User className="w-4 h-4 mr-2" /> Identification
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="flex-1 rounded-lg h-full data-[state=active]:bg-primary/10 data-[state=active]:!border-transparent dark:data-[state=active]:bg-primary/20 data-[state=active]:shadow-none data-[state=active]:text-primary py-0 text-sm"
+              className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
             >
-              <Bell className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
-              Preferences
+              <Activity className="w-4 h-4 mr-2" /> Protocols
             </TabsTrigger>
           </TabsList>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-8 space-y-12">
               {/* Profile Tab */}
               <TabsContent
                 value="profile"
-                className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12"
+                className="m-0 space-y-12 outline-none"
               >
-                <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
-                  <CardHeader>
-                    <CardTitle className="text-xl flex items-center gap-2">
-                      <User className="w-5 h-5 text-primary" />
-                      Personal Information
-                    </CardTitle>
-                    <CardDescription>
-                      Update your personal details and public profile.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
+                <div className="border border-[#222] bg-[#050505] p-8 relative">
+                  <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+                    Identity_Registry
+                  </div>
+                  
+                  <div className="space-y-8 mt-4">
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div className="space-y-3">
+                        <Label htmlFor="firstName" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                          Given_Name
+                        </Label>
                         <Input
                           id="firstName"
-                          defaultValue="Alex"
-                          className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                          defaultValue="ALEX"
+                          className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
+                      <div className="space-y-3">
+                        <Label htmlFor="lastName" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                          Family_Name
+                        </Label>
                         <Input
                           id="lastName"
-                          defaultValue="Mercer"
-                          className="bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                          defaultValue="MERCER"
+                          className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
+                    <div className="space-y-3">
+                      <Label htmlFor="email" className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                        Network_Address
+                      </Label>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#444]" />
                         <Input
                           id="email"
                           type="email"
-                          defaultValue="alex@founder.ai"
-                          className="pl-10 bg-background/50 border-border/50 h-11 rounded-xl focus-visible:ring-primary/20"
+                          defaultValue="ALEX@FOUNDER.AI"
+                          className="pl-12 bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]"
                         />
                       </div>
                     </div>
-                  </CardContent>
-                  <CardFooter className="bg-muted/10 border-t border-border/50 py-4 flex justify-end">
-                    <Button className="rounded-xl px-8 shadow-[0_0_15px_var(--shadow-primary)] hover:shadow-[0_0_25px_var(--shadow-primary-lg)] transition-all">
-                      Save Changes
-                    </Button>
-                  </CardFooter>
-                </Card>
+                  </div>
 
-                <Card className="border border-destructive/20 bg-destructive/5 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-xl text-destructive flex items-center gap-2">
-                      <Shield className="w-5 h-5" />
-                      Danger Zone
-                    </CardTitle>
-                    <CardDescription>
-                      Permanently delete your account and all associated data.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Once your account is deleted, all of your generated
-                      voices, projects, and credits will be permanently
-                      destroyed. This action cannot be reversed.
-                    </p>
-                    <Button variant="destructive" className="rounded-xl">
-                      Delete Account
+                  <div className="mt-12 pt-8 border-t border-[#222] flex justify-end">
+                    <Button className="h-14 px-10 rounded-none bg-primary hover:bg-white text-black font-mono text-xs uppercase tracking-widest transition-colors border border-primary">
+                      Commit Changes
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
+
+                <div className="border border-red-900/50 bg-[#050505] p-8 relative">
+                  <div className="absolute top-0 right-0 px-4 py-2 bg-red-600 text-white font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-red-600">
+                    Terminal_Directive
+                  </div>
+                  
+                  <div className="flex items-center gap-4 text-red-500 mb-6">
+                    <Shield className="w-6 h-6" />
+                    <h3 className="font-heading text-xl font-bold uppercase">Decommission Account</h3>
+                  </div>
+                  
+                  <p className="font-mono text-xs text-[#888] uppercase leading-relaxed mb-8 max-w-2xl">
+                    Once the decommissioning sequence is initiated, all neural maps, 
+                    voice assets, and credit reserves will be purged from the mainframe. 
+                    This operation is irreversible.
+                  </p>
+                  
+                  <Button variant="destructive" className="h-14 px-8 rounded-none border border-red-600 bg-red-600/10 hover:bg-red-600 hover:text-white text-red-600 font-mono text-xs uppercase tracking-widest transition-colors">
+                    Execute Deletion Protocol
+                  </Button>
+                </div>
               </TabsContent>
 
               {/* Preferences Tab */}
               <TabsContent
                 value="appearance"
-                className="m-0 space-y-6 animate-in slide-in-from-left-2 duration-500 fade-in pb-12"
+                className="m-0 space-y-12 outline-none"
               >
-                <Card className="border border-border/70 dark:border-border/50 bg-card/70 dark:bg-card/40 backdrop-blur-xl shadow-xl overflow-hidden rounded-2xl group transition-all duration-500 hover:border-primary/30">
-                  <CardHeader>
-                    <CardTitle className="text-xl flex items-center gap-2">
-                      <Bell className="w-5 h-5 text-primary" />
-                      Preferences
-                    </CardTitle>
-                    <CardDescription>
-                      Manage how the application looks and what notifications
-                      you receive.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between p-4 border border-border/50 bg-background/30 rounded-xl">
-                      <div className="space-y-1">
-                        <p className="font-medium">Appearance / Theme</p>
-                        <p className="text-sm text-muted-foreground">
-                          Toggle between light and dark modes.
-                        </p>
-                      </div>
-                      <ModeToggle />
-                    </div>
+                <div className="border border-[#222] bg-[#050505] p-8 relative">
+                  <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+                    Protocol_Configs
+                  </div>
 
-                    <div className="space-y-4">
-                      <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                        Email Notifications
+                  <div className="space-y-12 mt-8">
+                    <div className="space-y-6">
+                      <h4 className="font-mono text-[10px] uppercase tracking-widest text-primary border-b border-[#222] pb-4">
+                        Communication_Streams
                       </h4>
 
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label className="text-base">Product Updates</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Receive news about new features and voices.
-                          </p>
+                      <div className="flex items-center justify-between p-6 bg-[#111] border border-[#333]">
+                        <div className="space-y-1">
+                          <Label className="font-mono text-sm uppercase tracking-wider text-white">System Updates</Label>
+                          <p className="font-mono text-[10px] text-[#666] uppercase">New features and neural models.</p>
                         </div>
-                        <Switch defaultChecked />
+                        <Switch defaultChecked className="data-[state=checked]:bg-primary" />
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label className="text-base">Usage Alerts</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Get notified when you approach your quota limit.
-                          </p>
+                      <div className="flex items-center justify-between p-6 bg-[#111] border border-[#333]">
+                        <div className="space-y-1">
+                          <Label className="font-mono text-sm uppercase tracking-wider text-white">Usage Alerts</Label>
+                          <p className="font-mono text-[10px] text-[#666] uppercase">Quota and throughput notifications.</p>
                         </div>
-                        <Switch defaultChecked />
+                        <Switch defaultChecked className="data-[state=checked]:bg-primary" />
                       </div>
 
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label className="text-base">
-                            Promotional Offers
-                          </Label>
-                          <p className="text-sm text-muted-foreground">
-                            Special discounts and early access.
-                          </p>
+                      <div className="flex items-center justify-between p-6 bg-[#111] border border-[#333]">
+                        <div className="space-y-1">
+                          <Label className="font-mono text-sm uppercase tracking-wider text-white">Security Logs</Label>
+                          <p className="font-mono text-[10px] text-[#666] uppercase">Critical account access reports.</p>
                         </div>
-                        <Switch />
+                        <Switch defaultChecked className="data-[state=checked]:bg-primary" />
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               </TabsContent>
             </div>
 
-            {/* Support Sidebar Side Widget */}
-            <div className="lg:col-span-1">
-              <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent relative overflow-hidden rounded-2xl sticky top-24 shadow-xl backdrop-blur-xl bg-card/40">
-                <div className="absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-                <CardContent className="p-6 flex flex-col pt-8">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-5 border border-primary/20 shadow-[0_0_15px_var(--shadow-primary-sm)]">
-                    <AlertCircle className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-lg mb-2">Need Help?</h3>
-                  <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-                    Our support team is available 24/7. Reach out if you're
-                    experiencing issues with billing, API integrations, or
-                    generation quality.
-                  </p>
+            {/* Sidebar Support */}
+            <div className="lg:col-span-4 space-y-8">
+              <div className="border border-[#222] bg-[#050505] p-8 relative">
+                <div className="absolute top-0 right-0 px-3 py-1 bg-[#111] border-b border-l border-[#333] font-mono text-[8px] text-[#555] uppercase">
+                  Ref: SUP_001
+                </div>
+                
+                <h3 className="font-heading text-lg font-bold uppercase text-primary mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
+                  <AlertTriangle className="w-5 h-5" /> Technical Assistance
+                </h3>
+                
+                <p className="font-mono text-xs text-[#aaa] uppercase leading-relaxed mb-8">
+                  Core support units are active 24/7. Address billing anomalies 
+                  or API synchronization failures through secure channels.
+                </p>
 
-                  <div className="space-y-3">
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start rounded-xl bg-background/50 border-border/50 hover:bg-muted/50 hover:text-primary transition-colors"
-                    >
-                      <Mail className="w-4 h-4 mr-2 text-muted-foreground" />
-                      Contact Support
-                    </Button>
+                <Button
+                  variant="outline"
+                  className="w-full h-14 rounded-none border-[#333] bg-[#111] hover:bg-primary hover:text-black hover:border-primary transition-all font-mono text-xs uppercase tracking-widest"
+                >
+                  <Mail className="w-4 h-4 mr-3" /> Initialize Contact
+                </Button>
+              </div>
+
+              <div className="border border-[#222] bg-[#050505] p-8 opacity-40">
+                <h3 className="font-mono text-sm uppercase text-[#888] mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
+                  <Terminal className="w-4 h-4" /> System_Logs
+                </h3>
+                <div className="space-y-3 font-mono text-[10px] text-[#555] uppercase">
+                  <div className="flex justify-between">
+                    <span>UPTIME</span>
+                    <span className="text-[#333]">99.98%</span>
                   </div>
-                </CardContent>
-              </Card>
+                  <div className="flex justify-between">
+                    <span>LATENCY</span>
+                    <span className="text-[#333]">24MS</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>STATUS</span>
+                    <span className="text-primary/60">NOMINAL</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </Tabs>
