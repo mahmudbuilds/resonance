@@ -114,44 +114,44 @@ export default function VoicesPage() {
          <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
+      <div className="relative z-10 responsive-container">
         
         {/* Header Section */}
-        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
               <Terminal className="w-3 h-3" />
               Database: Acoustic Models
             </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
               VOICE <span className="text-primary">REGISTRY</span>
             </h1>
           </div>
           <div className="flex flex-col items-start md:items-end gap-4">
-            <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+            <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
               Access the global repository of parameterized neural voices.
             </p>
-            <Button className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-xs uppercase tracking-widest h-10 px-6 transition-colors">
+            <Button className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-[10px] sm:text-xs uppercase tracking-widest h-10 px-6 transition-colors w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" /> ADD_MODEL
             </Button>
           </div>
         </header>
 
         {/* Filters */}
-        <div className="border border-[#222] bg-[#050505] p-6 mb-10">
-          <div className="flex flex-col md:flex-row gap-6">
+        <div className="border border-[#222] bg-[#050505] p-4 sm:p-6 mb-8 sm:mb-10">
+          <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
             <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#666]" />
               <Input
                 placeholder="QUERY_DATABASE..."
-                className="pl-12 bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary w-full font-mono uppercase placeholder:text-[#555] text-white"
+                className="pl-10 sm:pl-12 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary w-full font-mono uppercase placeholder:text-[#555] text-white text-xs sm:text-sm"
               />
             </div>
-            <div className="flex gap-4 overflow-x-auto pb-2 md:pb-0 shrink-0 min-w-0">
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-2 md:pb-0 shrink-0 min-w-0 no-scrollbar">
               <Select defaultValue="all">
-                <SelectTrigger className="w-[160px] shrink-0 bg-[#111] border-[#333] h-14 rounded-none focus:ring-primary font-mono uppercase text-white">
+                <SelectTrigger className="w-[140px] sm:w-[160px] shrink-0 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus:ring-primary font-mono uppercase text-white text-[10px] sm:text-xs">
                   <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                    <Globe2 className="w-4 h-4 text-primary shrink-0" />{" "}
+                    <Globe2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />{" "}
                     <SelectValue placeholder="LOCALE" />
                   </div>
                 </SelectTrigger>
@@ -163,9 +163,9 @@ export default function VoicesPage() {
               </Select>
 
               <Select defaultValue="all">
-                <SelectTrigger className="w-[160px] shrink-0 bg-[#111] border-[#333] h-14 rounded-none focus:ring-primary font-mono uppercase text-white">
+                <SelectTrigger className="w-[140px] sm:w-[160px] shrink-0 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus:ring-primary font-mono uppercase text-white text-[10px] sm:text-xs">
                   <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                    <Filter className="w-4 h-4 text-primary shrink-0" />{" "}
+                    <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />{" "}
                     <SelectValue placeholder="CLASS" />
                   </div>
                 </SelectTrigger>
@@ -180,7 +180,7 @@ export default function VoicesPage() {
         </div>
 
         {/* Voices Grid */}
-        <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 w-full max-w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 w-full max-w-full">
           {library.map((voice) => (
             <div
               key={voice.name}
@@ -188,10 +188,10 @@ export default function VoicesPage() {
             >
               {/* Top Banner */}
               <div className="h-10 w-full border-b border-[#222] bg-[#111] flex items-center justify-between px-4">
-                <span className="font-mono text-[10px] text-[#666] uppercase">{voice.id}</span>
+                <span className="font-mono text-[9px] sm:text-[10px] text-[#666] uppercase">{voice.id}</span>
                 <div className="flex items-center gap-2">
                   {voice.type === "PRO" && (
-                    <span className="font-mono text-[9px] uppercase tracking-widest text-black bg-primary px-1.5 py-0.5">
+                    <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-black bg-primary px-1.5 py-0.5">
                       PRO
                     </span>
                   )}
@@ -200,9 +200,9 @@ export default function VoicesPage() {
               </div>
 
               {/* Main Content */}
-              <div className="p-6 flex flex-col flex-1">
+              <div className="p-5 sm:p-6 flex flex-col flex-1">
                 <div className="flex justify-between items-start mb-6">
-                  <div className="w-16 h-16 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-2xl text-white group-hover:border-primary transition-colors">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-xl sm:text-2xl text-white group-hover:border-primary transition-colors">
                     {voice.name[0]}
                   </div>
                   <Button
@@ -213,24 +213,24 @@ export default function VoicesPage() {
                   </Button>
                 </div>
 
-                <h3 className="font-heading text-2xl font-bold uppercase text-white mb-2 group-hover:text-primary transition-colors">{voice.name}</h3>
+                <h3 className="font-heading text-xl sm:text-2xl font-bold uppercase text-white mb-2 group-hover:text-primary transition-colors">{voice.name}</h3>
                 
                 <div className="flex gap-2 mb-4">
-                  <span className="font-mono text-[10px] text-primary border border-primary/30 px-1.5 py-0.5">{voice.accent}</span>
-                  <span className="font-mono text-[10px] text-[#888] border border-[#333] px-1.5 py-0.5">{voice.gender}</span>
+                  <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-1.5 py-0.5">{voice.accent}</span>
+                  <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-1.5 py-0.5">{voice.gender}</span>
                 </div>
 
-                <p className="font-mono text-xs text-[#888] uppercase leading-relaxed flex-1">
+                <p className="font-mono text-[11px] sm:text-xs text-[#888] uppercase leading-relaxed flex-1">
                   {voice.desc}
                 </p>
               </div>
 
               {/* Footer */}
               <div className="px-6 py-4 border-t border-[#222] bg-[#0a0a0a] flex items-center justify-between">
-                <span className="font-mono text-[10px] text-[#555] border border-[#333] px-2 py-1">
+                <span className="font-mono text-[9px] sm:text-[10px] text-[#555] border border-[#333] px-2 py-1">
                   {voice.mood}
                 </span>
-                <span className="flex items-center gap-2 font-mono text-[10px] text-[#666]">
+                <span className="flex items-center gap-2 font-mono text-[9px] sm:text-[10px] text-[#666]">
                   <Activity className="w-3 h-3 text-primary" />
                   {voice.plays}
                 </span>

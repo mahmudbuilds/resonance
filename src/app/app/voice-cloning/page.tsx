@@ -320,19 +320,19 @@ export default function VoiceCloningPage() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
+      <div className="relative z-10 responsive-container">
         {/* Header Section */}
-        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
               <Terminal className="w-3 h-3" />
               Module: Voice Extraction
             </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
               CLONE <span className="text-primary">VOICE</span>
             </h1>
           </div>
-          <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+          <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
             Initialize neural extraction protocol. Provide high-fidelity audio
             samples to map acoustic topography.
           </p>
@@ -340,17 +340,17 @@ export default function VoiceCloningPage() {
 
         <div className="grid lg:grid-cols-12 gap-8 w-full max-w-full">
           {/* Main Workspace */}
-          <div className="lg:col-span-8 flex flex-col gap-8">
-            <div className="border border-[#222] bg-[#050505] p-8 relative">
-              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+          <div className="lg:col-span-8 flex flex-col gap-6 sm:gap-8">
+            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
+              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
                 Configuration
               </div>
 
-              <div className="space-y-8 mt-4">
+              <div className="space-y-6 sm:space-y-8 mt-4">
                 <div className="space-y-3">
                   <Label
                     htmlFor="voiceName"
-                    className="font-mono text-xs uppercase tracking-widest text-[#888]"
+                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
                   >
                     Voice Designation <span className="text-primary">*</span>
                   </Label>
@@ -358,14 +358,14 @@ export default function VoiceCloningPage() {
                     id="voiceName"
                     ref={voiceNameRef}
                     placeholder="E.G. MARK_01"
-                    className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]"
+                    className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] text-sm"
                   />
                 </div>
 
                 <div className="space-y-3">
                   <Label
                     htmlFor="desc"
-                    className="font-mono text-xs uppercase tracking-widest text-[#888]"
+                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
                   >
                     Acoustic Profile <span className="text-primary">*</span>
                   </Label>
@@ -373,7 +373,7 @@ export default function VoiceCloningPage() {
                     id="desc"
                     ref={descriptionRef}
                     placeholder="DEFINE_TONE_PARAMETERS..."
-                    className="resize-none bg-[#111] border-[#333] h-28 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] w-full"
+                    className="resize-none bg-[#111] border-[#333] h-24 sm:h-28 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] w-full text-sm"
                   />
                 </div>
 
@@ -381,14 +381,14 @@ export default function VoiceCloningPage() {
                   <div className="space-y-3">
                     <Label
                       htmlFor="langCode"
-                      className="font-mono text-xs uppercase tracking-widest text-[#888]"
+                      className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
                     >
                       Locale Code
                     </Label>
                     <Select value={langCode} onValueChange={setLangCode}>
                       <SelectTrigger
                         id="langCode"
-                        className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white"
+                        className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white text-sm"
                       >
                         <SelectValue placeholder="LOCALE" />
                       </SelectTrigger>
@@ -409,7 +409,7 @@ export default function VoiceCloningPage() {
                   <div className="space-y-3">
                     <Label
                       htmlFor="tags"
-                      className="font-mono text-xs uppercase tracking-widest text-[#888]"
+                      className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
                     >
                       Metadata Tags
                     </Label>
@@ -417,7 +417,7 @@ export default function VoiceCloningPage() {
                       id="tags"
                       ref={tagsRef}
                       placeholder="TAG_1, TAG_2..."
-                      className="bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444]"
+                      className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] text-sm"
                     />
                   </div>
                 </div>
@@ -425,8 +425,8 @@ export default function VoiceCloningPage() {
             </div>
 
             {/* Audio Input Module */}
-            <div className="border border-[#222] bg-[#050505] p-8 relative">
-              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
+              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
                 Input Source
               </div>
 
@@ -439,18 +439,18 @@ export default function VoiceCloningPage() {
                   }}
                   className="w-full"
                 >
-                  <TabsList className="bg-transparent p-0 rounded-none h-14 w-full flex border border-[#333] mb-8">
+                  <TabsList className="bg-transparent p-0 rounded-none h-12 sm:h-14 w-full flex border border-[#333] mb-6 sm:mb-8 overflow-hidden">
                     <TabsTrigger
                       value="upload"
-                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
+                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
                     >
-                      <UploadCloud className="w-4 h-4 mr-2" /> Upload Stream
+                      <UploadCloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">Upload</span>
                     </TabsTrigger>
                     <TabsTrigger
                       value="record"
-                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-xs h-full"
+                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
                     >
-                      <Mic className="w-4 h-4 mr-2" /> Live Input
+                      <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">Record</span>
                     </TabsTrigger>
                   </TabsList>
 

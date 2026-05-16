@@ -115,34 +115,34 @@ export default function TextToSpeechPage() {
          <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
-      <div className="relative z-10 px-6 py-12 max-w-[1600px] mx-auto border-x border-[#222] min-h-screen">
+      <div className="relative z-10 responsive-container">
         {/* Header Section */}
-        <header className="mb-16 border-b border-[#222] pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-8 font-mono text-xs uppercase text-primary">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
               <Terminal className="w-3 h-3" />
               Module: Speech Synthesis
             </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
+            <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
               TEXT_TO_<span className="text-primary">SPEECH</span>
             </h1>
           </div>
-          <p className="font-mono text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+          <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
             Initialize parametric voice synthesis. Define text vectors and semantic weightings.
           </p>
         </header>
 
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 w-full max-w-full">
           {/* Settings Sidebar */}
-          <div className="lg:col-span-4 space-y-8 w-full max-w-full">
-            <div className="border border-[#222] bg-[#050505] p-8 relative">
-              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
+          <div className="lg:col-span-4 space-y-6 sm:space-y-8 w-full max-w-full">
+            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
+              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
                 Configuration
               </div>
 
-              <div className="space-y-8 mt-4">
+              <div className="space-y-6 sm:space-y-8 mt-4">
                 <div className="space-y-3">
-                  <Label className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                  <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
                     Voice Identity <span className="text-primary">*</span>
                   </Label>
                   <Select
@@ -150,7 +150,7 @@ export default function TextToSpeechPage() {
                     onValueChange={(value) => setSelectedVoice(value)}
                     disabled={!isReady}
                   >
-                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase">
+                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase text-sm">
                       <SelectValue
                         placeholder={
                           isReady ? "SELECT_VOICE" : "LOADING_VOICES..."
@@ -194,10 +194,10 @@ export default function TextToSpeechPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Label className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                    <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
                       Neural Model
                     </Label>
-                    <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5">
+                    <span className="font-mono text-[9px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5">
                       V2.0
                     </span>
                   </div>
@@ -205,7 +205,7 @@ export default function TextToSpeechPage() {
                     value={model}
                     onValueChange={(value) => setModel(value)}
                   >
-                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase">
+                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase text-sm">
                       <SelectValue placeholder="SELECT_MODEL" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white uppercase">
@@ -231,14 +231,14 @@ export default function TextToSpeechPage() {
                   </Select>
                 </div>
 
-                <div className="space-y-8 pt-8 border-t border-[#333]">
-                  <Label className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                <div className="space-y-6 sm:space-y-8 pt-6 sm:pt-8 border-t border-[#333]">
+                  <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
                     Tuning Parameters
                   </Label>
 
-                  <div className="space-y-4 bg-[#111] border border-[#333] p-6">
+                  <div className="space-y-4 bg-[#111] border border-[#333] p-5 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <Label className="font-mono text-xs text-white uppercase tracking-widest">
+                      <Label className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest">
                         Rate
                       </Label>
                       <span className="font-mono text-xs text-primary">
@@ -255,9 +255,9 @@ export default function TextToSpeechPage() {
                     />
                   </div>
 
-                  <div className="space-y-4 bg-[#111] border border-[#333] p-6">
+                  <div className="space-y-4 bg-[#111] border border-[#333] p-5 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <Label className="font-mono text-xs text-white uppercase tracking-widest">
+                      <Label className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest">
                         Temperature
                       </Label>
                       <span className="font-mono text-xs text-primary">
@@ -279,18 +279,18 @@ export default function TextToSpeechPage() {
           </div>
 
           {/* Main Input area & Generations */}
-          <div className="lg:col-span-8 flex flex-col space-y-8 w-full max-w-full">
-            <div className="flex flex-col border border-[#222] bg-[#050505] min-h-[500px] w-full max-w-full focus-within:border-primary transition-colors relative">
-              <div className="absolute top-0 right-0 px-4 py-2 bg-primary text-black font-mono text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary z-10">
+          <div className="lg:col-span-8 flex flex-col space-y-6 sm:space-y-8 w-full max-w-full">
+            <div className="flex flex-col border border-[#222] bg-[#050505] min-h-[400px] sm:min-h-[500px] w-full max-w-full focus-within:border-primary transition-colors relative">
+              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary z-10">
                 Script Editor
               </div>
 
-              <div className="border-b border-[#222] p-6 flex flex-row items-center justify-between bg-[#0a0a0a]">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-3">
+              <div className="border-b border-[#222] p-4 sm:p-6 flex flex-row items-center justify-between bg-[#0a0a0a]">
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <div className="flex items-center gap-2 sm:gap-3">
                     <Label
                       htmlFor="ssml"
-                      className="font-mono text-xs text-white uppercase tracking-widest cursor-pointer hidden sm:block"
+                      className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest cursor-pointer"
                     >
                       SSML
                     </Label>
@@ -298,14 +298,14 @@ export default function TextToSpeechPage() {
                       id="ssml"
                       checked={isSsml}
                       onCheckedChange={setIsSsml}
-                      className="data-[state=checked]:bg-primary"
+                      className="data-[state=checked]:bg-primary scale-75 sm:scale-100"
                     />
                   </div>
-                  <div className="w-px h-6 bg-[#333] hidden sm:block" />
+                  <div className="w-px h-6 bg-[#333] hidden xs:block" />
                   <Button
                     variant="ghost"
                     onClick={() => setText("")}
-                    className="font-mono text-xs uppercase tracking-widest text-[#888] hover:text-white rounded-none h-8 px-0"
+                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888] hover:text-white rounded-none h-8 px-0"
                   >
                     Clear Buffer
                   </Button>
@@ -315,7 +315,7 @@ export default function TextToSpeechPage() {
               <div className={`flex-1 relative flex flex-col w-full max-w-full transition-colors duration-500`}>
                 <div className="flex-1 flex w-full h-full relative">
                   {isSsml && (
-                    <div className="hidden md:flex flex-col items-end py-8 px-4 border-r border-[#222] w-12 font-mono text-xs text-[#444] select-none bg-[#0a0a0a]">
+                    <div className="hidden md:flex flex-col items-end py-8 px-4 border-r border-[#222] w-12 font-mono text-[10px] text-[#444] select-none bg-[#0a0a0a]">
                       {Array.from({
                         length: Math.max(1, text.split("\n").length),
                       }).map((_, i) => (
@@ -329,10 +329,10 @@ export default function TextToSpeechPage() {
                         ? "<speak>\n  INITIALIZE SSML SEQUENCE...\n</speak>"
                         : "INPUT NEURAL SCRIPT HERE..."
                     }
-                    className={`w-full h-full min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 leading-relaxed p-8 rounded-none ${
+                    className={`w-full h-full min-h-[300px] sm:min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 leading-relaxed p-6 sm:p-8 rounded-none ${
                       isSsml
-                        ? "bg-[#050505] font-mono text-sm text-primary placeholder:text-primary/30 selection:bg-primary/20"
-                        : "bg-[#050505] font-sans text-lg text-white placeholder:text-[#444] selection:bg-[#222]"
+                        ? "bg-[#050505] font-mono text-xs sm:text-sm text-primary placeholder:text-primary/30 selection:bg-primary/20"
+                        : "bg-[#050505] font-sans text-base sm:text-lg text-white placeholder:text-[#444] selection:bg-[#222]"
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -342,14 +342,14 @@ export default function TextToSpeechPage() {
                 </div>
               </div>
 
-              <div className="border-t border-[#222] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#0a0a0a]">
+              <div className="border-t border-[#222] p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 bg-[#0a0a0a]">
                 <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-start">
-                  <span className="font-mono text-xs text-[#888] uppercase tracking-widest">
+                  <span className="font-mono text-[10px] sm:text-xs text-[#888] uppercase tracking-widest">
                     <span className={text.length > 4500 ? "text-red-500" : "text-white"}>
                       {text.length}
                     </span> / 5000
                   </span>
-                  <div className="hidden sm:flex items-center gap-2 font-mono text-xs text-[#888] uppercase tracking-widest">
+                  <div className="hidden xs:flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#888] uppercase tracking-widest">
                     <Clock className="w-3.5 h-3.5" />
                     EST: {Math.ceil(text.length / 18)}s
                   </div>
@@ -359,12 +359,12 @@ export default function TextToSpeechPage() {
                   <Button
                     onClick={handleGenerateSpeech}
                     disabled={isGenerating || !text.trim()}
-                    className="rounded-none h-14 w-full sm:w-auto px-10 bg-primary hover:bg-white text-black font-mono text-sm uppercase tracking-widest transition-colors border border-primary disabled:opacity-30 disabled:hover:bg-primary"
+                    className="rounded-none h-12 sm:h-14 w-full sm:w-auto px-8 sm:px-10 bg-primary hover:bg-white text-black font-mono text-xs sm:text-sm uppercase tracking-widest transition-colors border border-primary disabled:opacity-30 disabled:hover:bg-primary"
                   >
                     {isGenerating ? (
-                      <Loader2 className="w-4 h-4 mr-3 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-3 animate-spin" />
                     ) : (
-                      <Wand2 className="w-4 h-4 mr-3" />
+                      <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-3" />
                     )}
                     {isGenerating ? "PROCESSING..." : "SYNTHESIZE"}
                   </Button>
