@@ -85,3 +85,78 @@ export const getUserVoices = query({
   },
 });
 
+export const saveClonedVoice = internalMutation({
+  args: {
+    voiceId: v.string(),
+    userId: v.id("users"),
+    name: v.string(),
+    lang_code: v.optional(v.string()),
+    transcriptions: v.optional(v.array(v.string())),
+    tags: v.optional(v.array(v.string())),
+    description: v.optional(v.string()),
+  },
+  handler: async (
+    ctx,
+    { voiceId, userId, name, lang_code, tags, description },
+  ) => {
+    return await ctx.db.insert("voices", {
+      inworldVoiceId: voiceId,
+      userId,
+      displayName: name,
+      langCode: lang_code,
+      isPublic: false,
+      tags,
+      description,
+    });
+  },
+});
+
+export const listClonedVoices = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("User not authenticated");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+    if (!user) throw new Error("User not identified");
+
+    return await ctx.db
+      .query("voices")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .collect();
+  },
+});
+
+export const listClonedVoice = listClonedVoices;
+
+export const deleteClonedVoice = mutation({
+  args: {
+    voiceId: v.id("voices"),
+  },
+  handler: async (ctx, { voiceId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("User not authenticated");
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) =>
+        q.eq("tokenIdentifier", identity.tokenIdentifier)
+      )
+      .unique();
+    if (!user) throw new Error("User not identified");
+
+    const voice = await ctx.db.get(voiceId);
+    if (!voice) throw new Error("Voice not found");
+
+    if (voice.userId !== user._id) {
+      throw new Error("Unauthorized to delete this voice");
+    }
+
+    await ctx.db.delete(voiceId);
+    return true;
+  },
+});
+

@@ -2,7 +2,7 @@
 import { ApiError, InworldTTS } from "@inworld/tts";
 import { v } from "convex/values";
 import { api, internal } from "./_generated/api";
-import { action, internalMutation } from "./_generated/server";
+import { action } from "./_generated/server";
 
 type CloneVoiceResponse = {
   voice?: {
@@ -76,7 +76,7 @@ export const cloneVoice = action({
       if (clonedVoiceId) {
         console.log("Cloned Voice ID:", clonedVoiceId);
 
-        await ctx.runMutation(internal.cloneVoice.saveClonedVoice, {
+        await ctx.runMutation(internal.voice.saveClonedVoice, {
           voiceId: clonedVoiceId,
           userId: user._id,
           name,
@@ -98,31 +98,5 @@ export const cloneVoice = action({
         `Failed to clone voice: ${getInworldErrorMessage(error)}`,
       );
     }
-  },
-});
-
-export const saveClonedVoice = internalMutation({
-  args: {
-    voiceId: v.string(),
-    userId: v.id("users"),
-    name: v.string(),
-    lang_code: v.optional(v.string()),
-    transcriptions: v.optional(v.array(v.string())),
-    tags: v.optional(v.array(v.string())),
-    description: v.optional(v.string()),
-  },
-  handler: async (
-    ctx,
-    { voiceId, userId, name, lang_code, tags, description },
-  ) => {
-    return await ctx.db.insert("voices", {
-      inworldVoiceId: voiceId,
-      userId,
-      displayName: name,
-      langCode: lang_code,
-      isPublic: false,
-      tags,
-      description,
-    });
   },
 });

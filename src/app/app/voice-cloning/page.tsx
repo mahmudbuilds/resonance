@@ -1,8 +1,9 @@
 "use client";
 
-import { useAction } from "convex/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import {
   AlertTriangle,
+  Loader2,
   Mic,
   Pause,
   Play,
@@ -13,10 +14,21 @@ import {
   UploadCloud,
   Waves,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,6 +42,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "../../../../convex/_generated/api";
+import type { Id } from "../../../../convex/_generated/dataModel";
 
 const LANG_CODES = [
   "EN_US",
@@ -75,6 +88,44 @@ function formatTime(seconds: number) {
 
 export default function VoiceCloningPage() {
   const cloneVoice = useAction(api.cloneVoice.cloneVoice);
+  const clonedVoices = useQuery(api.voice.listClonedVoices);
+  const deleteClonedVoice = useMutation(api.voice.deleteClonedVoice);
+
+  const [voiceToDelete, setVoiceToDelete] = useState<{
+    id: Id<"voices">;
+    name: string;
+  } | null>(null);
+
+  const handleUseVoice = (inworldVoiceId: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
+      toast.success("ACTIVE VOICE LOADED INTO SPEECH MODULE");
+    }
+  };
+
+  const handleDeleteVoice = (voiceId: Id<"voices">, name: string) => {
+    setVoiceToDelete({ id: voiceId, name });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!voiceToDelete) return;
+    const { id: voiceId, name } = voiceToDelete;
+    setVoiceToDelete(null);
+
+    const toastId = toast.loading(
+      `DELETING NEURAL PROFILE "${name.toUpperCase()}"...`,
+    );
+    try {
+      await deleteClonedVoice({ voiceId });
+      toast.success(`NEURAL PROFILE "${name.toUpperCase()}" PURGED`, {
+        id: toastId,
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error(`FAILED TO PURGE NEURAL PROFILE`, { id: toastId });
+    }
+  };
+
   const [activeTab, setActiveTab] = useState("upload");
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -444,13 +495,15 @@ export default function VoiceCloningPage() {
                       value="upload"
                       className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
                     >
-                      <UploadCloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">Upload</span>
+                      <UploadCloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />{" "}
+                      <span className="truncate">Upload</span>
                     </TabsTrigger>
                     <TabsTrigger
                       value="record"
                       className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
                     >
-                      <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" /> <span className="truncate">Record</span>
+                      <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />{" "}
+                      <span className="truncate">Record</span>
                     </TabsTrigger>
                   </TabsList>
 
@@ -692,21 +745,141 @@ export default function VoiceCloningPage() {
               </div>
             </div>
 
-            {/* Inactive Database */}
-            <div className="border border-[#222] bg-[#050505] p-8 opacity-40">
-              <h3 className="font-mono text-sm uppercase text-[#888] mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
-                <Waves className="w-4 h-4" /> Local Storage
+            {/* Active Cloned Voices Database */}
+            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8">
+              <h3 className="font-mono text-sm uppercase text-white mb-6 flex items-center justify-between border-b border-[#222] pb-4">
+                <span className="flex items-center gap-3">
+                  <Waves className="w-4 h-4 text-primary" /> CLONE REGISTRY
+                </span>
+                {clonedVoices && (
+                  <span className="text-primary font-bold text-xs bg-primary/10 border border-primary/20 px-2 py-0.5 font-mono">
+                    [{clonedVoices.length}]
+                  </span>
+                )}
               </h3>
-              <div className="text-center py-8">
-                <Terminal className="w-8 h-8 text-[#444] mx-auto mb-4" />
-                <p className="font-mono text-xs text-[#666] uppercase tracking-widest">
-                  REGISTRY_EMPTY
-                </p>
-              </div>
+
+              {clonedVoices === undefined ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                  <span className="font-mono text-xs text-[#666] uppercase tracking-widest animate-pulse">
+                    Retrieving neural archive...
+                  </span>
+                </div>
+              ) : clonedVoices.length === 0 ? (
+                <div className="text-center py-12 border border-dashed border-[#222] bg-[#020202]">
+                  <Terminal className="w-8 h-8 text-[#333] mx-auto mb-4" />
+                  <p className="font-mono text-xs text-[#666] uppercase tracking-widest mb-2">
+                    REGISTRY_EMPTY
+                  </p>
+                  <p className="font-mono text-[10px] text-[#444] uppercase leading-relaxed max-w-xs mx-auto px-4">
+                    No neural signatures mapped. Run a cloning protocol on the
+                    left to initialize a voice profile.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
+                  {clonedVoices.map((voice) => (
+                    <div
+                      key={voice._id}
+                      className="border border-[#222] bg-[#080808] hover:border-primary/40 transition-colors p-4 flex flex-col gap-3 relative group"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-heading text-sm font-bold text-white uppercase truncate">
+                            {voice.displayName}
+                          </h4>
+                          <span className="font-mono text-[8px] text-[#444] uppercase tracking-widest block mt-0.5 truncate">
+                            ID: {voice.inworldVoiceId}
+                          </span>
+                        </div>
+                        <span className="font-mono text-[9px] text-primary border border-primary/20 bg-primary/5 px-2 py-0.5 uppercase shrink-0">
+                          {voice.langCode || "EN_US"}
+                        </span>
+                      </div>
+
+                      {voice.description ? (
+                        <p className="font-mono text-[10px] text-[#888] uppercase leading-relaxed line-clamp-2">
+                          {voice.description}
+                        </p>
+                      ) : (
+                        <p className="font-mono text-[10px] text-[#333] uppercase italic">
+                          NO_PARAMETERS_DEFINED
+                        </p>
+                      )}
+
+                      {voice.tags && voice.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {voice.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="font-mono text-[8px] text-[#666] border border-[#222] bg-[#0c0c0c] px-1.5 py-0.5 uppercase"
+                            >
+                              #{tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#111]">
+                        <Button
+                          asChild
+                          variant="outline"
+                          onClick={() => handleUseVoice(voice.inworldVoiceId!)}
+                          className="flex-1 rounded-none border-primary/30 hover:border-primary bg-transparent text-primary hover:bg-primary hover:text-black font-mono text-[10px] uppercase tracking-widest h-8"
+                        >
+                          <Link href="/app/text-to-speech">Use Voice</Link>
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            handleDeleteVoice(voice._id, voice.displayName)
+                          }
+                          variant="ghost"
+                          className="rounded-none hover:bg-red-500/10 text-[#888] hover:text-red-500 font-mono text-[10px] uppercase tracking-widest h-8 px-3 border border-transparent hover:border-red-500/20"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
+
+      <AlertDialog
+        open={voiceToDelete !== null}
+        onOpenChange={(open) => !open && setVoiceToDelete(null)}
+      >
+        <AlertDialogContent className="border border-[#222] bg-black rounded-none font-mono max-w-md">
+          <AlertDialogHeader className="text-left">
+            <AlertDialogTitle className="text-sm font-bold uppercase tracking-widest text-red-500 flex items-center gap-2 border-b border-[#222] pb-3">
+              <AlertTriangle className="w-4 h-4 text-red-500" /> DECOMMISSION
+              NEURAL PROFILE
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-xs uppercase text-[#aaa] leading-relaxed pt-2">
+              YOU ARE ABOUT TO PURGE THE NEURAL PROFILE:
+              <span className="block my-2 text-white font-bold bg-[#111] border border-[#222] p-2 truncate">
+                &ldquo;{voiceToDelete?.name.toUpperCase()}&rdquo;
+              </span>
+              WARNING: THIS ACTION CANNOT BE UNDONE. THE DATA SIGNATURE WILL BE
+              PERMANENTLY DELETED FROM THE REGISTRY.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex sm:justify-end gap-2 border-t border-[#111] pt-3">
+            <AlertDialogCancel className="rounded-none border-[#333] bg-[#111] hover:bg-[#222] text-[#888] hover:text-white font-mono text-xs uppercase tracking-widest h-10">
+              ABORT PROTOCOL
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              className="rounded-none bg-red-600 hover:bg-red-700 text-white font-mono text-xs uppercase tracking-widest h-10 border border-red-600"
+            >
+              PURGE DATA
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
