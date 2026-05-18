@@ -72,12 +72,29 @@ const RECORDING_SENTENCES = [
   "We are thrilled to announce our latest product update, which brings a host of new features designed to make your workflow faster and more efficient.",
 ];
 
-function isAbortError(error: unknown) {
-  if (!(error instanceof Error)) return false;
-  return (
-    error.name === "AbortError" ||
-    error.message.toLowerCase().includes("signal is aborted")
-  );
+function isAbortError(error: unknown): boolean {
+  if (!error) return false;
+
+  if (typeof error === "string") {
+    const lower = error.toLowerCase();
+    return lower.includes("abort") || lower.includes("aborted");
+  }
+
+  if (typeof error === "object") {
+    const err = error as { name?: unknown; message?: unknown };
+    const name = typeof err.name === "string" ? err.name : "";
+    const message = typeof err.message === "string" ? err.message : "";
+
+    return (
+      name === "AbortError" ||
+      name.toLowerCase().includes("abort") ||
+      message.toLowerCase().includes("abort") ||
+      message.toLowerCase().includes("aborted") ||
+      message.toLowerCase().includes("signal is aborted")
+    );
+  }
+
+  return false;
 }
 
 function formatTime(seconds: number) {
@@ -158,14 +175,16 @@ export default function VoiceCloningPage() {
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       if (isAbortError(event.reason)) {
         event.preventDefault();
+        event.stopImmediatePropagation();
       }
     };
 
-    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+    window.addEventListener("unhandledrejection", handleUnhandledRejection, true);
     return () => {
       window.removeEventListener(
         "unhandledrejection",
         handleUnhandledRejection,
+        true,
       );
     };
   }, []);
