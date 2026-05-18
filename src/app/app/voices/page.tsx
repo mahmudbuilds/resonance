@@ -47,7 +47,7 @@ export default function VoicesPage() {
       type: "PRO",
       plays: "2.4M",
       desc: "Deep, resonant acoustic profile. Ideal for heavy exposition.",
-      id: "VOX-01"
+      id: "VOX-01",
     },
     {
       name: "Elara",
@@ -57,7 +57,7 @@ export default function VoicesPage() {
       type: "STD",
       plays: "1.8M",
       desc: "High fidelity conversational tone with natural mid-range.",
-      id: "VOX-02"
+      id: "VOX-02",
     },
     {
       name: "Kai",
@@ -67,7 +67,7 @@ export default function VoicesPage() {
       type: "STD",
       plays: "1.2M",
       desc: "Energetic frequency response. Optimized for broadcast.",
-      id: "VOX-03"
+      id: "VOX-03",
     },
     {
       name: "Nadia",
@@ -77,7 +77,7 @@ export default function VoicesPage() {
       type: "PRO",
       plays: "980K",
       desc: "Strict timing parameters. Perfect for corporate instruction.",
-      id: "VOX-04"
+      id: "VOX-04",
     },
     {
       name: "Theo",
@@ -87,7 +87,7 @@ export default function VoicesPage() {
       type: "STD",
       plays: "875K",
       desc: "Smooth velocity curve. Designed for narrative immersion.",
-      id: "VOX-05"
+      id: "VOX-05",
     },
     {
       name: "Zara",
@@ -97,7 +97,7 @@ export default function VoicesPage() {
       type: "PRO",
       plays: "762K",
       desc: "High-amplitude delivery. Sharp transients for commercial impact.",
-      id: "VOX-06"
+      id: "VOX-06",
     },
     {
       name: "Jin",
@@ -107,7 +107,7 @@ export default function VoicesPage() {
       type: "STD",
       plays: "640K",
       desc: "Low-noise, subdued output. Calibrated for ambient contexts.",
-      id: "VOX-07"
+      id: "VOX-07",
     },
     {
       name: "Sofia",
@@ -117,7 +117,7 @@ export default function VoicesPage() {
       type: "STD",
       plays: "590K",
       desc: "Clear articulation index. Suitable for semantic analysis tasks.",
-      id: "VOX-08"
+      id: "VOX-08",
     },
   ];
 
@@ -168,8 +168,12 @@ export default function VoicesPage() {
   const filteredVoices = voicesList.filter((voice: any) => {
     const voiceName = voice.displayName || voice.name || "";
     const voiceDesc = voice.description || voice.desc || "";
-    const nameMatch = voiceName.toLowerCase().includes(searchQuery.toLowerCase());
-    const descMatch = voiceDesc.toLowerCase().includes(searchQuery.toLowerCase());
+    const nameMatch = voiceName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const descMatch = voiceDesc
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     const searchMatch = searchQuery === "" || nameMatch || descMatch;
 
     const accentVal = voice.langCode || voice.accent || "";
@@ -187,16 +191,29 @@ export default function VoicesPage() {
   });
 
   const filteredGenerations = (generations || []).filter((gen) => {
-    const promptMatch = gen.prompt.toLowerCase().includes(searchQuery.toLowerCase());
-    const voiceIdMatch = gen.voiceId.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const voiceObj = voicesList.find((v: any) => (v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId));
-    const voiceName = voiceObj ? (voiceObj.displayName || voiceObj.name || "") : gen.voiceId;
-    const voiceNameMatch = voiceName.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const searchMatch = searchQuery === "" || promptMatch || voiceIdMatch || voiceNameMatch;
+    const promptMatch = gen.prompt
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const voiceIdMatch = gen.voiceId
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
-    const voiceAccent = voiceObj ? (voiceObj.langCode || voiceObj.accent || "") : "";
+    const voiceObj = voicesList.find(
+      (v: any) => v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId,
+    );
+    const voiceName = voiceObj
+      ? voiceObj.displayName || voiceObj.name || ""
+      : gen.voiceId;
+    const voiceNameMatch = voiceName
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const searchMatch =
+      searchQuery === "" || promptMatch || voiceIdMatch || voiceNameMatch;
+
+    const voiceAccent = voiceObj
+      ? voiceObj.langCode || voiceObj.accent || ""
+      : "";
     const localeMatch =
       selectedLocale === "all" ||
       voiceAccent.toLowerCase().startsWith(selectedLocale.toLowerCase());
@@ -211,29 +228,30 @@ export default function VoicesPage() {
   });
 
   // Pagination calculation
-  const totalItems = activeTab === "registry" ? filteredVoices.length : filteredGenerations.length;
+  const totalItems =
+    activeTab === "registry"
+      ? filteredVoices.length
+      : filteredGenerations.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
   const paginatedVoices = filteredVoices.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   const paginatedGenerations = filteredGenerations.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
+    currentPage * ITEMS_PER_PAGE,
   );
 
   return (
     <div className="min-h-screen relative w-full overflow-hidden bg-black text-white font-sans selection:bg-primary selection:text-black pb-24 sm:pb-32">
-      
       {/* Background Grid */}
       <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
-         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </div>
 
       <div className="relative z-10 responsive-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Header Section */}
         <header className="mb-12 sm:mb-20 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 pt-8">
           <div>
@@ -249,7 +267,10 @@ export default function VoicesPage() {
             <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
               Access the global repository of parameterized neural voices.
             </p>
-            <Button asChild className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-xs uppercase tracking-widest h-12 px-8 transition-colors w-full sm:w-auto font-bold">
+            <Button
+              asChild
+              className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-xs uppercase tracking-widest h-12 px-8 transition-colors w-full sm:w-auto font-bold"
+            >
               <Link href="/app/voice-cloning">
                 <Plus className="w-4 h-4 mr-2" /> ADD_MODEL
               </Link>
@@ -259,7 +280,6 @@ export default function VoicesPage() {
 
         {/* Tabs and Views Selection */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          
           <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mb-8 sm:mb-12 border-b border-[#222]/30 pb-4">
             <TabsList className="bg-transparent p-0 rounded-none h-12 w-full sm:w-[380px] flex border border-[#222] overflow-hidden">
               <TabsTrigger
@@ -282,10 +302,12 @@ export default function VoicesPage() {
                 )}
               </TabsTrigger>
             </TabsList>
-            
+
             {/* View Mode Toggle Switcher */}
             <div className="flex items-center justify-end gap-3 font-mono text-xs text-[#666]">
-              <span className="uppercase tracking-wider hidden xs:inline">Layout View:</span>
+              <span className="uppercase tracking-wider hidden xs:inline">
+                Layout View:
+              </span>
               <div className="flex items-center border border-[#222] bg-[#050505] p-1 shrink-0">
                 <Button
                   size="icon"
@@ -312,7 +334,7 @@ export default function VoicesPage() {
             <div className="absolute top-0 right-0 px-3 py-1 bg-primary/10 border-b border-l border-[#222] font-mono text-[9px] text-[#666] uppercase tracking-widest">
               TELEMETRY_FILTER
             </div>
-            
+
             <div className="flex flex-col md:flex-row gap-6 items-stretch md:items-center mt-2">
               <div className="relative flex-1 min-w-0">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
@@ -324,7 +346,10 @@ export default function VoicesPage() {
                 />
               </div>
               <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-4 shrink-0 min-w-0">
-                <Select value={selectedLocale} onValueChange={setSelectedLocale}>
+                <Select
+                  value={selectedLocale}
+                  onValueChange={setSelectedLocale}
+                >
                   <SelectTrigger className="w-[140px] sm:w-[160px] shrink-0 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus:ring-primary font-mono uppercase text-white text-[10px] sm:text-xs">
                     <div className="flex items-center gap-2 overflow-hidden min-w-0">
                       <Globe2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
@@ -332,12 +357,42 @@ export default function VoicesPage() {
                     </div>
                   </SelectTrigger>
                   <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
-                    <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ALL_LOCALES</SelectItem>
-                    <SelectItem value="en" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">EN</SelectItem>
-                    <SelectItem value="es" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ES</SelectItem>
-                    <SelectItem value="ko" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">KO</SelectItem>
-                    <SelectItem value="ru" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">RU</SelectItem>
-                    <SelectItem value="fr" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">FR</SelectItem>
+                    <SelectItem
+                      value="all"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      ALL_LOCALES
+                    </SelectItem>
+                    <SelectItem
+                      value="en"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      EN
+                    </SelectItem>
+                    <SelectItem
+                      value="es"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      ES
+                    </SelectItem>
+                    <SelectItem
+                      value="ko"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      KO
+                    </SelectItem>
+                    <SelectItem
+                      value="ru"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      RU
+                    </SelectItem>
+                    <SelectItem
+                      value="fr"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      FR
+                    </SelectItem>
                   </SelectContent>
                 </Select>
 
@@ -349,9 +404,24 @@ export default function VoicesPage() {
                     </div>
                   </SelectTrigger>
                   <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
-                    <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">ALL_CLASSES</SelectItem>
-                    <SelectItem value="pro" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">PRO / CLONED</SelectItem>
-                    <SelectItem value="standard" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">STANDARD</SelectItem>
+                    <SelectItem
+                      value="all"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      ALL_CLASSES
+                    </SelectItem>
+                    <SelectItem
+                      value="pro"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      PRO / CLONED
+                    </SelectItem>
+                    <SelectItem
+                      value="standard"
+                      className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                    >
+                      STANDARD
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -400,10 +470,15 @@ export default function VoicesPage() {
                     const gender = voice.gender || "FEMALE";
                     const moodVal = voice.mood || "BALANCED";
                     const playsVal = voice.plays || "0";
-                    const description = voice.description || voice.desc || "Neural voice profile mapped with nominal characteristics.";
+                    const description =
+                      voice.description ||
+                      voice.desc ||
+                      "Neural voice profile mapped with nominal characteristics.";
                     const isCloned = !isPublic;
                     const typeVal = voice.type || (isCloned ? "CLONED" : "PRO");
-                    const idVal = voice.inworldVoiceId ? voice.inworldVoiceId.substring(0, 8).toUpperCase() : (voice.id || "VOX-00");
+                    const idVal = voice.inworldVoiceId
+                      ? voice.inworldVoiceId.substring(0, 8).toUpperCase()
+                      : voice.id || "VOX-00";
                     const voiceDisplayName = voice.displayName || voice.name;
 
                     return (
@@ -413,7 +488,9 @@ export default function VoicesPage() {
                       >
                         {/* ID Column */}
                         <div className="w-24 shrink-0 font-mono text-[11px] text-[#666] flex items-center justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">ID: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            ID:{" "}
+                          </span>
                           <span>{idVal}</span>
                         </div>
                         {/* Avatar */}
@@ -441,12 +518,16 @@ export default function VoicesPage() {
                         </div>
                         {/* Accent */}
                         <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Accent: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Accent:{" "}
+                          </span>
                           <span className="text-primary">{accent}</span>
                         </div>
                         {/* Gender */}
                         <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Gender: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Gender:{" "}
+                          </span>
                           <span className="text-[#888]">{gender}</span>
                         </div>
                         {/* Description */}
@@ -455,19 +536,27 @@ export default function VoicesPage() {
                         </div>
                         {/* Mood */}
                         <div className="w-32 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Mood: </span>
-                          <span className="border border-[#333] px-2 py-0.5 text-[#666] bg-[#0c0c0c]">{moodVal}</span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Mood:{" "}
+                          </span>
+                          <span className="border border-[#333] px-2 py-0.5 text-[#666] bg-[#0c0c0c]">
+                            {moodVal}
+                          </span>
                         </div>
                         {/* Plays */}
                         <div className="w-32 shrink-0 font-mono text-xs flex justify-between md:block md:text-right">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Plays: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Plays:{" "}
+                          </span>
                           <span className="text-white">{playsVal}</span>
                         </div>
                         {/* Play Action */}
                         <div className="w-24 shrink-0 text-right flex justify-end">
                           <Button
                             size="sm"
-                            onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
+                            onClick={() =>
+                              handleUseVoice(voice.inworldVoiceId || voice.id)
+                            }
                             className="rounded-none bg-primary hover:bg-white text-black font-mono text-[10px] uppercase h-8 px-4 border border-primary font-bold"
                           >
                             Use
@@ -487,10 +576,15 @@ export default function VoicesPage() {
                   const gender = voice.gender || "FEMALE";
                   const moodVal = voice.mood || "BALANCED";
                   const playsVal = voice.plays || "0";
-                  const description = voice.description || voice.desc || "Neural voice profile mapped with nominal characteristics.";
+                  const description =
+                    voice.description ||
+                    voice.desc ||
+                    "Neural voice profile mapped with nominal characteristics.";
                   const isCloned = !isPublic;
                   const typeVal = voice.type || (isCloned ? "CLONED" : "PRO");
-                  const idVal = voice.inworldVoiceId ? voice.inworldVoiceId.substring(0, 8).toUpperCase() : (voice.id || "VOX-00");
+                  const idVal = voice.inworldVoiceId
+                    ? voice.inworldVoiceId.substring(0, 8).toUpperCase()
+                    : voice.id || "VOX-00";
                   const voiceDisplayName = voice.displayName || voice.name;
 
                   return (
@@ -519,10 +613,15 @@ export default function VoicesPage() {
                           </div>
                           <Button
                             size="icon"
-                            onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
+                            onClick={() =>
+                              handleUseVoice(voice.inworldVoiceId || voice.id)
+                            }
                             className="h-11 w-11 rounded-none bg-primary hover:bg-white text-black transition-colors border border-primary"
                           >
-                            <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                            <Play
+                              className="w-4 h-4 ml-0.5"
+                              fill="currentColor"
+                            />
                           </Button>
                         </div>
 
@@ -531,8 +630,12 @@ export default function VoicesPage() {
                             {voiceDisplayName}
                           </h3>
                           <div className="flex gap-2 mt-2">
-                            <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">{accent}</span>
-                            <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-2 py-0.5 bg-[#111]">{gender}</span>
+                            <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">
+                              {accent}
+                            </span>
+                            <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-2 py-0.5 bg-[#111]">
+                              {gender}
+                            </span>
                           </div>
                         </div>
 
@@ -574,7 +677,9 @@ export default function VoicesPage() {
                   NO_GENERATIONS_FOUND
                 </p>
                 <p className="font-mono text-[10px] text-[#444] uppercase leading-relaxed max-w-sm mx-auto px-4">
-                  {searchQuery ? "No generated signatures match the active telemetry filters." : "No neural voice generations synthesized yet. Initialize speech synthesis to populate log."}
+                  {searchQuery
+                    ? "No generated signatures match the active telemetry filters."
+                    : "No neural voice generations synthesized yet. Initialize speech synthesis to populate log."}
                 </p>
               </div>
             ) : viewMode === "list" ? (
@@ -594,14 +699,31 @@ export default function VoicesPage() {
                 {/* Rows */}
                 <div className="flex flex-col divide-y divide-[#222]">
                   {paginatedGenerations.map((gen) => {
-                    const voiceObj = voicesList.find((v: any) => (v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId));
-                    const voiceName = voiceObj ? (voiceObj.displayName || voiceObj.name || "") : "Custom Voice";
-                    const voiceAccent = voiceObj ? (voiceObj.langCode || voiceObj.accent || "EN-US") : "EN-US";
-                    const voiceGender = voiceObj ? (voiceObj.gender || "NEUTRAL") : "NEUTRAL";
-                    
+                    const voiceObj = voicesList.find(
+                      (v: any) =>
+                        v.inworldVoiceId === gen.voiceId ||
+                        v.id === gen.voiceId,
+                    );
+                    const voiceName = voiceObj
+                      ? voiceObj.displayName || voiceObj.name || ""
+                      : "Custom Voice";
+                    const voiceAccent = voiceObj
+                      ? voiceObj.langCode || voiceObj.accent || "EN-US"
+                      : "EN-US";
+                    const voiceGender = voiceObj
+                      ? voiceObj.gender || "NEUTRAL"
+                      : "NEUTRAL";
+
                     const date = new Date(gen._creationTime);
-                    const dateStr = date.toLocaleDateString([], { month: "short", day: "numeric" });
-                    const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+                    const dateStr = date.toLocaleDateString([], {
+                      month: "short",
+                      day: "numeric",
+                    });
+                    const timeStr = date.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    });
 
                     return (
                       <div
@@ -610,7 +732,9 @@ export default function VoicesPage() {
                       >
                         {/* ID Column */}
                         <div className="w-24 shrink-0 font-mono text-[11px] text-[#666] flex items-center justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">ID: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            ID:{" "}
+                          </span>
                           <span>{gen._id.substring(3, 10).toUpperCase()}</span>
                         </div>
                         {/* Play/Pause Button */}
@@ -618,12 +742,17 @@ export default function VoicesPage() {
                           <Button
                             size="icon"
                             onClick={() => {
-                              const audio = document.getElementById(`audio-${gen._id}`) as HTMLAudioElement;
+                              const audio = document.getElementById(
+                                `audio-${gen._id}`,
+                              ) as HTMLAudioElement;
                               if (audio) {
                                 if (audio.paused) {
-                                  document.querySelectorAll("audio").forEach((a) => {
-                                    if (a.id !== `audio-${gen._id}`) a.pause();
-                                  });
+                                  document
+                                    .querySelectorAll("audio")
+                                    .forEach((a) => {
+                                      if (a.id !== `audio-${gen._id}`)
+                                        a.pause();
+                                    });
                                   audio.play();
                                 } else {
                                   audio.pause();
@@ -635,7 +764,10 @@ export default function VoicesPage() {
                             {playingId === gen._id ? (
                               <Pause className="w-3.5 h-3.5" />
                             ) : (
-                              <Play className="w-3.5 h-3.5 ml-0.5" fill="currentColor" />
+                              <Play
+                                className="w-3.5 h-3.5 ml-0.5"
+                                fill="currentColor"
+                              />
                             )}
                           </Button>
                           <audio
@@ -643,8 +775,16 @@ export default function VoicesPage() {
                             src={gen.audioUrl}
                             className="hidden"
                             onPlay={() => setPlayingId(gen._id)}
-                            onPause={() => setPlayingId((current) => current === gen._id ? null : current)}
-                            onEnded={() => setPlayingId((current) => current === gen._id ? null : current)}
+                            onPause={() =>
+                              setPlayingId((current) =>
+                                current === gen._id ? null : current,
+                              )
+                            }
+                            onEnded={() =>
+                              setPlayingId((current) =>
+                                current === gen._id ? null : current,
+                              )
+                            }
                           />
                         </div>
                         {/* Voice Name */}
@@ -655,12 +795,16 @@ export default function VoicesPage() {
                         </div>
                         {/* Accent */}
                         <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Accent: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Accent:{" "}
+                          </span>
                           <span className="text-primary">{voiceAccent}</span>
                         </div>
                         {/* Gender */}
                         <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Gender: </span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Gender:{" "}
+                          </span>
                           <span className="text-[#888]">{voiceGender}</span>
                         </div>
                         {/* Prompt */}
@@ -669,8 +813,12 @@ export default function VoicesPage() {
                         </div>
                         {/* Timestamp */}
                         <div className="w-36 shrink-0 font-mono text-xs flex justify-between md:block text-[#666]">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">Created: </span>
-                          <span>{dateStr} {timeStr}</span>
+                          <span className="md:hidden text-[#444] uppercase tracking-wider">
+                            Created:{" "}
+                          </span>
+                          <span>
+                            {dateStr} {timeStr}
+                          </span>
                         </div>
                         {/* Download & Delete */}
                         <div className="w-28 shrink-0 flex items-center justify-end gap-2">
@@ -678,7 +826,9 @@ export default function VoicesPage() {
                             size="icon"
                             variant="ghost"
                             className="h-8 w-8 rounded-none bg-[#111] border border-[#333] hover:border-primary hover:text-primary text-[#888]"
-                            disabled={downloadingId === gen._id || !gen.audioUrl}
+                            disabled={
+                              downloadingId === gen._id || !gen.audioUrl
+                            }
                             onClick={async () => {
                               if (!gen.audioUrl) return;
                               try {
@@ -700,7 +850,11 @@ export default function VoicesPage() {
                               }
                             }}
                           >
-                            {downloadingId === gen._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                            {downloadingId === gen._id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Download className="w-3.5 h-3.5" />
+                            )}
                           </Button>
                           <Button
                             size="icon"
@@ -720,15 +874,31 @@ export default function VoicesPage() {
               /* GRID VIEW WITH GENEROUS SPACING (gap-6 sm:gap-8) */
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 w-full max-w-full">
                 {paginatedGenerations.map((gen) => {
-                  const voiceObj = voicesList.find((v: any) => (v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId));
-                  const voiceName = voiceObj ? (voiceObj.displayName || voiceObj.name || "") : "Custom Voice";
-                  const voiceAccent = voiceObj ? (voiceObj.langCode || voiceObj.accent || "EN-US") : "EN-US";
-                  const voiceGender = voiceObj ? (voiceObj.gender || "NEUTRAL") : "NEUTRAL";
-                  
+                  const voiceObj = voicesList.find(
+                    (v: any) =>
+                      v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId,
+                  );
+                  const voiceName = voiceObj
+                    ? voiceObj.displayName || voiceObj.name || ""
+                    : "Custom Voice";
+                  const voiceAccent = voiceObj
+                    ? voiceObj.langCode || voiceObj.accent || "EN-US"
+                    : "EN-US";
+                  const voiceGender = voiceObj
+                    ? voiceObj.gender || "NEUTRAL"
+                    : "NEUTRAL";
+
                   const date = new Date(gen._creationTime);
-                  const dateStr = date.toLocaleDateString([], { month: "short", day: "numeric" });
-                  const timeStr = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-                  
+                  const dateStr = date.toLocaleDateString([], {
+                    month: "short",
+                    day: "numeric",
+                  });
+                  const timeStr = date.toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  });
+
                   return (
                     <div
                       key={gen._id}
@@ -754,23 +924,37 @@ export default function VoicesPage() {
                             {playingId === gen._id && (
                               <span className="absolute inset-0 flex items-center justify-center bg-black/60">
                                 <span className="flex items-end gap-0.5 h-6">
-                                  <span className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-full" style={{ animationDelay: '0.1s' }} />
-                                  <span className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-3" style={{ animationDelay: '0.3s' }} />
-                                  <span className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-5" style={{ animationDelay: '0.5s' }} />
+                                  <span
+                                    className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-full"
+                                    style={{ animationDelay: "0.1s" }}
+                                  />
+                                  <span
+                                    className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-3"
+                                    style={{ animationDelay: "0.3s" }}
+                                  />
+                                  <span
+                                    className="w-1 bg-primary animate-[bounce_0.8s_infinite] h-5"
+                                    style={{ animationDelay: "0.5s" }}
+                                  />
                                 </span>
                               </span>
                             )}
                           </div>
-                          
+
                           <Button
                             size="icon"
                             onClick={() => {
-                              const audio = document.getElementById(`audio-${gen._id}`) as HTMLAudioElement;
+                              const audio = document.getElementById(
+                                `audio-${gen._id}`,
+                              ) as HTMLAudioElement;
                               if (audio) {
                                 if (audio.paused) {
-                                  document.querySelectorAll("audio").forEach((a) => {
-                                    if (a.id !== `audio-${gen._id}`) a.pause();
-                                  });
+                                  document
+                                    .querySelectorAll("audio")
+                                    .forEach((a) => {
+                                      if (a.id !== `audio-${gen._id}`)
+                                        a.pause();
+                                    });
                                   audio.play();
                                 } else {
                                   audio.pause();
@@ -782,7 +966,10 @@ export default function VoicesPage() {
                             {playingId === gen._id ? (
                               <Pause className="w-4 h-4" />
                             ) : (
-                              <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
+                              <Play
+                                className="w-4 h-4 ml-0.5"
+                                fill="currentColor"
+                              />
                             )}
                           </Button>
                           <audio
@@ -790,8 +977,16 @@ export default function VoicesPage() {
                             src={gen.audioUrl}
                             className="hidden"
                             onPlay={() => setPlayingId(gen._id)}
-                            onPause={() => setPlayingId((current) => current === gen._id ? null : current)}
-                            onEnded={() => setPlayingId((current) => current === gen._id ? null : current)}
+                            onPause={() =>
+                              setPlayingId((current) =>
+                                current === gen._id ? null : current,
+                              )
+                            }
+                            onEnded={() =>
+                              setPlayingId((current) =>
+                                current === gen._id ? null : current,
+                              )
+                            }
                           />
                         </div>
 
@@ -800,8 +995,12 @@ export default function VoicesPage() {
                             {voiceName}
                           </h3>
                           <div className="flex gap-2 mt-2">
-                            <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">{voiceAccent}</span>
-                            <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-2 py-0.5 bg-[#111]">{voiceGender}</span>
+                            <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">
+                              {voiceAccent}
+                            </span>
+                            <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-2 py-0.5 bg-[#111]">
+                              {voiceGender}
+                            </span>
                           </div>
                         </div>
 
@@ -820,7 +1019,9 @@ export default function VoicesPage() {
                             size="icon"
                             variant="ghost"
                             className="h-8 w-8 rounded-none bg-[#111] border border-[#333] hover:border-primary hover:text-primary text-[#888]"
-                            disabled={downloadingId === gen._id || !gen.audioUrl}
+                            disabled={
+                              downloadingId === gen._id || !gen.audioUrl
+                            }
                             onClick={async () => {
                               if (!gen.audioUrl) return;
                               try {
@@ -842,7 +1043,11 @@ export default function VoicesPage() {
                               }
                             }}
                           >
-                            {downloadingId === gen._id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                            {downloadingId === gen._id ? (
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                            ) : (
+                              <Download className="w-3.5 h-3.5" />
+                            )}
                           </Button>
                           <Button
                             size="icon"
@@ -866,7 +1071,16 @@ export default function VoicesPage() {
             <div className="mt-12 sm:mt-16 flex flex-col sm:flex-row items-center justify-between border border-[#222] bg-[#050505] p-5 gap-4 font-mono text-[10px] sm:text-xs uppercase tracking-widest relative overflow-hidden">
               <div className="absolute top-0 left-0 bottom-0 w-1 bg-primary" />
               <div className="text-[#666]">
-                Showing <span className="text-white">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}</span> - <span className="text-white">{Math.min(currentPage * ITEMS_PER_PAGE, totalItems)}</span> of <span className="text-white">{totalItems}</span> telemetry records
+                Showing{" "}
+                <span className="text-white">
+                  {(currentPage - 1) * ITEMS_PER_PAGE + 1}
+                </span>{" "}
+                -{" "}
+                <span className="text-white">
+                  {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)}
+                </span>{" "}
+                of <span className="text-white">{totalItems}</span> telemetry
+                records
               </div>
               <div className="flex items-center gap-3">
                 <Button
@@ -882,7 +1096,9 @@ export default function VoicesPage() {
                 </div>
                 <Button
                   disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   variant="outline"
                   className="rounded-none border-[#333] hover:border-primary bg-[#111] hover:bg-primary hover:text-black font-mono text-[10px] uppercase h-10 px-5 disabled:opacity-30 transition-all font-bold"
                 >
@@ -891,17 +1107,20 @@ export default function VoicesPage() {
               </div>
             </div>
           )}
-
         </Tabs>
       </div>
-      
+
       {/* Bounce animation keyframes */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         @keyframes bounce {
           0%, 100% { transform: scaleY(0.3); }
           50% { transform: scaleY(1); }
         }
-      `}} />
+      `,
+        }}
+      />
     </div>
   );
 }
