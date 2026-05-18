@@ -270,8 +270,7 @@
 /* Fix Development Mode Badge Color */
 .cl-internal-b3fm6y, 
 .cl-dev-badge,
-[data-clerk-theme="dark"] .cl-internal-17le6jh,
-.cl-userButtonPopoverFooter p {
+[data-clerk-theme="dark"] .cl-internal-17le6jh {
   color: #ccff00 !important;
 }
 
