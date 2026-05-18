@@ -331,8 +331,8 @@ export default function TextToSpeechPage() {
                     }
                     className={`w-full h-full min-h-[300px] sm:min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 leading-relaxed p-6 sm:p-8 rounded-none ${
                       isSsml
-                        ? "bg-[#050505] font-mono text-xs sm:text-sm text-primary placeholder:text-primary/30 selection:bg-primary/20"
-                        : "bg-[#050505] font-sans text-base sm:text-lg text-white placeholder:text-[#444] selection:bg-[#222]"
+                        ? "bg-[#050505] font-mono text-base sm:text-lg lg:text-xl text-primary placeholder:text-primary/30 selection:bg-primary/20"
+                        : "bg-[#050505] font-sans text-xl sm:text-2xl lg:text-3xl text-white placeholder:text-[#444] selection:bg-[#222]"
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
