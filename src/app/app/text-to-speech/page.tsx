@@ -21,7 +21,7 @@ import {
   Wand2,
   Terminal
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,6 +74,7 @@ export default function TextToSpeechPage() {
   );
   const [isSsml, setIsSsml] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const lineNumbersRef = useRef<HTMLDivElement>(null);
   const userGenerations = useQuery(api.inworld.listUserGenerations);
   const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
   const deleteGeneration = useMutation(api.inworld.deleteUserGeneration);
@@ -313,13 +314,22 @@ export default function TextToSpeechPage() {
               </div>
 
               <div className={`flex-1 relative flex flex-col w-full max-w-full transition-colors duration-500`}>
-                <div className="flex-1 flex w-full h-full relative">
+                <div className="flex-1 flex w-full h-full relative items-stretch">
                   {isSsml && (
-                    <div className="hidden md:flex flex-col items-end py-8 px-4 border-r border-[#222] w-12 font-mono text-[10px] text-[#444] select-none bg-[#0a0a0a]">
+                    <div
+                      ref={lineNumbersRef}
+                      className="flex flex-col items-end pt-6 sm:pt-8 pb-6 sm:pb-8 pl-3 pr-2 border-r border-[#222] w-12 sm:w-16 font-mono text-base sm:text-lg lg:text-xl text-[#444] select-none bg-[#0a0a0a] text-right overflow-hidden h-full pointer-events-none"
+                    >
                       {Array.from({
                         length: Math.max(1, text.split("\n").length),
                       }).map((_, i) => (
-                        <span key={i}>{i + 1}</span>
+                        <div
+                          key={i}
+                          style={{ height: "32px", lineHeight: "32px" }}
+                          className="flex-shrink-0 w-full text-right"
+                        >
+                          {i + 1}
+                        </div>
                       ))}
                     </div>
                   )}
@@ -329,10 +339,17 @@ export default function TextToSpeechPage() {
                         ? "<speak>\n  INITIALIZE SSML SEQUENCE...\n</speak>"
                         : "INPUT NEURAL SCRIPT HERE..."
                     }
-                    className={`w-full h-full min-h-[300px] sm:min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 leading-relaxed p-6 sm:p-8 rounded-none ${
+                    wrap={isSsml ? "off" : "soft"}
+                    onScroll={(e) => {
+                      if (isSsml && lineNumbersRef.current) {
+                        lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+                      }
+                    }}
+                    style={isSsml ? { lineHeight: "32px" } : undefined}
+                    className={`w-full h-full min-h-[300px] sm:min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none focus:outline-none focus-visible:ring-offset-0 ${
                       isSsml
-                        ? "bg-[#050505] font-mono text-base sm:text-lg lg:text-xl text-primary placeholder:text-primary/30 selection:bg-primary/20"
-                        : "bg-[#050505] font-sans text-xl sm:text-2xl lg:text-3xl text-white placeholder:text-[#444] selection:bg-[#222]"
+                        ? "pt-6 sm:pt-8 pb-6 sm:pb-8 pl-4 sm:pl-6 pr-6 sm:pr-8 bg-[#050505] font-mono text-base sm:text-lg lg:text-xl text-primary placeholder:text-primary/30 selection:bg-primary/20 overflow-x-auto"
+                        : "p-6 sm:p-8 bg-[#050505] font-sans text-xl sm:text-2xl lg:text-3xl text-white placeholder:text-[#444] selection:bg-[#222] overflow-x-hidden"
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
