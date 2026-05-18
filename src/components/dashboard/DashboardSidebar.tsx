@@ -45,7 +45,7 @@ interface NavSectionProps {
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
-  const { state, setOpen } = useSidebar();
+  const { state, setOpen, setOpenMobile } = useSidebar();
   const isMobile = useIsMobile();
   const mainMenuItems: MenuItem[] = [
     { title: "Dashboard", url: "/app", icon: Home },
@@ -88,7 +88,7 @@ export default function DashboardSidebar() {
                       asChild={!!item.url}
                       isActive={isActive}
                       onClick={() => {
-                        if (isMobile) setOpen(false);
+                        if (isMobile) setOpenMobile(false);
                         item.onClick?.();
                       }}
                       tooltip={item.title}
