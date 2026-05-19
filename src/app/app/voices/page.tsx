@@ -40,84 +40,92 @@ export default function VoicesPage() {
   const router = useRouter();
   const library = [
     {
-      name: "Marcus",
+      displayName: "Marcus",
       gender: "MALE",
-      accent: "EN-US",
+      langCode: "EN-US",
       mood: "AUTHORITATIVE",
       type: "PRO",
       plays: "2.4M",
-      desc: "Deep, resonant acoustic profile. Ideal for heavy exposition.",
-      id: "VOX-01",
+      description: "Deep, resonant acoustic profile. Ideal for heavy exposition.",
+      inworldVoiceId: "VOX-01",
+      isPublic: true,
     },
     {
-      name: "Elara",
+      displayName: "Elara",
       gender: "FEMALE",
-      accent: "EN-UK",
+      langCode: "EN-UK",
       mood: "WARM",
       type: "STD",
       plays: "1.8M",
-      desc: "High fidelity conversational tone with natural mid-range.",
-      id: "VOX-02",
+      description: "High fidelity conversational tone with natural mid-range.",
+      inworldVoiceId: "VOX-02",
+      isPublic: true,
     },
     {
-      name: "Kai",
+      displayName: "Kai",
       gender: "NEUTRAL",
-      accent: "EN-AU",
+      langCode: "EN-AU",
       mood: "CASUAL",
       type: "STD",
       plays: "1.2M",
-      desc: "Energetic frequency response. Optimized for broadcast.",
-      id: "VOX-03",
+      description: "Energetic frequency response. Optimized for broadcast.",
+      inworldVoiceId: "VOX-03",
+      isPublic: true,
     },
     {
-      name: "Nadia",
+      displayName: "Nadia",
       gender: "FEMALE",
-      accent: "RU-RU",
+      langCode: "RU-RU",
       mood: "PROFESSIONAL",
       type: "PRO",
       plays: "980K",
-      desc: "Strict timing parameters. Perfect for corporate instruction.",
-      id: "VOX-04",
+      description: "Strict timing parameters. Perfect for corporate instruction.",
+      inworldVoiceId: "VOX-04",
+      isPublic: true,
     },
     {
-      name: "Theo",
+      displayName: "Theo",
       gender: "MALE",
-      accent: "FR-FR",
+      langCode: "FR-FR",
       mood: "ROMANTIC",
       type: "STD",
       plays: "875K",
-      desc: "Smooth velocity curve. Designed for narrative immersion.",
-      id: "VOX-05",
+      description: "Smooth velocity curve. Designed for narrative immersion.",
+      inworldVoiceId: "VOX-05",
+      isPublic: true,
     },
     {
-      name: "Zara",
+      displayName: "Zara",
       gender: "FEMALE",
-      accent: "NG-NG",
+      langCode: "NG-NG",
       mood: "ENERGETIC",
       type: "PRO",
       plays: "762K",
-      desc: "High-amplitude delivery. Sharp transients for commercial impact.",
-      id: "VOX-06",
+      description: "High-amplitude delivery. Sharp transients for commercial impact.",
+      inworldVoiceId: "VOX-06",
+      isPublic: true,
     },
     {
-      name: "Jin",
+      displayName: "Jin",
       gender: "MALE",
-      accent: "KO-KR",
+      langCode: "KO-KR",
       mood: "CALM",
       type: "STD",
       plays: "640K",
-      desc: "Low-noise, subdued output. Calibrated for ambient contexts.",
-      id: "VOX-07",
+      description: "Low-noise, subdued output. Calibrated for ambient contexts.",
+      inworldVoiceId: "VOX-07",
+      isPublic: true,
     },
     {
-      name: "Sofia",
+      displayName: "Sofia",
       gender: "FEMALE",
-      accent: "ES-ES",
+      langCode: "ES-ES",
       mood: "UPBEAT",
       type: "STD",
       plays: "590K",
-      desc: "Clear articulation index. Suitable for semantic analysis tasks.",
-      id: "VOX-08",
+      description: "Clear articulation index. Suitable for semantic analysis tasks.",
+      inworldVoiceId: "VOX-08",
+      isPublic: true,
     },
   ];
 
@@ -143,7 +151,7 @@ export default function VoicesPage() {
   }, [searchQuery, selectedLocale, selectedClass, activeTab]);
 
   // Dynamic voice data using DB query falling back to static predefined array
-  const voicesList = voices && voices.length > 0 ? voices : library;
+  const voicesList: any[] = voices && voices.length > 0 ? voices : library;
 
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
@@ -202,7 +210,7 @@ export default function VoicesPage() {
       (v: any) => v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId,
     );
     const voiceName = voiceObj
-      ? voiceObj.displayName || voiceObj.name || ""
+      ? voiceObj.displayName || ""
       : gen.voiceId;
     const voiceNameMatch = voiceName
       .toLowerCase()
@@ -212,7 +220,7 @@ export default function VoicesPage() {
       searchQuery === "" || promptMatch || voiceIdMatch || voiceNameMatch;
 
     const voiceAccent = voiceObj
-      ? voiceObj.langCode || voiceObj.accent || ""
+      ? voiceObj.langCode || ""
       : "";
     const localeMatch =
       selectedLocale === "all" ||
@@ -705,10 +713,10 @@ export default function VoicesPage() {
                         v.id === gen.voiceId,
                     );
                     const voiceName = voiceObj
-                      ? voiceObj.displayName || voiceObj.name || ""
+                      ? voiceObj.displayName || ""
                       : "Custom Voice";
                     const voiceAccent = voiceObj
-                      ? voiceObj.langCode || voiceObj.accent || "EN-US"
+                      ? voiceObj.langCode || "EN-US"
                       : "EN-US";
                     const voiceGender = voiceObj
                       ? voiceObj.gender || "NEUTRAL"
@@ -879,10 +887,10 @@ export default function VoicesPage() {
                       v.inworldVoiceId === gen.voiceId || v.id === gen.voiceId,
                   );
                   const voiceName = voiceObj
-                    ? voiceObj.displayName || voiceObj.name || ""
+                    ? voiceObj.displayName || ""
                     : "Custom Voice";
                   const voiceAccent = voiceObj
-                    ? voiceObj.langCode || voiceObj.accent || "EN-US"
+                    ? voiceObj.langCode || "EN-US"
                     : "EN-US";
                   const voiceGender = voiceObj
                     ? voiceObj.gender || "NEUTRAL"
