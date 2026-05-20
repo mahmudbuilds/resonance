@@ -36,8 +36,12 @@ yarn-error.log*
 # vercel
 .vercel
 
+# agent files
+.antigravitycli/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
+# antigravity
+.antigravitycli/
