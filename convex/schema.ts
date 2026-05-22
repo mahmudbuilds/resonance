@@ -8,6 +8,9 @@ export default defineSchema({
     email: v.optional(v.string()),
     tokenIdentifier: v.string(), // For authentication (Clerk/Auth0)
     credits: v.number(), // Track how many characters they have left
+    systemUpdates: v.optional(v.boolean()),
+    usageAlerts: v.optional(v.boolean()),
+    securityLogs: v.optional(v.boolean()),
   }).index("by_token", ["tokenIdentifier"]),
 
   // 2. The Cloned Voices
