@@ -6,9 +6,9 @@ import { UserButton } from "@clerk/nextjs";
 import { Terminal } from "lucide-react";
 
 export default function Navbar() {
-  const pathname = usePathname();   
-  
-  const formattedPath = pathname
+  const pathname = usePathname();
+
+  const formattedPath = pathname === "/app" ? "" : pathname
     ?.split('/')
     .filter(Boolean)
     .pop()
