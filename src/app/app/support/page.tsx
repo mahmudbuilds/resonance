@@ -112,21 +112,13 @@ export default function SupportPage() {
                       <div className="font-mono text-xs sm:text-sm text-white group-hover:text-primary">SUPPORT@RESONANCE.AI</div>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-4 group cursor-pointer">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 border border-[#333] bg-[#111] flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all">
-                      <Terminal className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:text-black" />
-                    </div>
-                    <div>
-                      <div className="font-mono text-[9px] sm:text-[10px] text-[#555] uppercase">Global Discord</div>
-                      <div className="font-mono text-xs sm:text-sm text-white group-hover:text-primary">JOIN_COMMUNITY_SERVER</div>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="pt-6 sm:pt-8 mt-auto">
-                  <Button className="w-full rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-[10px] sm:text-xs uppercase tracking-widest h-14 sm:h-16 transition-colors shadow-[5px_5px_0px_rgba(204,255,0,0.2)] hover:shadow-none">
-                    Initialize Chat <ArrowRight className="w-4 h-4 ml-2" />
+                  <Button asChild className="w-full rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-[10px] sm:text-xs uppercase tracking-widest h-14 sm:h-16 transition-colors shadow-[5px_5px_0px_rgba(204,255,0,0.2)] hover:shadow-none">
+                    <a href="mailto:SUPPORT@RESONANCE.AI">
+                      Send Email <ArrowRight className="w-4 h-4 ml-2" />
+                    </a>
                   </Button>
                 </div>
               </div>
