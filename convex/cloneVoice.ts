@@ -60,43 +60,66 @@ export const cloneVoice = action({
       throw new Error("Audio sample is empty");
     }
 
-    const tts = InworldTTS({ timeout: 300_000 });
-    try {
-      const clonedVoice = await tts.cloneVoice({
-        audioSamples: [new Uint8Array(audioSample)],
-        displayName: name,
-        lang: lang_code || "EN_US",
-        transcriptions,
-        tags,
-        description,
-        removeBackgroundNoise: true,
-      });
+    const keys = [
+      process.env.INWORLD_API_KEY,
+      process.env.INWORLD_API_KEY2,
+      process.env.INWORLD_API_KEY3,
+    ].filter((key): key is string => typeof key === "string" && key.trim() !== "");
 
-      const clonedVoiceId = getClonedVoiceId(clonedVoice);
-      if (clonedVoiceId) {
-        console.log("Cloned Voice ID:", clonedVoiceId);
+    if (keys.length === 0) {
+      throw new Error("No Inworld API keys configured.");
+    }
 
-        await ctx.runMutation(internal.voice.saveClonedVoice, {
-          voiceId: clonedVoiceId,
-          userId: user._id,
-          name,
-          lang_code,
+    for (const key of keys) {
+      try {
+        process.env.INWORLD_API_KEY = key;
+        const tts = InworldTTS({ apiKey: key, timeout: 300_000 });
+        const clonedVoice = await tts.cloneVoice({
+          audioSamples: [new Uint8Array(audioSample)],
+          displayName: name,
+          lang: lang_code || "EN_US",
           transcriptions,
           tags,
           description,
+          removeBackgroundNoise: true,
         });
-        return clonedVoiceId;
-      } else {
-        console.error("Inworld response missing voice data:", clonedVoice);
+
+        const clonedVoiceId = getClonedVoiceId(clonedVoice);
+        if (clonedVoiceId) {
+          console.log("Cloned Voice ID:", clonedVoiceId);
+
+          await ctx.runMutation(internal.voice.saveClonedVoice, {
+            voiceId: clonedVoiceId,
+            userId: user._id,
+            name,
+            lang_code,
+            transcriptions,
+            tags,
+            description,
+          });
+          return clonedVoiceId;
+        } else {
+          console.error("Inworld response missing voice data:", clonedVoice);
+          throw new Error(
+            "Inworld cloned the voice but did not return a voice identifier.",
+          );
+        }
+      } catch (error: any) {
+        const errorMessage = error?.message?.toLowerCase() || "";
+        const statusCode = error?.status || error?.code || error?.response?.status;
+        
+        if (errorMessage.includes("no credits remaining") || statusCode === 402) {
+          console.warn(`Inworld API key out of credits or failed (status ${statusCode}), trying next key...`);
+          continue;
+        }
+        
+        console.error("Inworld Clone Error:", error);
         throw new Error(
-          "Inworld cloned the voice but did not return a voice identifier.",
+          `Failed to clone voice: ${getInworldErrorMessage(error)}`,
         );
       }
-    } catch (error) {
-      console.error("Inworld Clone Error:", error);
-      throw new Error(
-        `Failed to clone voice: ${getInworldErrorMessage(error)}`,
-      );
     }
+    
+    throw new Error("All Inworld API keys are exhausted.");
   },
 });
