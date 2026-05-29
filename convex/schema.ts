@@ -24,15 +24,18 @@ export default defineSchema({
     langCode: v.optional(v.string()),
     description: v.optional(v.string()),
     tags: v.optional(v.array(v.string())),
+    playCount: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
     .index("by_public", ["isPublic"])
-    .index("by_voiceID", ["inworldVoiceId"]),
+    .index("by_voiceID", ["inworldVoiceId"])
+    .index("by_playCount", ["playCount"])
+    .index("by_plays_and_user", ["userId", "playCount"]),
 
   // 3. Generation History
   generations: defineTable({
     userId: v.id("users"),
-    voiceId: v.string(),
+    inworldVoiceId: v.string(),
     prompt: v.string(),
     storageId: v.id("_storage"), // Store the audio in Convex's built-in file storage
     audioUrl: v.string(),

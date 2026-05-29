@@ -53,7 +53,7 @@ export const generateSpeech = action({
     const audioUrl = await ctx.storage.getUrl(storedAudioBlobUrl);
     await ctx.runMutation(api.inworld.saveAudio, {
       userId: user._id,
-      voiceId: voice,
+      inworldVoiceId: voice,
       prompt: text,
       storageId: storedAudioBlobUrl,
       audioUrl: audioUrl!,

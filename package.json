@@ -4,7 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"bun run dev:web\" \"bun run dev:backend\"",
+    "dev:web": "next dev",
+    "dev:backend": "convex dev",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
@@ -46,6 +48,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "concurrently": "^10.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

@@ -160,3 +160,50 @@ export const deleteClonedVoice = mutation({
   },
 });
 
+
+export const getNumberOfGenerations = query({args: {}, handler: async(ctx) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw new Error("User not authenticated");
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_token", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .unique();
+  if (!user) throw new Error("User not identified");
+  const userGenerations = await ctx.db.query("generations").withIndex("by_user", (q) => q.eq("userId", user._id));
+  return (await userGenerations.collect()).length;
+
+}});
+
+export const getNumberOfUserVoices = query({args: {}, handler: async(ctx) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw new Error("User not authenticated");
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_token", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .unique();
+  if (!user) throw new Error("User not identified");
+  const userVoices = await ctx.db.query("voices").withIndex("by_user", (q) => q.eq("userId", user._id));
+  const publicVoices = await ctx.db.query("voices").withIndex("by_public", (q) => q.eq("isPublic", true));
+  return (await userVoices.collect()).length + (await publicVoices.collect()).length;
+
+}});
+
+export const getTopVoices = query({args: {}, handler: async(ctx) => {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) throw new Error("User not authenticated");
+  const user = await ctx.db
+    .query("users")
+    .withIndex("by_token", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier)
+    )
+    .unique();
+  if (!user) throw new Error("User not identified");
+  const top3PublicVoices = await ctx.db.query("voices").withIndex("by_playCount").order("desc").take(3);
+  const topUserVoice = await ctx.db.query("voices").withIndex("by_plays_and_user", (q) => q.eq("userId", user._id)).order("desc").take(1);
+  return [...top3PublicVoices, ...topUserVoice];
+}})
+
