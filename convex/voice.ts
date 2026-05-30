@@ -232,8 +232,8 @@ export const getTopVoices = query({args: {}, handler: async(ctx) => {
     )
     .unique();
   if (!user) throw new Error("User not identified");
-  const top3PublicVoices = await ctx.db.query("voices").withIndex("by_playCount").order("desc").take(3);
-  const topUserVoice = await ctx.db.query("voices").withIndex("by_plays_and_user", (q) => q.eq("userId", user._id)).order("desc").take(1);
+  const top3PublicVoices = await ctx.db.query("voices").withIndex("by_playCount_and_public", (q) => q.eq("isPublic", true)).order("desc").take(3);
+  const topUserVoice = await ctx.db.query("voices").withIndex("by_plays_and_private", (q) => q.eq("userId", user._id)).order("desc").take(1);
   return [...top3PublicVoices, ...topUserVoice];
 }})
 

@@ -32,7 +32,9 @@ export default defineSchema({
     .index("by_public", ["isPublic"])
     .index("by_voiceID", ["inworldVoiceId"])
     .index("by_playCount", ["playCount"])
-    .index("by_plays_and_user", ["userId", "playCount"]),
+    .index("by_playCount_and_public", ["isPublic", "playCount"])
+    .index("by_plays_and_private", ["userId", "playCount"]),
+
 
   // 3. Generation History
   generations: defineTable({
