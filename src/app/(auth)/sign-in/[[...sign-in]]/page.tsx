@@ -11,7 +11,7 @@ export default function SignInPage() {
         baseTheme: dark,
         variables: {
           colorPrimary: "#ccff00",
-          colorBackground: "#050505",
+          colorBackground: "#000000", 
           colorInputBackground: "#000000",
           colorInputText: "#ffffff",
           colorText: "#ffffff",
@@ -21,10 +21,19 @@ export default function SignInPage() {
           borderRadius: "0px",
         },
         elements: {
-          logoBox: "bg-black flex items-center justify-center",
-          logoImage: "w-16 h-16 object-contain mix-blend-screen",
+          // Extra margin-bottom to clear space for the larger graphic
+          logoBox: "bg-black flex items-center justify-center mb-6",
+          
+          // Using an object here overrides Clerk's hardcoded inline image width/height directly
+          logoImage: {
+            width: "96px",       // Equivalent to w-24
+            height: "96px",      // Equivalent to h-24
+            objectFit: "contain",
+          },
+          
           rootBox: "w-full",
-          card: "border border-[#222] shadow-[5px_5px_0px_rgba(204,255,0,0.2)] rounded-none bg-[#050505] p-6 sm:p-8 w-full max-w-full",
+          card: "border border-[#222] shadow-[5px_5px_0px_rgba(204,255,0,0.2)] rounded-none !bg-black p-6 sm:p-8 w-full max-w-full",
+          footer: "!bg-black",
           headerTitle: "font-heading uppercase tracking-widest text-2xl mb-2",
           headerSubtitle:
             "font-mono text-xs uppercase tracking-wider text-[#888]",

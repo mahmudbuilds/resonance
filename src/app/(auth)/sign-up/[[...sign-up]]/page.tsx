@@ -11,7 +11,7 @@ export default function SignUpPage() {
         baseTheme: dark,
         variables: {
           colorPrimary: "#ccff00",
-          colorBackground: "#050505",
+          colorBackground: "#000000", // Matches pure black styling
           colorInputBackground: "#000000",
           colorInputText: "#ffffff",
           colorText: "#ffffff",
@@ -21,10 +21,21 @@ export default function SignUpPage() {
           borderRadius: "0px",
         },
         elements: {
-          logoBox: "bg-black flex items-center justify-center",
-          logoImage: "w-16 h-16 object-contain mix-blend-screen",
+          // Added mb-6 to keep spacing consistent with the larger logo
+          logoBox: "bg-black flex items-center justify-center mb-6",
+          
+          // Replaced string class with explicit inline styles to force scale the logo tag
+          logoImage: {
+            width: "96px",       // Equivalent to w-24
+            height: "96px",      // Equivalent to h-24
+            objectFit: "contain",
+          },
+          
           rootBox: "w-full",
-          card: "border border-[#222] shadow-[5px_5px_0px_rgba(204,255,0,0.2)] rounded-none bg-[#050505] p-6 sm:p-8 w-full max-w-full",
+          // Added !bg-black to completely eliminate the off-black container tint
+          card: "border border-[#222] shadow-[5px_5px_0px_rgba(204,255,0,0.2)] rounded-none !bg-black p-6 sm:p-8 w-full max-w-full",
+          // Forcefully sets the bottom text block wrapper to absolute black
+          footer: "!bg-black",
           headerTitle: "font-heading uppercase tracking-widest text-2xl mb-2",
           headerSubtitle:
             "font-mono text-xs uppercase tracking-wider text-[#888]",
