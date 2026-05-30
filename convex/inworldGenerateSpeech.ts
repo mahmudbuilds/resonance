@@ -108,7 +108,7 @@ export const generateSpeech = action({
             // This key slot already has a cloned voice ID — use it
             effectiveVoiceId = mappedId;
             console.log(`Using cached voice ID "${mappedId}" for key slot ${keySlot}`);
-          } else if (i > 0 && voiceDoc.sampleStorageId) {
+          } else if (voiceDoc.sampleStorageId) {
             // Fallback key with no mapped ID — auto-clone from cached audio
             console.log(`Auto-cloning voice "${voiceDoc.displayName}" for key slot ${keySlot}...`);
 
