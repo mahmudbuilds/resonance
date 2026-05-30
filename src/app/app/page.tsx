@@ -206,7 +206,7 @@ export default function Home() {
               ) : (
                 showcaseVoices.map((voice, i) => (
                   <div
-                    key={voice.displayName}
+                    key={i}
                     className="p-4 sm:p-6 hover:bg-[#0a0a0a] transition-colors flex items-center gap-4 group cursor-pointer"
                   >
                     {/* Visual Indicator Container */}
