@@ -411,8 +411,8 @@ export default function TextToSpeechPage() {
                       const timeString = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
                       const dateString = isToday ? `TODAY ${timeString}` : `${date.toLocaleDateString()} ${timeString}`;
 
-                      const voice = voices?.find((v) => v.inworldVoiceId === generation.voiceId);
-                      const voiceName = voice?.displayName || generation.voiceId || "UNKNOWN";
+                      const voice = voices?.find((v) => v.inworldVoiceId === generation.inworldVoiceId);
+                      const voiceName = voice?.displayName || generation.inworldVoiceId || "UNKNOWN";
 
                       return (
                         <div key={generation._id} className="p-6 flex items-center justify-between hover:bg-[#111] transition-colors gap-4 group/item">

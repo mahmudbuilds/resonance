@@ -98,7 +98,6 @@ export const generateSpeech = action({
       const keySlot = String(i);
 
       try {
-        process.env.INWORLD_API_KEY = key;
 
         // --- Lazy Auto-Clone: resolve the correct voice ID for this key slot ---
         let effectiveVoiceId = voice;
