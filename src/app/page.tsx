@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { 
   ArrowRight, 
   Mic, 
@@ -45,8 +46,8 @@ export default function LandingPage() {
       <nav className="relative z-50 w-full border-b border-[#222] bg-black/80 backdrop-blur-md">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between px-4 sm:px-6 h-20">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary flex items-center justify-center">
-              <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black relative flex items-center justify-center">
+              <Image src="/logo.png" alt="Resonance Logo" fill className="object-contain mix-blend-screen" />
             </div>
             <span className="text-xl sm:text-2xl font-heading font-bold uppercase tracking-widest text-white">RESONANCE</span>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 import { UserButton, useClerk } from "@clerk/nextjs";
+import Image from "next/image";
 import {
   AudioLines,
   Headphones,
@@ -122,13 +123,13 @@ export default function DashboardSidebar() {
 
   return (
     <Sidebar variant="inset" collapsible="icon" className="border-r border-[#222] bg-black">
-      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 border-b border-[#222]">
+      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-black border-b border-[#222]">
         <Link
           href="/"
-          className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 transition-opacity"
         >
-          <div className="w-8 h-8 bg-primary flex items-center justify-center shrink-0">
-            <AudioLines className="w-5 h-5 text-black" />
+          <div className="w-14 h-14 bg-black flex items-center justify-center shrink-0 relative">
+            <Image src="/logo.png" alt="Resonance Logo" fill className="object-contain mix-blend-screen" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="font-heading font-black tracking-widest uppercase text-white text-sm">

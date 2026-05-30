@@ -5,6 +5,9 @@ export default function SignUpPage() {
   return (
     <SignUp 
       appearance={{
+        layout: {
+          logoImageUrl: "/logo.png",
+        },
         baseTheme: dark,
         variables: {
           colorPrimary: "#ccff00",
@@ -18,6 +21,8 @@ export default function SignUpPage() {
           borderRadius: "0px",
         },
         elements: {
+          logoBox: "bg-black flex items-center justify-center",
+          logoImage: "w-16 h-16 object-contain mix-blend-screen",
           rootBox: "w-full",
           card: "border border-[#222] shadow-[5px_5px_0px_rgba(204,255,0,0.2)] rounded-none bg-[#050505] p-6 sm:p-8 w-full max-w-full",
           headerTitle: "font-heading uppercase tracking-widest text-2xl mb-2",
