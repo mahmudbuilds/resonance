@@ -2,12 +2,31 @@
 import { performance } from "node:perf_hooks";
 
 import { InworldTTS } from "@inworld/tts";
-import { action, mutation, query } from "./_generated/server";
+import { action } from "./_generated/server";
 import { v } from "convex/values";
-import { api } from "./_generated/api";
+import { api, internal } from "./_generated/api";
 
 if (!globalThis.performance) {
   (globalThis as any).performance = performance;
+}
+
+// Shared helper to extract a voice ID from an Inworld clone response
+type CloneVoiceResponse = {
+  voice?: { voiceId?: string; id?: string; name?: string };
+  voiceId?: string;
+  id?: string;
+  name?: string;
+};
+
+function getClonedVoiceId(response: CloneVoiceResponse) {
+  return (
+    response.voice?.voiceId ??
+    response.voice?.id ??
+    response.voice?.name ??
+    response.voiceId ??
+    response.id ??
+    response.name
+  );
 }
 
 export const listVoices = action({
@@ -25,7 +44,6 @@ export const listVoices = action({
 
     for (const key of keys) {
       try {
-        process.env.INWORLD_API_KEY = key;
         const tts = InworldTTS({ apiKey: key });
         return await tts.listVoices();
       } catch (error: any) {
@@ -70,13 +88,67 @@ export const generateSpeech = action({
       throw new Error("No Inworld API keys configured.");
     }
 
-    for (const key of keys) {
+    // Look up the voice document once (may be null for stock voices)
+    const voiceDoc = await ctx.runQuery(internal.voice.getVoiceByInworldId, {
+      inworldVoiceId: voice,
+    });
+
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const keySlot = String(i);
+
       try {
-        process.env.INWORLD_API_KEY = key; // Fallback in case apiKey is read from env
+        process.env.INWORLD_API_KEY = key;
+
+        // --- Lazy Auto-Clone: resolve the correct voice ID for this key slot ---
+        let effectiveVoiceId = voice;
+
+        if (voiceDoc && voiceDoc.voiceIdByKeySlot) {
+          const mappedId = voiceDoc.voiceIdByKeySlot[keySlot];
+          if (mappedId) {
+            // This key slot already has a cloned voice ID — use it
+            effectiveVoiceId = mappedId;
+            console.log(`Using cached voice ID "${mappedId}" for key slot ${keySlot}`);
+          } else if (i > 0 && voiceDoc.sampleStorageId) {
+            // Fallback key with no mapped ID — auto-clone from cached audio
+            console.log(`Auto-cloning voice "${voiceDoc.displayName}" for key slot ${keySlot}...`);
+
+            const sampleBlob = await ctx.storage.get(voiceDoc.sampleStorageId);
+            if (sampleBlob) {
+              const sampleBytes = await sampleBlob.arrayBuffer();
+              const ttsClone = InworldTTS({ apiKey: key, timeout: 300_000 });
+              const clonedVoice = await ttsClone.cloneVoice({
+                audioSamples: [new Uint8Array(sampleBytes)],
+                displayName: voiceDoc.displayName,
+                lang: voiceDoc.langCode || "EN_US",
+                removeBackgroundNoise: true,
+              });
+
+              const newVoiceId = getClonedVoiceId(clonedVoice);
+              if (newVoiceId) {
+                // Persist the new mapping so future requests skip the clone step
+                await ctx.runMutation(internal.voice.saveKeySlotVoiceId, {
+                  voiceDocId: voiceDoc._id,
+                  keySlot,
+                  inworldVoiceId: newVoiceId,
+                });
+                effectiveVoiceId = newVoiceId;
+                console.log(`Auto-cloned voice ID "${newVoiceId}" saved for key slot ${keySlot}`);
+              } else {
+                console.warn(`Auto-clone returned no voice ID for key slot ${keySlot}, falling back to original`);
+              }
+            } else {
+              console.warn(`Cached audio sample not found for voice "${voiceDoc.displayName}", using original voice ID`);
+            }
+          }
+        }
+        // For stock/public voices (no voiceDoc or no voiceIdByKeySlot), effectiveVoiceId stays as the original
+
+        // --- Generate speech with the resolved voice ID ---
         const tts = InworldTTS({ apiKey: key });
         const audio = await tts.generate({
           text,
-          voice,
+          voice: effectiveVoiceId,
           model,
           speakingRate,
           temperature,
@@ -91,7 +163,7 @@ export const generateSpeech = action({
         const audioUrl = await ctx.storage.getUrl(storedAudioBlobUrl);
         await ctx.runMutation(api.inworld.saveAudio, {
           userId: user._id,
-          inworldVoiceId: voice,
+          inworldVoiceId: voice, // Keep original voice ID for the generations record
           prompt: text,
           storageId: storedAudioBlobUrl,
           audioUrl: audioUrl!,
@@ -101,7 +173,7 @@ export const generateSpeech = action({
         const errorMessage = error?.message?.toLowerCase() || "";
         const statusCode = error?.status || error?.code || error?.response?.status;
         if (errorMessage.includes("no credits remaining") || statusCode === 402) {
-          console.warn("Inworld API key out of credits, trying next key...");
+          console.warn(`Inworld API key out of credits (slot ${i}), trying next key...`);
           continue;
         }
         throw error;

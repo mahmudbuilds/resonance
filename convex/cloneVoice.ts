@@ -60,6 +60,11 @@ export const cloneVoice = action({
       throw new Error("Audio sample is empty");
     }
 
+    // Cache the raw audio in Convex storage for future auto-cloning on fallback keys
+    const sampleStorageId = await ctx.storage.store(
+      new Blob([audioSample], { type: "audio/wav" }),
+    );
+
     const keys = [
       process.env.INWORLD_API_KEY,
       process.env.INWORLD_API_KEY2,
@@ -70,9 +75,10 @@ export const cloneVoice = action({
       throw new Error("No Inworld API keys configured.");
     }
 
-    for (const key of keys) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const keySlot = String(i);
       try {
-        process.env.INWORLD_API_KEY = key;
         const tts = InworldTTS({ apiKey: key, timeout: 300_000 });
         const clonedVoice = await tts.cloneVoice({
           audioSamples: [new Uint8Array(audioSample)],
@@ -86,7 +92,7 @@ export const cloneVoice = action({
 
         const clonedVoiceId = getClonedVoiceId(clonedVoice);
         if (clonedVoiceId) {
-          console.log("Cloned Voice ID:", clonedVoiceId);
+          console.log("Cloned Voice ID:", clonedVoiceId, "on key slot:", keySlot);
 
           await ctx.runMutation(internal.voice.saveClonedVoice, {
             voiceId: clonedVoiceId,
@@ -96,6 +102,8 @@ export const cloneVoice = action({
             transcriptions,
             tags,
             description,
+            sampleStorageId,
+            voiceIdByKeySlot: { [keySlot]: clonedVoiceId },
           });
           return clonedVoiceId;
         } else {

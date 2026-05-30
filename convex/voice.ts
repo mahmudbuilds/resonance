@@ -94,10 +94,12 @@ export const saveClonedVoice = internalMutation({
     transcriptions: v.optional(v.array(v.string())),
     tags: v.optional(v.array(v.string())),
     description: v.optional(v.string()),
+    sampleStorageId: v.optional(v.id("_storage")),
+    voiceIdByKeySlot: v.optional(v.record(v.string(), v.string())),
   },
   handler: async (
     ctx,
-    { voiceId, userId, name, lang_code, tags, description },
+    { voiceId, userId, name, lang_code, tags, description, sampleStorageId, voiceIdByKeySlot },
   ) => {
     return await ctx.db.insert("voices", {
       inworldVoiceId: voiceId,
@@ -107,6 +109,34 @@ export const saveClonedVoice = internalMutation({
       isPublic: false,
       tags,
       description,
+      sampleStorageId,
+      voiceIdByKeySlot,
+    });
+  },
+});
+
+export const getVoiceByInworldId = internalQuery({
+  args: { inworldVoiceId: v.string() },
+  handler: async (ctx, { inworldVoiceId }) => {
+    return await ctx.db
+      .query("voices")
+      .withIndex("by_voiceID", (q) => q.eq("inworldVoiceId", inworldVoiceId))
+      .first();
+  },
+});
+
+export const saveKeySlotVoiceId = internalMutation({
+  args: {
+    voiceDocId: v.id("voices"),
+    keySlot: v.string(),
+    inworldVoiceId: v.string(),
+  },
+  handler: async (ctx, { voiceDocId, keySlot, inworldVoiceId }) => {
+    const voice = await ctx.db.get(voiceDocId);
+    if (!voice) throw new Error("Voice document not found");
+    const existing = voice.voiceIdByKeySlot ?? {};
+    await ctx.db.patch(voiceDocId, {
+      voiceIdByKeySlot: { ...existing, [keySlot]: inworldVoiceId },
     });
   },
 });

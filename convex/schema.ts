@@ -20,6 +20,8 @@ export default defineSchema({
     // This is the ID gotten from Inworld after cloning
     inworldVoiceId: v.optional(v.string()),
     sampleUrl: v.optional(v.string()), // URL to the original 10s clip
+    sampleStorageId: v.optional(v.id("_storage")), // Cached raw audio blob for auto-cloning on fallback keys
+    voiceIdByKeySlot: v.optional(v.record(v.string(), v.string())), // Key slot index → Inworld Voice ID
     isPublic: v.boolean(),
     langCode: v.optional(v.string()),
     description: v.optional(v.string()),
