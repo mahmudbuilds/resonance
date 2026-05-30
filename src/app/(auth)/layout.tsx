@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { Mic, Activity } from "lucide-react";
+import { Activity } from "lucide-react";
 
 export default function AuthLayout({
   children,
@@ -46,14 +45,6 @@ export default function AuthLayout({
       {/* Right side - Auth Component */}
       <div className="flex w-full md:w-1/2 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 items-center z-10 bg-black/80 backdrop-blur-md">
         <div className="mx-auto w-full max-w-md lg:w-[400px]">
-          <div className="mb-12 flex justify-center md:justify-start">
-            <Link href="/" className="flex items-center gap-3 sm:gap-4 group">
-              <div className="w-10 h-10 bg-primary flex items-center justify-center group-hover:bg-white transition-colors">
-                <Mic className="w-6 h-6 text-black" />
-              </div>
-              <span className="text-2xl font-heading font-bold uppercase tracking-widest text-white group-hover:text-primary transition-colors">RESONANCE</span>
-            </Link>
-          </div>
           {children}
         </div>
       </div>
