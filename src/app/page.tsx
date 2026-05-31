@@ -2,211 +2,370 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { 
   ArrowRight, 
-  Mic, 
-  Sparkles, 
-  Volume2, 
-  Zap, 
-  Globe,
-  Activity
+  Feather, 
+  Compass, 
+  AudioLines,
+  Play,
+  Pause,
+  Waves,
+  Infinity as InfinityIcon,
+  Music,
+  Sliders,
+  Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
-  const [waveHeights, setWaveHeights] = useState<number[]>([]);
+  const [isAuditioning, setIsAuditioning] = useState(false);
+  const [activeProfile, setActiveProfile] = useState("velvet");
+  const [fluidRhythms, setFluidRhythms] = useState<number[]>([]);
+  const [resonanceDepth, setResonanceDepth] = useState(72);
 
   useEffect(() => {
-    setWaveHeights(Array.from({ length: 24 }, () => Math.random() * 60 + 10));
-  }, []);
+    // Populate fluid sculptural rhythm lines
+    setFluidRhythms(Array.from({ length: 35 }, () => Math.random() * 60 + 15));
+    
+    const interval = setInterval(() => {
+      setFluidRhythms(prev => prev.map((val, i) => {
+        if (isAuditioning) {
+          return Math.max(10, Math.min(100, val + (Math.random() * 24 - 12)));
+        } else {
+          return 40 + Math.sin((Date.now() / 500) + i * 0.25) * 12;
+        }
+      }));
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [isAuditioning]);
+
+  const acousticProfiles = [
+    { id: "velvet", name: "Satin Warmth", tone: "Rich Editorial Narrative", space: "Studio Context", description: "Deeply resonant lower registers engineered for fine literary prose and long-form biographical pieces." },
+    { id: "ivory", name: "Alabaster Clear", tone: "Bright Articulate Prose", space: "Cinematic Atmosphere", description: "Crisp mid-tones optimized for clarity, structural descriptions, and sophisticated modern educational delivery." },
+    { id: "amber", name: "Amber Resonance", tone: "Deep Atmospheric Presence", space: "Intimate Whisper", description: "Velvety, close-mic dynamic text processing created specifically for luxurious spatial design and art galleries." },
+  ];
+
+  const currentProfileData = acousticProfiles.find(p => p.id === activeProfile) || acousticProfiles[0];
+
   return (
-    <div className="min-h-screen bg-black relative selection:bg-primary selection:text-black font-sans text-white overflow-hidden">
-      {/* Brutalist Grid Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_0%,#000_70%,transparent_100%)]" />
-        {/* Noise overlay */}
-        <div className="absolute inset-0 opacity-[0.05] mix-blend-screen" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }} />
+    <div className="min-h-screen bg-[#0b0908] text-[#fcfbf7] font-body relative selection:bg-[#e0a96d]/20 selection:text-[#e0a96d]">
+      
+      {/* Background Radial Ambiance */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[50%] -translate-x-1/2 w-[80vw] h-[50vw] rounded-full bg-gradient-to-br from-[#e0a96d]/5 via-transparent to-transparent blur-3xl animate-organic-drift" />
+        <div className="absolute bottom-[10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tr from-[#948880]/3 via-transparent to-transparent blur-3xl" />
       </div>
 
-      <style dangerouslySetInnerHTML={{__html: `
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 30s linear infinite;
-        }
-        .brutal-border {
-          border: 1px solid #222;
-        }
-      `}}></style>
-
-      {/* Navigation */}
-      <nav className="relative z-50 w-full border-b border-[#222] bg-black/80 backdrop-blur-md">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between px-4 sm:px-6 h-20">
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-black relative flex items-center justify-center">
-              <Image src="/logo.png" alt="Resonance Logo" fill className="object-contain mix-blend-screen" />
-            </div>
-            <span className="text-xl sm:text-2xl font-heading font-bold uppercase tracking-widest text-white">RESONANCE</span>
-          </div>
-          <div className="flex items-center gap-4 sm:gap-6">
-            <span className="hidden sm:inline-flex font-mono text-[10px] text-muted-foreground uppercase tracking-widest">
-              SYS.STATUS: <span className="text-primary ml-2 flex items-center gap-1"><span className="w-2 h-2 bg-primary rounded-none animate-pulse"></span> ONLINE</span>
+      {/* Floating Editorial Navigation */}
+      <nav className="relative z-50 w-full border-b border-white/5 bg-[#0b0908]/60 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-24">
+          <div className="flex items-center gap-3">
+            <span className="font-sans text-xl sm:text-2xl font-light tracking-[0.25em] text-white">
+              RESONANCE
             </span>
+          </div>
+          
+          <div className="hidden md:flex items-center gap-10 text-[12px] font-medium tracking-[0.15em] text-[#948880] uppercase">
+            <a href="#philosophy" className="hover:text-[#e0a96d] transition-colors duration-300">The Philosophy</a>
+            <a href="#atelier" className="hover:text-[#e0a96d] transition-colors duration-300">The Audition Room</a>
+            <a href="#curation" className="hover:text-[#e0a96d] transition-colors duration-300">The Curation</a>
+          </div>
+
+          <div>
             <Link href="/app">
-              <Button className="rounded-none bg-primary text-black hover:bg-white hover:text-black font-mono text-[10px] sm:text-xs uppercase tracking-widest h-10 sm:h-12 px-4 sm:px-8 border border-primary transition-colors">
-                Initialize <ArrowRight className="w-4 h-4 ml-2" />
+              <Button className="rounded-full bg-[#e0a96d] text-[#0b0908] hover:bg-white hover:text-black font-medium text-xs tracking-wider h-11 px-6 transition-all duration-500 shadow-xl shadow-[#e0a96d]/5">
+                Studio Dashboard
               </Button>
             </Link>
           </div>
         </div>
       </nav>
 
-      <main className="relative z-10">
-        {/* Hero Section */}
-        <section className="relative px-4 sm:px-6 pt-20 sm:pt-32 pb-24 sm:pb-40 max-w-[1600px] mx-auto border-x-0 sm:border-x border-[#222] min-h-[70vh] sm:min-h-[85vh] flex flex-col justify-center">
-          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary to-transparent" />
-          
-          <div className="grid lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-8 relative">
-              <div className="inline-flex items-center gap-3 border border-[#222] bg-[#050505] px-4 py-2 mb-8 sm:mb-12">
-                <Activity className="w-4 h-4 text-primary" />
-                <span className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-primary">Vocal Synthesis Engine v2.0.4</span>
-              </div>
-              
-              <h1 className="fluid-heading-xl mb-8 sm:mb-10 text-white">
-                SYNTHESIZE <br />
-                <span className="text-primary">REALITY.</span>
-              </h1>
-              
-              <p className="text-lg sm:text-xl md:text-2xl font-sans text-[#888] max-w-2xl mb-10 sm:mb-12 leading-relaxed">
-                Hyper-realistic text-to-speech and neural voice cloning. Built for industrial-scale creation. Precision audio engineering meets deep learning.
-              </p>
+      {/* Hero Symphony Block */}
+      <header className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-24 pb-16 text-center space-y-8 animate-soft-reveal">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/5 bg-white/[0.01] text-[#e0a96d]">
+          <Feather className="w-3.5 h-3.5" />
+          <span className="text-[10px] font-semibold tracking-[0.2em] uppercase">The Acoustic Paradigm Shift</span>
+        </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <Link href="/app">
-                  <Button size="lg" className="rounded-none h-14 sm:h-16 px-8 sm:px-10 bg-primary text-black hover:bg-white hover:text-black font-mono uppercase tracking-widest text-xs sm:text-sm transition-colors border border-primary w-full sm:w-auto">
-                    Launch Console
-                    <ArrowRight className="w-5 h-5 ml-3" />
-                  </Button>
-                </Link>
-                <div className="flex items-center gap-4 px-6 border border-[#222] bg-[#050505] h-14 sm:h-16 w-full sm:w-auto justify-center sm:justify-start">
-                  <span className="font-mono text-[10px] text-[#888]">LATENCY</span>
-                  <span className="font-mono text-xs sm:text-sm text-white">{"<"} 400ms</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="lg:col-span-4 hidden lg:block">
-              <div className="w-full aspect-square border border-[#222] relative bg-[#050505] overflow-hidden group">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(204,255,0,0.1)_0,transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                <div className="absolute top-4 left-4 font-mono text-[10px] text-[#555]">FIG. 1 - NEURAL WAVEFORM</div>
-                <div className="absolute bottom-4 right-4 font-mono text-[10px] text-primary animate-pulse">RECORDING...</div>
-                
-                {/* Simulated Audio Visualizer */}
-                <div className="absolute inset-0 flex items-center justify-center gap-1 px-8">
-                  {[...Array(24)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="w-full bg-primary/20 sound-wave-bar origin-bottom group-hover:bg-primary transition-colors"
-                      style={{ 
-                        height: waveHeights[i] ? `${waveHeights[i]}%` : '10%',
-                        animationDelay: `${i * 0.05}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <h1 className="font-sans text-5xl sm:text-7xl lg:text-8xl font-light tracking-tight text-white max-w-5xl mx-auto leading-[1.05]">
+          Resonance: The Living Narrative.<br />
+          <span className="italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#e0a96d] via-[#fcfbf7] to-[#948880]">
+            Where prose becomes poetry.
+          </span>
+        </h1>
 
-        {/* Marquee */}
-        <section className="w-full border-y border-[#222] bg-[#050505] py-6 sm:py-8 overflow-hidden relative">
-          <div className="flex w-max animate-marquee">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex gap-12 sm:gap-20 items-center px-6 sm:px-10">
-                {['ACME_CORP', 'GLOBAL_NET', 'NEXUS_AI', 'QUANTUM_STD', 'VANGUARD', 'STARLIGHT', 'PINNACLE'].map((brand, j) => (
-                  <span key={j} className="text-xl sm:text-2xl font-heading font-bold text-[#333] uppercase tracking-widest whitespace-nowrap hover:text-primary transition-colors cursor-default">
-                    {brand}
-                  </span>
-                ))}
+        <p className="text-base sm:text-lg text-[#948880] max-w-2xl mx-auto font-normal leading-relaxed">
+          Strip away machine monotony. Infuse digital layouts, publications, and narratives with premium acoustic textures modeled after master vocal storytellers.
+        </p>
+
+        <div className="pt-4 flex justify-center">
+          <Link href="/app">
+            <Button size="lg" className="rounded-full h-14 px-10 bg-gradient-to-r from-[#e0a96d] to-[#cfa064] text-[#0b0908] hover:opacity-95 font-medium tracking-wider text-xs transition-all duration-300 shadow-2xl shadow-[#e0a96d]/10 group">
+              Enter Interactive Atelier Studio
+              <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
+        </div>
+      </header>
+
+      {/* Panoramic Marquee Band */}
+      <section className="w-full py-12 overflow-hidden relative border-y border-white/5 bg-white/[0.005]">
+        <div className="w-full mask-luxury-fade relative py-1">
+          <div className="flex w-max space-x-32 animate-marquee-luxury">
+            {[...Array(2)].map((_, i) => (
+              <div key={i} className="flex gap-32 items-center text-[11px] tracking-[0.3em] font-light text-[#948880]/50 uppercase">
+                <span>Aura Publishing House</span>
+                <span className="text-[#e0a96d]/30 font-sans">/</span>
+                <span>Verdant Narrative Foundation</span>
+                <span className="text-[#e0a96d]/30 font-sans">/</span>
+                <span>Atelier House Cinematic</span>
+                <span className="text-[#e0a96d]/30 font-sans">/</span>
+                <span>Vivid Acoustics Europe</span>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Main Framework Sections */}
+      <main className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-24 space-y-40">
+        
+        {/* Section 1: The Curation Portfolio Map */}
+        <section id="curation" className="space-y-12">
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#e0a96d] font-semibold">01 // The Curation Framework</p>
+            <h2 className="text-3xl font-sans font-light tracking-tight text-white">Sculpted Framework Artifacts</h2>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-8">
+            
+            {/* Elegant Main Feature Card */}
+            <div className="lg:col-span-7 silk-panel rounded-[2.5rem] p-8 sm:p-12 flex flex-col justify-between silk-card-hover min-h-[440px]">
+              <div className="p-4 rounded-2xl bg-white/[0.01] border border-white/5 text-[#e0a96d] w-fit">
+                <AudioLines className="w-5 h-5" />
+              </div>
+              <div className="space-y-4 max-w-xl">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#e0a96d]/70">Curation Suite</span>
+                <h3 className="text-2xl sm:text-3xl font-sans font-light text-white">The Symphony Engine</h3>
+                <p className="text-sm text-[#948880] leading-relaxed">
+                  Automatically balances multi-layered vocal tracks while introducing microscopic human pauses, authentic inhalation signatures, and contextual speech cadence variations perfectly across paragraphs.
+                </p>
+              </div>
+            </div>
+
+            {/* Side Column Stack */}
+            <div className="lg:col-span-5 grid sm:grid-cols-1 gap-8">
+              
+              {/* Secondary Block A */}
+              <div className="silk-panel rounded-[2.5rem] p-8 flex flex-col justify-between silk-card-hover">
+                <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-[#e0a96d] w-fit">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <div className="space-y-2 mt-12">
+                  <h4 className="text-lg font-sans font-light text-white">Bespoke Architectural Tone</h4>
+                  <p className="text-xs text-[#948880] leading-relaxed">
+                    Tailor acoustic frequencies precisely for art exhibits, continuous spatial atmospheres, or high-end soundbooks.
+                  </p>
+                </div>
+              </div>
+
+              {/* Secondary Block B */}
+              <div className="silk-panel rounded-[2.5rem] p-8 flex flex-col justify-between silk-card-hover">
+                <div className="p-3 rounded-xl bg-white/[0.01] border border-white/5 text-[#e0a96d] w-fit">
+                  <InfinityIcon className="w-4 h-4" />
+                </div>
+                <div className="space-y-2 mt-12">
+                  <h4 className="text-lg font-sans font-light text-white">Infinite Continuum Synthesis</h4>
+                  <p className="text-xs text-[#948880] leading-relaxed">
+                    Stream high-resolution conversational audio vectors smoothly and seamlessly to global delivery end-points instantly.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </section>
 
-        {/* Features Grid */}
-        <section className="py-24 sm:py-40 px-4 sm:px-6 max-w-[1600px] mx-auto border-x-0 sm:border-x border-[#222]">
-          <div className="mb-16 sm:mb-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-            <div>
-              <span className="font-mono text-primary text-xs sm:text-sm tracking-widest uppercase mb-3 sm:mb-4 block">01 // Architecture</span>
-              <h2 className="fluid-heading-lg text-white">System Specs</h2>
-            </div>
-            <p className="font-mono text-xs sm:text-sm text-[#888] max-w-md uppercase leading-relaxed">
-              Industrial-grade infrastructure engineered for zero-compromise audio generation and manipulation.
+        {/* Section 2: Highly Intuitive Mixing Board Audition Desk */}
+        <section id="atelier" className="space-y-8">
+          <div className="space-y-2">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#e0a96d] font-semibold">02 // Voice Preview</p>
+            <h2 className="text-3xl font-sans font-light tracking-tight text-white">The Audition Room</h2>
+            <p className="text-sm text-[#948880] max-w-xl">
+              Select a master profile to view its acoustic architectural tuning and test live sample vectors.
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-0 border border-[#222]">
-            {/* Feature 1 */}
-            <div className="group border-b lg:border-b-0 lg:border-r border-[#222] p-8 sm:p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
-              <div className="font-mono text-[10px] sm:text-xs text-[#555] mb-6 sm:mb-8 group-hover:text-primary transition-colors">MDL.001</div>
-              <Volume2 className="w-10 h-10 sm:w-12 sm:h-12 text-white mb-6 sm:mb-8 group-hover:text-primary transition-colors" />
-              <h3 className="text-2xl sm:text-3xl font-heading font-bold uppercase mb-4 text-white">Neural TTS</h3>
-              <p className="font-sans text-sm sm:text-base text-[#888] leading-relaxed">
-                Parametric voice synthesis with complete emotional control. 
-                Adjust intonation, pacing, and timber with surgical precision.
-              </p>
+
+          <div className="grid lg:grid-cols-12 gap-8 items-stretch">
+            
+            {/* Left Column: Profile Selection list */}
+            <div className="lg:col-span-5 flex flex-col gap-3 justify-between">
+              <div className="space-y-3">
+                <p className="text-[11px] uppercase tracking-wider text-[#948880] font-medium">Select Vocal Profile</p>
+                <div className="space-y-3">
+                  {acousticProfiles.map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => setActiveProfile(p.id)}
+                      className={`w-full p-5 rounded-2xl border text-left transition-all duration-300 block relative overflow-hidden ${
+                        activeProfile === p.id 
+                          ? "bg-white/[0.03] border-[#e0a96d]/40 shadow-lg shadow-black/40" 
+                          : "bg-transparent border-white/5 hover:border-white/10 hover:bg-white/[0.01]"
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-base font-sans font-normal text-white">{p.name}</h3>
+                          <p className="text-xs text-[#948880] mt-0.5">{p.tone}</p>
+                        </div>
+                        <span className={`text-[9px] font-mono uppercase tracking-widest px-2 py-0.5 rounded border ${
+                          activeProfile === p.id 
+                            ? "text-[#e0a96d] border-[#e0a96d]/20 bg-[#e0a96d]/5" 
+                            : "text-[#948880]/70 border-white/5"
+                        }`}>
+                          {p.space}
+                        </span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Engine Status Callout */}
+              <div className="silk-panel rounded-2xl p-4 flex items-center gap-3 border border-white/5 bg-white/[0.01]">
+                <div className="w-2 h-2 rounded-full bg-[#e0a96d] animate-pulse" />
+                <span className="text-[11px] tracking-wide text-[#948880]">
+                  Engine Matrix: <span className="text-white font-medium">Calibrated for Ultra-High Fidelity</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Right Column: Unified Tuning Controls */}
+            <div className="lg:col-span-7 silk-panel rounded-[2.5rem] p-8 sm:p-10 flex flex-col justify-between border border-white/5 relative bg-gradient-to-b from-white/[0.01] to-transparent">
+              
+              {/* Dynamic Information Block */}
+              <div className="space-y-3 pb-6 border-b border-white/5">
+                <div className="flex items-center gap-2 text-[10px] font-mono text-[#e0a96d] uppercase tracking-widest">
+                  <Music className="w-3 h-3" />
+                  <span>Active Configuration</span>
+                </div>
+                <h4 className="text-xl font-sans text-white font-light">
+                  {currentProfileData.name} — <span className="italic text-[#948880] text-lg font-normal">{currentProfileData.tone}</span>
+                </h4>
+                <p className="text-sm text-[#948880] leading-relaxed max-w-xl">
+                  {currentProfileData.description}
+                </p>
+              </div>
+
+              {/* Audio Controls Matrix */}
+              <div className="space-y-6 pt-6">
+                <div className="bg-white/[0.01] border border-white/5 rounded-2xl p-6 space-y-4">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-[#948880] flex items-center gap-2">
+                      <Sliders className="w-3.5 h-3.5 text-[#e0a96d]" /> Custom Vector Balance
+                    </span>
+                    <span className="font-mono text-[#e0a96d] uppercase tracking-widest text-[10px]">
+                      {isAuditioning ? "Streaming Active Sample" : "Quiescent Mode"}
+                    </span>
+                  </div>
+
+                  {/* Clean Visual Waveform Block */}
+                  <div className="h-12 flex items-center justify-between gap-[4px] px-1">
+                    {fluidRhythms.map((height, i) => (
+                      <div 
+                        key={i} 
+                        className={`w-full rounded-full transition-all duration-150 origin-center ${
+                          isAuditioning ? "bg-[#e0a96d]" : "bg-white/10"
+                        }`}
+                        style={{ height: `${height}%`, transform: `scaleY(${isAuditioning ? 1 : 0.4})` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Saturation Parameters Mixer Row */}
+                <div className="grid sm:grid-cols-12 gap-6 items-center">
+                  <div className="sm:col-span-7 space-y-2">
+                    <div className="flex justify-between text-xs font-medium">
+                      <span className="text-[#948880]">Saturation Depth</span>
+                      <span className="text-[#e0a96d] font-mono">{resonanceDepth}%</span>
+                    </div>
+                    <input 
+                      type="range" min="1" max="100" value={resonanceDepth}
+                      onChange={(e) => setResonanceDepth(Number(e.target.value))}
+                      className="w-full h-[2px] bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#e0a96d]"
+                    />
+                  </div>
+
+                  <div className="sm:col-span-5">
+                    <Button 
+                      onClick={() => setIsAuditioning(!isAuditioning)}
+                      className={`w-full h-12 rounded-xl text-xs font-medium tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2.5 ${
+                        isAuditioning 
+                          ? "bg-[#fcfbf7] text-[#0b0908] hover:bg-neutral-200 shadow-xl shadow-white/5" 
+                          : "bg-transparent border border-white/10 text-white hover:bg-white/5"
+                      }`}
+                    >
+                      {isAuditioning ? (
+                        <>
+                          <Pause className="w-3.5 h-3.5 fill-[#0b0908]" /> Stop Sample
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-3.5 h-3.5 fill-white" /> Audition Texture
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        {/* Section 3: The Grand Architectural Call to Action */}
+        <section id="philosophy" className="relative rounded-[3.5rem] overflow-hidden p-[1px] bg-gradient-to-b from-white/10 via-transparent to-transparent">
+          <div className="w-full bg-gradient-to-b from-[#13100e] to-[#0b0908] rounded-[3.4rem] py-28 px-6 text-center space-y-8 relative overflow-hidden">
+            
+            {/* Abstract Decorative Element */}
+            <div className="absolute inset-0 pointer-events-none z-0 opacity-40">
+              <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] rounded-full border border-[#e0a96d]/10 blur-[2px]" />
+            </div>
+
+            <div className="space-y-4 relative z-10 max-w-2xl mx-auto">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#e0a96d]">The Resonance Invitation</span>
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-sans font-light tracking-tight text-white leading-tight">
+                Step into a brand new era of <br />
+                <span className="italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-[#e0a96d] to-white">vocal eloquence.</span>
+              </h2>
+            </div>
+
+            <p className="text-sm text-[#948880] max-w-md mx-auto relative z-10 leading-relaxed font-light">
+              Experience synthetic audio custom engineering tailored for beautiful editorial design. Open your studio layout today.
+            </p>
+
+            <div className="relative z-10 pt-4">
+              <Link href="/app">
+                <Button size="lg" className="rounded-full h-16 px-12 bg-[#e0a96d] text-[#0b0908] hover:bg-white hover:text-black font-medium tracking-widest text-xs uppercase transition-all duration-500 shadow-2xl shadow-[#e0a96d]/10">
+                  Enter Interactive Atelier Studio
+                </Button>
+              </Link>
             </div>
             
-            {/* Feature 2 */}
-            <div className="group border-b lg:border-b-0 lg:border-r border-[#222] p-8 sm:p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
-              <div className="font-mono text-[10px] sm:text-xs text-[#555] mb-6 sm:mb-8 group-hover:text-primary transition-colors">MDL.002</div>
-              <Mic className="w-10 h-10 sm:w-12 sm:h-12 text-white mb-6 sm:mb-8 group-hover:text-primary transition-colors" />
-              <h3 className="text-2xl sm:text-3xl font-heading font-bold uppercase mb-4 text-white">Voice Cloning</h3>
-              <p className="font-sans text-sm sm:text-base text-[#888] leading-relaxed">
-                Extract acoustic features from a 10-second sample. 
-                Generate a perfect digital replica indistinguishable from the source.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="group p-8 sm:p-12 bg-[#050505] hover:bg-[#0a0a0a] transition-colors relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-3xl group-hover:bg-primary/20 transition-colors" />
-              <div className="font-mono text-[10px] sm:text-xs text-[#555] mb-6 sm:mb-8 group-hover:text-primary transition-colors">MDL.003</div>
-              <Zap className="w-10 h-10 sm:w-12 sm:h-12 text-white mb-6 sm:mb-8 group-hover:text-primary transition-colors" />
-              <h3 className="text-2xl sm:text-3xl font-heading font-bold uppercase mb-4 text-white">Zero Latency</h3>
-              <p className="font-sans text-sm sm:text-base text-[#888] leading-relaxed">
-                Optimized inference pipeline. Stream generated audio packets 
-                in real-time for interactive AI agents and dynamic content.
-              </p>
-            </div>
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="border-t border-[#222] bg-primary relative overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000015_1px,transparent_1px),linear-gradient(to_bottom,#00000015_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-20 sm:py-32 border-x-0 sm:border-x border-[#222] relative z-10 flex flex-col items-center text-center">
-            <h2 className="fluid-heading-lg text-black mb-6 sm:mb-8">
-              INITIALIZE <br /> SYSTEM
-            </h2>
-            <p className="font-mono text-black/70 mb-10 sm:mb-12 max-w-xl uppercase tracking-widest text-xs sm:text-sm">
-              Deploy the resonance engine to your workflow today.
-            </p>
-            <Link href="/app">
-              <Button size="lg" className="rounded-none h-16 sm:h-20 px-10 sm:px-16 bg-black text-white hover:bg-white hover:text-black font-mono uppercase tracking-widest text-base sm:text-lg transition-colors border border-black shadow-[5px_5px_0px_rgba(0,0,0,1)] sm:shadow-[10px_10px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[5px] hover:translate-y-[5px] sm:hover:translate-x-[10px] sm:hover:translate-y-[10px]">
-                Access Terminal
-              </Button>
-            </Link>
-          </div>
-        </section>
       </main>
+
+      {/* Luxury Footer */}
+      <footer className="border-t border-white/5 py-12 relative z-10 text-center text-xs text-[#948880]/50 tracking-wider">
+        <p>© 2026 Resonance Acoustics Inc. Crafted Frame Mechanics.</p>
+      </footer>
+
     </div>
   );
 }

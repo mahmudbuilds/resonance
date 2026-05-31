@@ -7,379 +7,115 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-dm-sans);
-  --font-mono: var(--font-jetbrains-mono);
-  --font-heading: var(--font-outfit);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
+  --font-sans: "Didot", "Playfair Display", serif;
+  --font-body: system-ui, -apple-system, sans-serif;
   --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  --shadow-primary: oklch(from var(--primary) l c h / 30%);
-  --shadow-primary-sm: oklch(from var(--primary) l c h / 10%);
-  --shadow-primary-md: oklch(from var(--primary) l c h / 20%);
-  --shadow-primary-lg: oklch(from var(--primary) l c h / 40%);
-  --shadow-primary-xl: oklch(from var(--primary) l c h / 60%);
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 2.5);
 }
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --card: #050505;
-  --card-foreground: #ffffff;
-  --popover: #050505;
-  --popover-foreground: #ffffff;
-  --primary: #ccff00;
-  --primary-foreground: #000000;
-  --secondary: #111111;
-  --secondary-foreground: #ffffff;
-  --muted: #111111;
-  --muted-foreground: #888888;
-  --accent: #111111;
-  --accent-foreground: #ccff00;
-  --destructive: #ff3333;
-  --border: #222222;
-  --input: #222222;
-  --ring: #ccff00;
-  --chart-1: #ccff00;
-  --chart-2: #00e5ff;
-  --chart-3: #ff0055;
-  --chart-4: #bb00ff;
-  --chart-5: #ffaa00;
-  --radius: 0rem;
-  --sidebar: #050505;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ccff00;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #111111;
-  --sidebar-accent-foreground: #ccff00;
-  --sidebar-border: #222222;
-  --sidebar-ring: #ccff00;
-}
-
-/* Unified Clerk Design System - Brutalist Cyber Aesthetic */
-:root {
-  --clerk-color-primary: #ccff00;
-  --clerk-color-primary-foreground: #000000;
-  --clerk-color-danger: #ff3333;
-  --clerk-color-success: #ccff00;
-  --clerk-color-warning: #ccff00;
-  --clerk-color-neutral: #ffffff;
-  --clerk-color-foreground: #ffffff;
-  --clerk-color-muted-foreground: #888888;
-  --clerk-color-background: #050505;
-  --clerk-color-input: #111111;
-  --clerk-color-input-foreground: #ffffff;
-  --clerk-color-ring: #ccff00;
-  --clerk-color-shimmer: #ccff00;
-  --clerk-color-modal-backdrop: rgba(0, 0, 0, 0.9);
-  --clerk-border-radius: 0rem;
-  --clerk-spacing: 1.25rem;
-  --clerk-color-border: #222222;
-}
-
-.dark {
-  --background: #000000;
-  --foreground: #ffffff;
-  --card: #050505;
-  --card-foreground: #ffffff;
-  --popover: #050505;
-  --popover-foreground: #ffffff;
-  --primary: #ccff00;
-  --primary-foreground: #000000;
-  --secondary: #111111;
-  --secondary-foreground: #ffffff;
-  --muted: #111111;
-  --muted-foreground: #888888;
-  --accent: #111111;
-  --accent-foreground: #ccff00;
-  --destructive: #ff3333;
-  --border: #222222;
-  --input: #222222;
-  --ring: #ccff00;
-  --chart-1: #ccff00;
-  --chart-2: #00e5ff;
-  --chart-3: #ff0055;
-  --chart-4: #bb00ff;
-  --chart-5: #ffaa00;
-  --sidebar: #050505;
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #ccff00;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #111111;
-  --sidebar-accent-foreground: #ccff00;
-  --sidebar-border: #222222;
-  --sidebar-ring: #ccff00;
-}
-
-/* Ensure Clerk elements follow the brutalist theme */
-.cl-rootBox {
-  --cl-font-family: var(--font-mono);
-}
-
-.cl-card, .cl-userButtonPopoverCard, .cl-navbar, .cl-scrollBox {
-  border-radius: 0 !important;
-  border: 1px solid #222 !important;
-  background-color: #050505 !important;
-  box-shadow: none !important;
-}
-
-.cl-button {
-  border-radius: 0 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-  font-family: var(--font-mono);
-}
-
-.cl-formButtonPrimary {
-  background-color: #ccff00 !important;
-  color: #000 !important;
-  border: 1px solid #ccff00 !important;
-}
-
-.cl-formButtonPrimary:hover {
-  background-color: #ffffff !important;
-  border-color: #ffffff !important;
-}
-
-.cl-formFieldInput {
-  border-radius: 0 !important;
-  background-color: #111 !important;
-  border: 1px solid #222 !important;
-  color: #fff !important;
-}
-
-.cl-formFieldInput:focus {
-  border-color: #ccff00 !important;
-  box-shadow: 0 0 0 1px #ccff00 !important;
-}
-
-.cl-headerTitle {
-  font-family: var(--font-heading) !important;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 900;
-}
-
-.cl-headerSubtitle {
-  font-family: var(--font-mono) !important;
-  text-transform: uppercase;
-  font-size: 0.7rem !important;
-  letter-spacing: 0.1em;
-  color: #888 !important;
-}
-
-.cl-socialButtonsBlockButton {
-  border-radius: 0 !important;
-  border: 1px solid #222 !important;
-  background-color: #0a0a0a !important;
-}
-
-.cl-socialButtonsBlockButton:hover {
-  background-color: #111 !important;
-  border-color: #333 !important;
-}
-
-.cl-dividerLine {
-  background-color: #222 !important;
-}
-
-.cl-dividerText {
-  color: #444 !important;
-  font-family: var(--font-mono) !important;
-  text-transform: uppercase;
-  font-size: 0.6rem !important;
-}
-
-.cl-footerActionText, .cl-footerActionLink {
-  font-family: var(--font-mono) !important;
-  text-transform: uppercase;
-  font-size: 0.7rem !important;
-}
-
-.cl-footerActionLink {
-  color: #ccff00 !important;
-}
-
-.cl-footerActionLink:hover {
-  color: #fff !important;
-}
-
-.cl-breadcrumbsItem {
-  font-family: var(--font-mono) !important;
-  text-transform: uppercase;
-  font-size: 0.65rem !important;
-}
-
-.cl-userPreviewMainIdentifier {
-  font-family: var(--font-mono) !important;
-  text-transform: uppercase;
-}
-
-.cl-profileSectionTitle {
-  border-bottom: 1px solid #222 !important;
-  padding-bottom: 0.5rem !important;
-}
-
-.cl-profileSectionTitleText {
-  font-family: var(--font-heading) !important;
-  text-transform: uppercase;
-  font-weight: 800;
-}
-
-.cl-activeDeviceIcon {
-  color: #ccff00 !important;
-}
-
-.cl-navbarMobileMenuButton {
-  border-radius: 0 !important;
-}
-
-/* Fix Development Mode Badge Color */
-.cl-internal-b3fm6y, 
-.cl-dev-badge,
-[data-clerk-theme="dark"] .cl-internal-17le6jh {
-  color: #ccff00 !important;
-}
-
-.cl-avatarBox {
-  padding: 4px !important;
-  background-color: #0a0a0a !important;
-  border-radius: 0 !important;
-}
-
-.cl-avatarImage {
-  border-radius: 0 !important;
+  --background: #0b0908;
+  --foreground: #fcfbf7;
+  --card: rgba(22, 19, 17, 0.4);
+  --card-foreground: #fcfbf7;
+  --primary: #e0a96d;
+  --primary-foreground: #0b0908;
+  --secondary: #1a1614;
+  --muted-foreground: #948880;
+  --border: rgba(255, 255, 255, 0.04);
+  --radius: 2rem;
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
   body {
-    @apply bg-background text-foreground antialiased;
-  }
-  html {
-    @apply font-sans;
-  }
-
-  ::selection {
-    background: oklch(from var(--primary) 0.3 0.1 180 / 0.3);
-    color: var(--foreground);
+    @apply bg-background text-foreground antialiased overflow-x-hidden;
+    background-color: #0b0908;
+    background-image: 
+      radial-gradient(circle at 20% 10%, rgba(224, 169, 109, 0.03) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(148, 136, 128, 0.03) 0%, transparent 50%);
   }
 }
 
-@layer components {
-  .responsive-container {
-    @apply px-4 sm:px-6 py-8 md:py-12 max-w-[1600px] mx-auto border-x-0 sm:border-x border-[#222] min-h-screen;
-  }
-
-  .fluid-heading-xl {
-    @apply text-5xl sm:text-7xl md:text-8xl lg:text-[8rem] font-heading font-black uppercase leading-[0.85] tracking-tighter;
-  }
-
-  .fluid-heading-lg {
-    @apply text-4xl sm:text-6xl md:text-7xl font-heading font-bold uppercase tracking-tighter;
-  }
+/* Organic Cinematic Motion */
+@keyframes organic-drift {
+  0%, 100% { transform: translate(0px, 0px) scale(1); filter: blur(60px); }
+  50% { transform: translate(40px, -30px) scale(1.08); filter: blur(80px); }
 }
 
-@keyframes marquee {
+@keyframes ribbon-wave {
+  0%, 100% { transform: scaleY(0.5); opacity: 0.3; }
+  50% { transform: scaleY(1.2); opacity: 0.8; }
+}
+
+@keyframes soft-reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes marquee-luxury {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
 }
 
-@keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.animate-organic-drift {
+  animation: organic-drift 16s infinite ease-in-out;
 }
 
-@keyframes pulse-glow {
-  0%,
-  100% {
-    opacity: 0.5;
-  }
-  50% {
-    opacity: 0.8;
-  }
+.animate-soft-reveal {
+  animation: soft-reveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-@keyframes sound-wave {
-  0%,
-  100% {
-    transform: scaleY(0.3);
-  }
-  50% {
-    transform: scaleY(1);
-  }
+.animate-marquee-luxury {
+  animation: marquee-luxury 40s linear infinite;
 }
 
-.animate-marquee {
-  animation: marquee 30s linear infinite;
+/* Silk Glassmorphism Panels */
+.silk-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.animate-fade-up {
-  animation: fade-up 0.6s ease-out forwards;
-  opacity: 0;
+.silk-card-hover {
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
+.silk-card-hover:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
+  border-color: rgba(224, 169, 109, 0.2);
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8);
+  transform: translateY(-4px);
 }
 
-.sound-wave-bar {
-  animation: sound-wave 1s ease-in-out infinite;
+/* Premium Text Fading Mask */
+.mask-luxury-fade {
+  mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
 }
 
-.sound-wave-bar:nth-child(1) {
-  animation-delay: 0s;
+/* Luxury Form Inputs Overrides */
+.cl-card, .cl-userButtonPopoverCard {
+  border-radius: var(--radius) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background-color: #0b0908 !important;
+  box-shadow: 0 50px 100px rgba(0,0,0,0.8) !important;
 }
-.sound-wave-bar:nth-child(2) {
-  animation-delay: 0.1s;
+
+.cl-button {
+  border-radius: 9999px !important;
+  font-family: system-ui, sans-serif !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
 }
-.sound-wave-bar:nth-child(3) {
-  animation-delay: 0.2s;
-}
-.sound-wave-bar:nth-child(4) {
-  animation-delay: 0.3s;
-}
-.sound-wave-bar:nth-child(5) {
-  animation-delay: 0.4s;
+
+.cl-formButtonPrimary {
+  background: #e0a96d !important;
+  color: #0b0908 !important;
 }

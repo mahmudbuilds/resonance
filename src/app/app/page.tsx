@@ -9,10 +9,10 @@ import {
   Mic2,
   Play,
   Volume2,
-  Terminal,
   Cpu,
   Radio,
-  Loader2, // Added for high-tech loading spinners
+  Loader2,
+  Music,
 } from "lucide-react";
 import Link from "next/link";
 import UserGreeting from "@/components/dashboard/UserGreeting";
@@ -25,47 +25,44 @@ import { toast } from "sonner";
 export default function Home() {
   const router = useRouter();
 
-  // External convex requests
+  // External data requests
   const numberOfUserGenerations = useQuery(api.voice.getNumberOfGenerations);
   const numberOfUserVoices = useQuery(api.voice.getNumberOfUserVoices);
   const topVoices = useQuery(api.voice.getTopVoices);
 
-  // Determine if specific segments are still loading
-  const isTelemetryLoading =
-    numberOfUserGenerations === undefined || numberOfUserVoices === undefined;
   const isRegistryLoading = topVoices === undefined;
 
   const features = [
     {
       title: "Text to Speech",
       description:
-        "Parametric synthesis engine. Generate studio-quality audio with precise emotional control.",
+        "Generate stunning, fluid voiceovers and narrative tracks with premium vocal textures.",
       icon: AudioLines,
       href: "/app/text-to-speech",
-      id: "MDL-01",
+      id: "01",
     },
     {
       title: "Voice Library",
       description:
-        "Access a global registry of 140+ neural voice models spanning 40+ languages.",
+        "Access a beautifully curated collection of high-fidelity voices spanning multiple languages.",
       icon: Volume2,
       href: "/app/voices",
-      id: "MDL-02",
+      id: "02",
     },
     {
       title: "Voice Cloning",
       description:
-        "Neural acoustic extraction. Replicate vocal signatures from minimal sample data.",
+        "Create a tailored dynamic replica of a specific voice using minimal sample audio.",
       icon: Mic2,
       href: "/app/voice-cloning",
-      id: "MDL-03",
+      id: "03",
     },
   ];
 
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
-      toast.success("ACTIVE VOICE LOADED INTO SPEECH MODULE");
+      toast.success("VOCAL STYLE LOADED SUCCESSFULLY");
       router.push("/app/text-to-speech");
     }
   };
@@ -73,26 +70,24 @@ export default function Home() {
   const showcaseVoices: Doc<"voices">[] = (topVoices as Doc<"voices">[]) || [];
 
   const stats = [
-    { label: "SYS.LOAD", value: "84%", change: "+12.4%", loading: false },
     {
-      label: "GENERATIONS",
+      label: "TOTAL AUDIO GENERATIONS",
       value:
         numberOfUserGenerations !== undefined
           ? String(numberOfUserGenerations)
           : "0",
-      change: "NOMINAL",
+      status: "ACTIVE",
       loading: numberOfUserGenerations === undefined,
     },
     {
-      label: "ACTIVE MODELS",
+      label: "MY CUSTOM SAVED VOICES",
       value:
         numberOfUserVoices !== undefined ? String(numberOfUserVoices) : "0",
-      change: "SYNCED",
+      status: "READY",
       loading: numberOfUserVoices === undefined,
     },
   ];
 
-  // Verified target locale matrix
   const targetLocales = [
     "AR-SA",
     "EN-US",
@@ -106,69 +101,65 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-primary selection:text-black pb-20">
-      {/* Background Grid */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+    <div className="min-h-screen bg-[#0b0908] text-[#fcfbf7] font-body relative selection:bg-[#e0a96d]/20 selection:text-[#e0a96d] pb-20">
+      
+      {/* Editorial Fluid Light Sculpture Background Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-20%] right-[-10%] w-[70vw] h-[70vw] rounded-full bg-gradient-to-bl from-[#e0a96d]/5 to-transparent blur-3xl" />
+        <div className="absolute bottom-[5%] left-[-20%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#948880]/3 to-transparent blur-3xl" />
       </div>
 
-      <div className="relative z-10 responsive-container">
-        {/* Header Section */}
-        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
-            <Radio className="w-3 h-3 animate-pulse" />
-            Terminal Session Active
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+        
+        {/* Clean Editorial Greeting Header */}
+        <header className="mb-14 pt-12 border-b border-white/5 pb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/[0.02] border border-white/5 mb-6 text-[10px] tracking-[0.2em] uppercase text-[#e0a96d]">
+            <Radio className="w-3 h-3 text-[#e0a96d] animate-pulse" />
+            Atelier Studio Connected
           </div>
-          <div className="font-heading text-3xl sm:text-4xl md:text-5xl font-bold uppercase tracking-tighter mb-4 text-white">
+          <h1 className="font-sans text-3xl sm:text-4xl md:text-5xl font-light tracking-tight text-white mb-4">
             <UserGreeting />
-          </div>
-          <p className="font-mono text-xs sm:text-sm text-[#888] max-w-2xl uppercase leading-relaxed tracking-wider">
-            Welcome to the command center. System telemetry is nominal. All
-            synthesis modules online and ready for input.
+          </h1>
+          <p className="text-sm text-[#948880] max-w-2xl font-light leading-relaxed">
+            Welcome to your creative dashboard. Your digital narration space is active, fully prepared, and waiting for your next text input.
           </p>
         </header>
 
-        {/* Feature Grid */}
-        <section className="mb-16 sm:mb-20">
-          <div className="flex items-center justify-between mb-6 sm:mb-8 border-b border-[#222] pb-4">
-            <h2 className="font-heading text-xl sm:text-2xl font-bold uppercase tracking-widest text-white flex items-center gap-3">
-              <Cpu className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-              Core Modules
+        {/* Studio Features Section */}
+        <section className="mb-16">
+          <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
+            <h2 className="font-sans text-lg tracking-wider text-white flex items-center gap-3 font-light">
+              <Cpu className="w-4 h-4 text-[#e0a96d]" />
+              Creative Studio Workspaces
             </h2>
-            <Link
-              href="/app/text-to-speech"
-              className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888] hover:text-primary transition-colors flex items-center gap-2"
-            >
-              Execute <ArrowRight className="w-3 h-3" />
-            </Link>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <Link
-                key={feature.title}
-                href={feature.href}
-                className="group block"
-              >
-                <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 h-full transition-all duration-300 hover:border-primary hover:bg-[#0a0a0a] relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 font-mono text-[10px] sm:text-xs text-[#444] group-hover:text-primary transition-colors">
-                    [{feature.id}]
+              <Link key={feature.title} href={feature.href} className="group block">
+                <div className="silk-panel rounded-[2rem] p-8 h-full transition-all duration-500 border border-white/5 bg-[#0e0c0b] hover:border-[#e0a96d]/30 hover:bg-white/[0.01] relative flex flex-col justify-between group min-h-[260px]">
+                  
+                  <div className="absolute top-6 right-8 font-sans text-[11px] tracking-wider text-[#444] group-hover:text-[#e0a96d] transition-colors">
+                    Studio Card {feature.id}
                   </div>
 
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#111] border border-[#333] flex items-center justify-center mb-6 group-hover:border-primary group-hover:bg-primary/10 transition-colors">
-                    <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:text-primary transition-colors" />
+                  <div className="space-y-6">
+                    <div className="w-12 h-12 rounded-xl bg-white/[0.01] border border-white/5 flex items-center justify-center group-hover:border-[#e0a96d]/20 group-hover:bg-[#e0a96d]/5 transition-all">
+                      <feature.icon className="w-5 h-5 text-white/80 group-hover:text-[#e0a96d] transition-colors" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <h3 className="font-sans text-lg font-light tracking-tight text-white group-hover:text-[#e0a96d] transition-colors">
+                        {feature.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-[#948880] leading-relaxed font-light">
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
 
-                  <h3 className="font-heading text-lg sm:text-xl font-bold uppercase mb-3 text-white group-hover:text-primary transition-colors">
-                    {feature.title}
-                  </h3>
-
-                  <p className="font-sans text-xs sm:text-sm text-[#888] leading-relaxed">
-                    {feature.description}
-                  </p>
-
-                  <div className="mt-8 flex items-center gap-2 font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#555] group-hover:text-primary transition-colors">
-                    Initialize <ChevronRight className="w-3 h-3" />
+                  <div className="mt-8 flex items-center gap-2 font-sans text-[11px] tracking-wider text-[#555] group-hover:text-white transition-colors">
+                    Open Tool <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               </Link>
@@ -176,78 +167,64 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Dashboard Panels */}
-        <div className="grid lg:grid-cols-12 gap-6 mb-16 sm:mb-20">
-          {/* Active Voice Registry */}
-          <section className="lg:col-span-8 border border-[#222] bg-[#050505]">
-            <div className="p-4 sm:p-6 border-b border-[#222] flex items-center justify-between bg-[#0a0a0a]">
-              <h2 className="font-mono text-xs sm:text-sm uppercase tracking-widest text-white flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-primary" />
-                Active Voice Registry
+        {/* Voice Discovery and Activity Trackers */}
+        <div className="grid lg:grid-cols-12 gap-8 mb-16">
+          
+          {/* Curated Voice Profiles Portfolio */}
+          <section className="lg:col-span-8 silk-panel rounded-[2.5rem] bg-[#0e0c0b] border border-white/5 overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.005]">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-white flex items-center gap-2 font-medium">
+                <Music className="w-4 h-4 text-[#e0a96d]" />
+                Featured Voice Styles
               </h2>
-              <Link
-                href="/app/voices"
-                className="font-mono text-[10px] sm:text-xs text-primary hover:underline"
-              >
-                VIEW_ALL
+              <Link href="/app/voices" className="text-[11px] uppercase tracking-wider text-[#e0a96d] hover:text-white transition-colors font-medium">
+                Browse Full Library
               </Link>
             </div>
 
-            <div className="divide-y divide-[#222]">
+            <div className="divide-y divide-white/5 flex-1 flex flex-col justify-center">
               {isRegistryLoading ? (
-                <div className="p-12 flex flex-col items-center justify-center gap-3 text-[#555] font-mono text-xs uppercase">
-                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                  <span>Fetching remote matrix models...</span>
+                <div className="p-16 flex flex-col items-center justify-center gap-3 text-[#948880] font-sans text-xs tracking-wider">
+                  <Loader2 className="w-5 h-5 text-[#e0a96d] animate-spin" />
+                  <span>Loading vocal profiles...</span>
                 </div>
               ) : showcaseVoices.length === 0 ? (
-                <div className="p-12 text-center text-[#555] font-mono text-xs uppercase">
-                  No active voice profiles synced.
+                <div className="p-16 text-center text-[#948880] font-sans text-xs tracking-wider italic">
+                  No voice profiles are available at this moment.
                 </div>
               ) : (
                 showcaseVoices.map((voice, i) => (
                   <div
                     key={i}
-                    className="p-4 sm:p-6 hover:bg-[#0a0a0a] transition-colors flex items-center gap-4 group cursor-pointer"
+                    onClick={() => voice.inworldVoiceId && handleUseVoice(voice.inworldVoiceId)}
+                    className="p-5 hover:bg-white/[0.01] transition-all duration-300 flex items-center gap-5 group cursor-pointer"
                   >
-                    {/* Visual Indicator Container */}
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 border border-[#333] bg-[#111] flex items-center justify-center group-hover:border-primary group-hover:bg-primary transition-all shrink-0 relative overflow-hidden">
-                      <span className="font-mono font-bold text-xs sm:text-sm text-white group-hover:opacity-0 transition-opacity absolute">
+                    {/* Activation Icon Button Container */}
+                    <div className="w-10 h-10 rounded-xl border border-white/5 bg-white/[0.01] flex items-center justify-center group-hover:border-[#e0a96d]/40 group-hover:bg-[#e0a96d] transition-all shrink-0 relative overflow-hidden">
+                      <span className="font-sans text-xs text-[#948880] group-hover:opacity-0 transition-opacity absolute">
                         0{i + 1}
                       </span>
-                      <Play
-                        onClick={() => {
-                          if (!voice.inworldVoiceId) {
-                            return;
-                          }
-                          handleUseVoice(voice.inworldVoiceId);
-                        }}
-                        className="w-4 h-4 text-black opacity-0 group-hover:opacity-100 transition-opacity absolute fill-black"
-                      />
+                      <Play className="w-3.5 h-3.5 text-[#0b0908] opacity-0 group-hover:opacity-100 transition-opacity absolute fill-[#0b0908]" />
                     </div>
 
-                    {/* Clean Content Fields Grid */}
                     <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-4 items-center">
                       <div className="min-w-0">
-                        <div className="font-heading font-bold uppercase text-sm sm:text-base text-white group-hover:text-primary transition-colors truncate">
+                        <div className="font-sans text-sm font-medium text-white group-hover:text-[#e0a96d] transition-colors truncate">
                           {voice.displayName}
                         </div>
-                        <div className="font-mono text-[9px] sm:text-[10px] text-[#666]">
-                          {voice.langCode}
+                        <div className="font-sans text-[10px] text-[#555] mt-0.5">
+                          Language Code: {voice.langCode}
                         </div>
                       </div>
 
-                      <div className="hidden sm:block font-mono text-[10px] sm:text-xs text-[#888]">
-                        Tags:{" "}
-                        <span className="text-white">
-                          {voice.tags?.join(", ")}
-                        </span>
+                      <div className="hidden sm:block font-sans text-xs text-[#948880] font-light truncate">
+                        Tone: <span className="text-white/70">{voice.tags?.join(", ")}</span>
                       </div>
 
-                      <div className="flex justify-end sm:justify-start items-center gap-2 font-mono text-[10px] sm:text-xs">
-                        <Activity className="w-3 h-3 text-[#555] group-hover:text-primary transition-colors" />
-                        <span className="text-[#888] group-hover:text-white transition-colors">
-                          {voice.playCount || 0} PLAY
-                          {voice.playCount === 1 ? "" : "S"}
+                      <div className="flex justify-end sm:justify-start items-center gap-2 font-sans text-xs tracking-wide">
+                        <Activity className="w-3.5 h-3.5 text-[#444] group-hover:text-[#e0a96d] transition-colors" />
+                        <span className="text-[#948880] group-hover:text-white transition-colors">
+                          {voice.playCount || 0} listen{voice.playCount === 1 ? "" : "s"}
                         </span>
                       </div>
                     </div>
@@ -257,39 +234,39 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Activity Overview / Telemetry */}
+          {/* Simple Studio Activity Stats */}
           <section className="lg:col-span-4 flex flex-col gap-6">
-            <div className="border border-[#222] bg-[#050505] p-6 h-full flex flex-col">
-              <h2 className="font-mono text-xs sm:text-sm uppercase tracking-widest text-white mb-6 border-b border-[#222] pb-4 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-primary" />
-                Telemetry
+            <div className="silk-panel rounded-[2.5rem] bg-[#0e0c0b] border border-white/5 p-6 h-full flex flex-col justify-between">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-white mb-6 border-b border-white/5 pb-4 flex items-center gap-2 font-medium">
+                <Activity className="w-4 h-4 text-[#e0a96d]" />
+                Studio Activity
               </h2>
 
-              <div className="flex-1 flex flex-col justify-between gap-4 sm:gap-6">
-                {stats.map((stat, i) => (
+              <div className="flex-1 flex flex-col justify-center gap-4">
+                {stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className="border border-[#222] p-4 bg-[#0a0a0a] relative overflow-hidden group min-h-[82px] flex flex-col justify-center"
+                    className="border border-white/5 rounded-2xl p-5 bg-white/[0.005] relative overflow-hidden group min-h-[90px] flex flex-col justify-center transition-all duration-500 hover:border-[#e0a96d]/20"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#222] group-hover:bg-primary transition-colors" />
+                    <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-white/5 group-hover:bg-[#e0a96d] transition-colors" />
 
                     {stat.loading ? (
-                      <div className="flex items-center justify-between font-mono text-[10px] text-[#444] uppercase">
-                        <span className="tracking-wider">{stat.label}</span>
-                        <Loader2 className="w-3 h-3 text-primary animate-spin" />
+                      <div className="flex items-center justify-between font-sans text-[11px] text-[#555] tracking-wide">
+                        <span>{stat.label}</span>
+                        <Loader2 className="w-3.5 h-3.5 text-[#e0a96d] animate-spin" />
                       </div>
                     ) : (
                       <div className="flex justify-between items-end">
                         <div>
-                          <div className="font-mono text-[9px] sm:text-[10px] text-[#666] mb-1">
+                          <div className="font-sans text-[10px] tracking-wider text-[#666] uppercase mb-1">
                             {stat.label}
                           </div>
-                          <div className="font-heading text-2xl sm:text-3xl font-bold text-white group-hover:text-primary transition-colors">
+                          <div className="font-sans text-2xl font-light text-white group-hover:text-[#e0a96d] transition-colors tracking-tight">
                             {stat.value}
                           </div>
                         </div>
-                        <div className="font-mono text-[9px] sm:text-[10px] text-primary bg-primary/10 px-2 py-1 border border-primary/20">
-                          {stat.change}
+                        <div className="text-[10px] tracking-widest text-[#e0a96d] bg-[#e0a96d]/5 px-2.5 py-1 rounded-md border border-[#e0a96d]/10 font-sans font-medium">
+                          {stat.status}
                         </div>
                       </div>
                     )}
@@ -300,25 +277,25 @@ export default function Home() {
           </section>
         </div>
 
-        {/* Global Languages - Full width with custom high-tech edge fading masks */}
-        <section className="border border-[#222] bg-[#050505] w-full overflow-hidden">
-          <div className="border-b border-[#222] p-4 bg-[#0a0a0a] flex items-center gap-2">
-            <Globe className="w-4 h-4 text-primary" />
-            <h2 className="font-mono text-xs sm:text-sm uppercase tracking-widest text-white">
-              Supported Matrix Locales
+        {/* Global Languages Ribbon Strip */}
+        <section className="silk-panel rounded-[2rem] bg-[#0e0c0b] border border-white/5 w-full overflow-hidden">
+          <div className="border-b border-white/5 p-4 bg-white/[0.005] flex items-center gap-2">
+            <Globe className="w-4 h-4 text-[#e0a96d]" />
+            <h2 className="text-xs uppercase tracking-[0.2em] text-white font-medium">
+              Supported Accent Regions
             </h2>
           </div>
           
-          <div className="relative py-4 sm:py-5 flex items-center">
-            {/* Visual gradient mask overlays to soften scrolling cuts */}
-            <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none" />
+          <div className="relative py-5 flex items-center">
+            {/* Visual gradient mask overlays */}
+            <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#0e0c0b] to-transparent z-20 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#0e0c0b] to-transparent z-20 pointer-events-none" />
             
-            <div className="flex shrink-0 animate-[marquee_25s_linear_infinite] gap-4 md:gap-6 px-4">
+            <div className="flex shrink-0 animate-[marquee_30s_linear_infinite] gap-5 px-4">
               {targetLocales.map((lang, idx) => (
                 <div
                   key={idx}
-                  className="font-mono text-[10px] sm:text-xs border border-[#222] bg-[#111] px-4 py-2 text-[#888] hover:text-primary hover:border-primary transition-colors cursor-default whitespace-nowrap tracking-wider"
+                  className="font-sans text-xs border border-white/5 bg-white/[0.01] px-5 py-2.5 rounded-xl text-[#948880] hover:text-[#e0a96d] hover:border-[#e0a96d]/20 transition-all cursor-default whitespace-nowrap tracking-widest"
                 >
                   {lang}
                 </div>
@@ -326,7 +303,7 @@ export default function Home() {
               {targetLocales.map((lang, idx) => (
                 <div
                   key={`dup-${idx}`}
-                  className="font-mono text-[10px] sm:text-xs border border-[#222] bg-[#111] px-4 py-2 text-[#888] hover:text-primary hover:border-primary transition-colors cursor-default whitespace-nowrap tracking-wider"
+                  className="font-sans text-xs border border-white/5 bg-white/[0.01] px-5 py-2.5 rounded-xl text-[#948880] hover:text-[#e0a96d] hover:border-[#e0a96d]/20 transition-all cursor-default whitespace-nowrap tracking-widest"
                 >
                   {lang}
                 </div>

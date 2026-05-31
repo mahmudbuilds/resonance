@@ -19,7 +19,6 @@ import {
   Type,
   Volume2,
   Wand2,
-  Terminal
 } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
@@ -56,6 +55,7 @@ export default function TextToSpeechPage() {
     "inworld-tts-1.5-mini",
   );
   const voices = useQuery(api.voice.getUserVoices);
+  
   useEffect(() => {
     if (!mounted) return;
     const fetchVoices = async () => {
@@ -65,6 +65,7 @@ export default function TextToSpeechPage() {
     };
     fetchVoices();
   }, [mounted, voices, selectedVoice, setSelectedVoice]);
+
   const [text, setText] = useState("");
   const [speakingRate, setSpeakingRate] = useState([1.0]);
   const [temperature, setTemperature] = useState([0.7]);
@@ -75,9 +76,11 @@ export default function TextToSpeechPage() {
   const [isSsml, setIsSsml] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
+  
   const userGenerations = useQuery(api.inworld.listUserGenerations);
   const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
   const deleteGeneration = useMutation(api.inworld.deleteUserGeneration);
+
   const handleGenerateSpeech = async () => {
     if (!text.trim()) {
       toast.error("Please enter some text first");
@@ -108,57 +111,60 @@ export default function TextToSpeechPage() {
       setIsGenerating(false);
     }
   };
-  const isReady = mounted && !!voices;
-  return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-black pb-20">
-      {/* Ambient Background Elements */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
-         <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-      </div>
 
-      <div className="relative z-10 responsive-container">
+  const isReady = mounted && !!voices;
+
+  return (
+    <div className="min-h-screen relative w-full overflow-hidden bg-zinc-950 text-zinc-50 font-sans pb-20">
+      {/* Premium Ambient Background Glows */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative z-10 responsive-container max-w-7xl mx-auto px-4 pt-12">
         {/* Header Section */}
-        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
-              <Terminal className="w-3 h-3" />
-              Module: Speech Synthesis
-            </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
-              TEXT_TO_<span className="text-primary">SPEECH</span>
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-zinc-900">
+          <div className="space-y-3">
+            <Badge variant="secondary" className="gap-1.5 px-3 py-1 bg-zinc-900 border-zinc-800 text-zinc-400 font-medium text-xs rounded-full">
+              <AudioLines className="w-3.5 h-3.5 text-primary" />
+              Speech Synthesis
+            </Badge>
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+              Text to <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Speech</span>
             </h1>
           </div>
-          <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
-            Initialize parametric voice synthesis. Define text vectors and semantic weightings.
+          <p className="text-sm text-zinc-400 max-w-md leading-relaxed">
+            Convert your written text into high-quality, natural-sounding audio script. Refine vocal vectors and tuning rules with advanced neural models.
           </p>
         </header>
 
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 w-full max-w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
           {/* Settings Sidebar */}
-          <div className="lg:col-span-4 space-y-6 sm:space-y-8 w-full max-w-full">
-            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
-              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
-                Configuration
+          <div className="lg:col-span-4 space-y-6 w-full">
+            <div className="border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-md rounded-xl p-6 shadow-xl shadow-black/20">
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-zinc-800/60">
+                <Settings2 className="w-4 h-4 text-zinc-400" />
+                <h2 className="text-sm font-semibold text-zinc-200 tracking-wide">Voice Configuration</h2>
               </div>
 
-              <div className="space-y-6 sm:space-y-8 mt-4">
-                <div className="space-y-3">
-                  <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
-                    Voice Identity <span className="text-primary">*</span>
+              <div className="space-y-6">
+                {/* Voice Identity Input Group */}
+                <div className="space-y-2">
+                  <Label className="text-xs font-medium text-zinc-400">
+                    Voice Profile <span className="text-primary">*</span>
                   </Label>
                   <Select
                     value={isReady ? (selectedVoice ?? "") : ""}
                     onValueChange={(value) => setSelectedVoice(value)}
                     disabled={!isReady}
                   >
-                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase text-sm">
+                    <SelectTrigger className="w-full bg-zinc-950/60 border-zinc-800 h-11 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary text-zinc-200 text-sm px-3.5 transition-all">
                       <SelectValue
                         placeholder={
-                          isReady ? "SELECT_VOICE" : "LOADING_VOICES..."
+                          isReady ? "Select a voice profile..." : "Loading system voices..."
                         }
                       />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                    <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg text-zinc-200 p-1">
                       {voices?.map((voice) => {
                         const isNew =
                           Date.now() - voice._creationTime <
@@ -167,20 +173,20 @@ export default function TextToSpeechPage() {
                           <SelectItem
                             key={voice.inworldVoiceId}
                             value={voice.inworldVoiceId!}
-                            className="rounded-none cursor-pointer w-full focus:bg-primary focus:text-black py-3 uppercase"
+                            className="rounded-md cursor-pointer w-full focus:bg-zinc-800 focus:text-white px-3 py-2.5 transition-colors"
                           >
                             <div className="flex items-center justify-between w-full gap-4">
-                              <span className="truncate">
+                              <span className="truncate font-medium">
                                 {voice.displayName}
                               </span>
-                              <div className="flex items-center gap-2 shrink-0">
+                              <div className="flex items-center gap-1.5 shrink-0">
                                 {isNew && (
-                                  <span className="text-[10px] tracking-widest font-bold text-primary">
-                                    [NEW]
-                                  </span>
+                                  <Badge className="text-[10px] px-1.5 py-0 bg-primary/10 text-primary border-none font-semibold uppercase rounded">
+                                    New
+                                  </Badge>
                                 )}
                                 {voice.langCode && (
-                                  <span className="text-[10px] tracking-widest text-[#888]">
+                                  <span className="text-xs text-zinc-500 font-mono bg-zinc-950 px-1.5 py-0.5 rounded border border-zinc-800/40">
                                     {voice.langCode}
                                   </span>
                                 )}
@@ -193,38 +199,39 @@ export default function TextToSpeechPage() {
                   </Select>
                 </div>
 
-                <div className="space-y-3">
+                {/* Neural Model Input Group */}
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
+                    <Label className="text-xs font-medium text-zinc-400">
                       Neural Model
                     </Label>
-                    <span className="font-mono text-[9px] text-primary bg-primary/10 border border-primary/20 px-2 py-0.5">
-                      V2.0
-                    </span>
+                    <Badge variant="outline" className="text-[10px] text-primary bg-primary/5 border-primary/20 px-2 py-0">
+                      v2.0 Adaptive
+                    </Badge>
                   </div>
                   <Select
                     value={model}
                     onValueChange={(value) => setModel(value)}
                   >
-                    <SelectTrigger className="w-full bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white uppercase text-sm">
-                      <SelectValue placeholder="SELECT_MODEL" />
+                    <SelectTrigger className="w-full bg-zinc-950/60 border-zinc-800 h-11 rounded-lg focus:ring-1 focus:ring-primary focus:border-primary text-zinc-200 text-sm px-3.5 transition-all">
+                      <SelectValue placeholder="Select model..." />
                     </SelectTrigger>
-                    <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white uppercase">
+                    <SelectContent className="bg-zinc-900 border-zinc-800 rounded-lg text-zinc-200 p-1">
                       <SelectItem
                         value="inworld-tts-2"
-                        className="rounded-none cursor-pointer focus:bg-primary focus:text-black py-3"
+                        className="rounded-md cursor-pointer focus:bg-zinc-800 focus:text-white px-3 py-2.5"
                       >
                         inworld-tts-2
                       </SelectItem>
                       <SelectItem
                         value="inworld-tts-1.5-mini"
-                        className="rounded-none cursor-pointer focus:bg-primary focus:text-black py-3"
+                        className="rounded-md cursor-pointer focus:bg-zinc-800 focus:text-white px-3 py-2.5"
                       >
                         inworld-tts-1.5-mini
                       </SelectItem>
                       <SelectItem
                         value="inworld-tts-1.5-max"
-                        className="rounded-none cursor-pointer focus:bg-primary focus:text-black py-3"
+                        className="rounded-md cursor-pointer focus:bg-zinc-800 focus:text-white px-3 py-2.5"
                       >
                         inworld-tts-1.5-max
                       </SelectItem>
@@ -232,18 +239,20 @@ export default function TextToSpeechPage() {
                   </Select>
                 </div>
 
-                <div className="space-y-6 sm:space-y-8 pt-6 sm:pt-8 border-t border-[#333]">
-                  <Label className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]">
-                    Tuning Parameters
+                {/* Tuning sliders */}
+                <div className="space-y-5 pt-5 border-t border-zinc-800/60">
+                  <Label className="text-xs font-semibold text-zinc-400 tracking-wide block">
+                    Vocal Parameters
                   </Label>
 
-                  <div className="space-y-4 bg-[#111] border border-[#333] p-5 sm:p-6">
+                  <div className="space-y-3 bg-zinc-950/40 border border-zinc-800/60 p-4 rounded-xl">
                     <div className="flex items-center justify-between">
-                      <Label className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest">
-                        Rate
-                      </Label>
-                      <span className="font-mono text-xs text-primary">
-                        {speakingRate[0].toFixed(1)}X
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
+                        <Gauge className="w-3.5 h-3.5 text-zinc-400" />
+                        Speaking Rate
+                      </div>
+                      <span className="text-xs font-mono font-semibold text-primary">
+                        {speakingRate[0].toFixed(1)}x
                       </span>
                     </div>
                     <Slider
@@ -252,16 +261,17 @@ export default function TextToSpeechPage() {
                       min={0.5}
                       max={1.5}
                       step={0.1}
-                      className="cursor-pointer"
+                      className="cursor-pointer py-2"
                     />
                   </div>
 
-                  <div className="space-y-4 bg-[#111] border border-[#333] p-5 sm:p-6">
+                  <div className="space-y-3 bg-zinc-950/40 border border-zinc-800/60 p-4 rounded-xl">
                     <div className="flex items-center justify-between">
-                      <Label className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-zinc-300">
+                        <Thermometer className="w-3.5 h-3.5 text-zinc-400" />
                         Temperature
-                      </Label>
-                      <span className="font-mono text-xs text-primary">
+                      </div>
+                      <span className="text-xs font-mono font-semibold text-primary">
                         {temperature[0].toFixed(2)}
                       </span>
                     </div>
@@ -271,7 +281,7 @@ export default function TextToSpeechPage() {
                       min={0}
                       max={1}
                       step={0.05}
-                      className="cursor-pointer"
+                      className="cursor-pointer py-2"
                     />
                   </div>
                 </div>
@@ -280,52 +290,52 @@ export default function TextToSpeechPage() {
           </div>
 
           {/* Main Input area & Generations */}
-          <div className="lg:col-span-8 flex flex-col space-y-6 sm:space-y-8 w-full max-w-full">
-            <div className="flex flex-col border border-[#222] bg-[#050505] min-h-[400px] sm:min-h-[500px] w-full max-w-full focus-within:border-primary transition-colors relative">
-              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary z-10">
-                Script Editor
-              </div>
-
-              <div className="border-b border-[#222] p-4 sm:p-6 flex flex-row items-center justify-between bg-[#0a0a0a]">
-                <div className="flex items-center gap-4 sm:gap-6">
-                  <div className="flex items-center gap-2 sm:gap-3">
+          <div className="lg:col-span-8 flex flex-col space-y-6 w-full">
+            <div className="flex flex-col border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-md min-h-[420px] sm:min-h-[480px] w-full rounded-xl focus-within:border-zinc-700/80 shadow-xl shadow-black/20 transition-all overflow-hidden relative">
+              <div className="border-b border-zinc-800/60 p-4 flex flex-row items-center justify-between bg-zinc-900/40">
+                <div className="flex items-center gap-2">
+                  <Type className="w-4 h-4 text-zinc-400" />
+                  <span className="text-sm font-semibold text-zinc-200">Script Editor</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
                     <Label
                       htmlFor="ssml"
-                      className="font-mono text-[10px] sm:text-xs text-white uppercase tracking-widest cursor-pointer"
+                      className="text-xs font-medium text-zinc-400 cursor-pointer select-none"
                     >
-                      SSML
+                      SSML Mode
                     </Label>
                     <Switch
                       id="ssml"
                       checked={isSsml}
                       onCheckedChange={setIsSsml}
-                      className="data-[state=checked]:bg-primary scale-75 sm:scale-100"
+                      className="data-[state=checked]:bg-primary"
                     />
                   </div>
-                  <div className="w-px h-6 bg-[#333] hidden xs:block" />
+                  <div className="w-px h-4 bg-zinc-800" />
                   <Button
                     variant="ghost"
                     onClick={() => setText("")}
-                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888] hover:text-white rounded-none h-8 px-0"
+                    className="text-xs font-medium text-zinc-400 hover:text-zinc-200 h-8 px-2.5 rounded-md hover:bg-zinc-800/50"
                   >
-                    Clear Buffer
+                    Clear text
                   </Button>
                 </div>
               </div>
 
-              <div className={`flex-1 relative flex flex-col w-full max-w-full transition-colors duration-500`}>
+              <div className="flex-1 relative flex flex-col w-full transition-colors duration-300">
                 <div className="flex-1 flex w-full h-full relative items-stretch">
                   {isSsml && (
                     <div
                       ref={lineNumbersRef}
-                      className="flex flex-col items-end pt-6 sm:pt-8 pb-6 sm:pb-8 pl-3 pr-2 border-r border-[#222] w-12 sm:w-16 font-mono text-base sm:text-lg lg:text-xl text-[#444] select-none bg-[#0a0a0a] text-right overflow-hidden h-full pointer-events-none"
+                      className="flex flex-col items-end pt-5 pb-5 pl-3 pr-2 border-r border-zinc-900 w-12 sm:w-14 font-mono text-sm text-zinc-600 select-none bg-zinc-950/30 text-right overflow-hidden h-full pointer-events-none"
                     >
                       {Array.from({
                         length: Math.max(1, text.split("\n").length),
                       }).map((_, i) => (
                         <div
                           key={i}
-                          style={{ height: "32px", lineHeight: "32px" }}
+                          style={{ height: "28px", lineHeight: "28px" }}
                           className="flex-shrink-0 w-full text-right"
                         >
                           {i + 1}
@@ -336,8 +346,8 @@ export default function TextToSpeechPage() {
                   <Textarea
                     placeholder={
                       isSsml
-                        ? "<speak>\n  INITIALIZE SSML SEQUENCE...\n</speak>"
-                        : "INPUT NEURAL SCRIPT HERE..."
+                        ? "<speak>\n  Write your SSML structured markup tags here...\n</speak>"
+                        : "Type or paste your text content here to synthesize speech..."
                     }
                     wrap={isSsml ? "off" : "soft"}
                     onScroll={(e) => {
@@ -345,11 +355,11 @@ export default function TextToSpeechPage() {
                         lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
                       }
                     }}
-                    style={isSsml ? { lineHeight: "32px" } : undefined}
-                    className={`w-full h-full min-h-[300px] sm:min-h-[350px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none focus:outline-none focus-visible:ring-offset-0 ${
+                    style={isSsml ? { lineHeight: "28px" } : undefined}
+                    className={`w-full h-full min-h-[300px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none focus:outline-none focus-visible:ring-offset-0 bg-transparent text-zinc-100 placeholder:text-zinc-500 overflow-y-auto ${
                       isSsml
-                        ? "pt-6 sm:pt-8 pb-6 sm:pb-8 pl-4 sm:pl-6 pr-6 sm:pr-8 bg-[#050505] font-mono text-base sm:text-lg lg:text-xl text-primary placeholder:text-primary/30 selection:bg-primary/20 overflow-x-auto"
-                        : "p-6 sm:p-8 bg-[#050505] font-sans text-xl sm:text-2xl lg:text-3xl text-white placeholder:text-[#444] selection:bg-[#222] overflow-x-hidden"
+                        ? "pt-5 pb-5 px-4 font-mono text-sm text-primary selection:bg-primary/20 overflow-x-auto"
+                        : "p-5 font-sans text-base sm:text-lg selection:bg-zinc-800 overflow-x-hidden"
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
@@ -359,66 +369,76 @@ export default function TextToSpeechPage() {
                 </div>
               </div>
 
-              <div className="border-t border-[#222] p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6 bg-[#0a0a0a]">
-                <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-start">
-                  <span className="font-mono text-[10px] sm:text-xs text-[#888] uppercase tracking-widest">
-                    <span className={text.length > 4500 ? "text-red-500" : "text-white"}>
-                      {text.length}
-                    </span> / 5000
+              <div className="border-t border-zinc-800/60 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-zinc-900/40">
+                <div className="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-start">
+                  <span className="text-xs font-medium text-zinc-400">
+                    <span className={text.length > 4500 ? "text-rose-500 font-semibold" : "text-zinc-200 font-mono"}>
+                      {text.length.toLocaleString()}
+                    </span>
+                    <span className="text-zinc-600"> / </span>5,000 chars
                   </span>
-                  <div className="hidden xs:flex items-center gap-2 font-mono text-[10px] sm:text-xs text-[#888] uppercase tracking-widest">
-                    <Clock className="w-3.5 h-3.5" />
-                    EST: {Math.ceil(text.length / 18)}s
+                  <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+                    <Clock className="w-3.5 h-3.5 text-zinc-500" />
+                    Est. Duration: <span className="font-mono text-zinc-200">{Math.ceil(text.length / 18)}s</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 w-full sm:w-auto">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
                   <Button
                     onClick={handleGenerateSpeech}
                     disabled={isGenerating || !text.trim()}
-                    className="rounded-none h-12 sm:h-14 w-full sm:w-auto px-8 sm:px-10 bg-primary hover:bg-white text-black font-mono text-xs sm:text-sm uppercase tracking-widest transition-colors border border-primary disabled:opacity-30 disabled:hover:bg-primary"
+                    className="shadow-md shadow-primary/10 rounded-lg h-11 w-full sm:w-auto px-6 bg-primary hover:bg-primary/90 text-zinc-950 font-medium text-sm transition-all border border-primary/20 disabled:opacity-40"
                   >
                     {isGenerating ? (
-                      <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-3 animate-spin" />
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     ) : (
-                      <Wand2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-3" />
+                      <Wand2 className="w-4 h-4 mr-2" />
                     )}
-                    {isGenerating ? "PROCESSING..." : "SYNTHESIZE"}
+                    {isGenerating ? "Synthesizing..." : "Generate Speech"}
                   </Button>
                 </div>
               </div>
             </div>
 
-            {/* Recent Generations List/Grid */}
-            <div className="border border-[#222] bg-[#050505] w-full max-w-full">
-              <div className="p-6 border-b border-[#222] bg-[#0a0a0a]">
-                <h3 className="font-mono text-sm uppercase tracking-widest text-white flex items-center gap-3">
-                  <History className="w-4 h-4 text-primary" /> Audio Log
+            {/* Recent Generations List / Audio Log */}
+            <div className="border border-zinc-800/80 bg-zinc-900/30 backdrop-blur-md rounded-xl shadow-xl shadow-black/20 overflow-hidden w-full">
+              <div className="p-4 border-b border-zinc-800/60 bg-zinc-900/40 flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-zinc-200 flex items-center gap-2">
+                  <History className="w-4 h-4 text-zinc-400" /> Generation History
                 </h3>
               </div>
               
               <div className="p-0">
                 {!userGenerations || userGenerations.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-                    <Terminal className="w-8 h-8 text-[#444] mb-4" />
-                    <p className="font-mono text-xs text-[#666] uppercase tracking-widest">REGISTRY_EMPTY</p>
+                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                    <div className="p-3 bg-zinc-950/60 rounded-full border border-zinc-800/60 mb-3">
+                      <Mic2 className="w-5 h-5 text-zinc-500" />
+                    </div>
+                    <p className="text-sm font-medium text-zinc-400">No audio generations yet</p>
+                    <p className="text-xs text-zinc-500 mt-1 max-w-xs">Synthesize text above to begin building your audio catalog.</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-[#222] max-h-[400px] overflow-y-auto">
+                  <div className="divide-y divide-zinc-800/50 max-h-[400px] overflow-y-auto">
                     {[...userGenerations].reverse().map((generation) => {
                       const date = new Date(generation._creationTime);
                       const isToday = new Date().toDateString() === date.toDateString();
                       const timeString = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                      const dateString = isToday ? `TODAY ${timeString}` : `${date.toLocaleDateString()} ${timeString}`;
+                      const dateString = isToday ? `Today, ${timeString}` : `${date.toLocaleDateString()} at ${timeString}`;
 
                       const voice = voices?.find((v) => v.inworldVoiceId === generation.inworldVoiceId);
-                      const voiceName = voice?.displayName || generation.inworldVoiceId || "UNKNOWN";
+                      const voiceName = voice?.displayName || generation.inworldVoiceId || "System Voice";
 
                       return (
-                        <div key={generation._id} className="p-6 flex items-center justify-between hover:bg-[#111] transition-colors gap-4 group/item">
-                          <div className="flex items-center gap-6 flex-1 min-w-0">
+                        <div key={generation._id} className="p-4 flex items-center justify-between hover:bg-zinc-900/40 transition-colors gap-4 group">
+                          <div className="flex items-center gap-4 flex-1 min-w-0">
                             <Button
-                              className={`h-12 w-12 shrink-0 rounded-none border transition-colors ${playingId === generation._id ? "bg-primary text-black border-primary" : "bg-[#111] text-white border-[#333] group-hover/item:border-primary group-hover/item:text-primary"}`}
+                              variant="outline"
+                              size="icon"
+                              className={`h-10 w-10 shrink-0 rounded-full transition-all border shadow-sm ${
+                                playingId === generation._id 
+                                  ? "bg-primary text-zinc-950 border-primary hover:bg-primary/90 hover:text-zinc-950" 
+                                  : "bg-zinc-950 border-zinc-800 text-zinc-200 hover:border-primary/50 hover:text-primary"
+                              }`}
                               onClick={() => {
                                 const audio = document.getElementById(`audio-${generation._id}`) as HTMLAudioElement;
                                 if (audio) {
@@ -433,7 +453,7 @@ export default function TextToSpeechPage() {
                                 }
                               }}
                             >
-                              {playingId === generation._id ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                              {playingId === generation._id ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
                             </Button>
                             <audio
                               id={`audio-${generation._id}`}
@@ -443,22 +463,25 @@ export default function TextToSpeechPage() {
                               onPause={() => setPlayingId((current) => current === generation._id ? null : current)}
                               onEnded={() => setPlayingId((current) => current === generation._id ? null : current)}
                             />
-                            <div className="flex flex-col min-w-0 flex-1 gap-2">
-                              <p className="font-sans text-sm text-white truncate w-full">
+                            <div className="flex flex-col min-w-0 flex-1 gap-1">
+                              <p className="text-sm font-medium text-zinc-200 truncate pr-2">
                                 {generation.prompt}
                               </p>
-                              <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-widest text-[#888]">
-                                <span className="text-primary border border-primary/20 bg-primary/10 px-2 py-0.5">
+                              <div className="flex items-center gap-2 text-xs text-zinc-400">
+                                <Badge className="text-[10px] font-medium bg-zinc-950 text-zinc-300 hover:bg-zinc-950 border border-zinc-800 px-1.5 py-0 rounded">
                                   {voiceName}
-                                </span>
-                                <span>{dateString}</span>
+                                </Badge>
+                                <span className="text-zinc-600">•</span>
+                                <span className="text-zinc-500 text-[11px]">{dateString}</span>
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 shrink-0">
+                          
+                          <div className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                             <Button
-                              variant="ghost"
-                              className="h-10 w-10 rounded-none bg-[#111] border border-[#333] hover:border-primary hover:text-primary text-[#888]"
+                              variant="outline"
+                              size="icon"
+                              className="h-9 w-9 rounded-lg bg-zinc-950 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 shadow-sm"
                               disabled={downloadingId === generation._id || !generation.audioUrl}
                               onClick={async () => {
                                 if (!generation.audioUrl) return;
@@ -483,25 +506,26 @@ export default function TextToSpeechPage() {
                             >
                               {downloadingId === generation._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                             </Button>
+                            
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="h-10 w-10 rounded-none bg-[#111] border border-[#333] hover:border-primary hover:text-primary text-[#888]">
+                                <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg bg-zinc-950 border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-zinc-200 shadow-sm">
                                   <MoreVertical className="w-4 h-4" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-40 rounded-none border-[#333] bg-[#050505] p-2">
+                              <DropdownMenuContent align="end" className="w-36 rounded-lg border-zinc-800 bg-zinc-900 p-1 shadow-lg">
                                 <DropdownMenuItem
-                                  className="text-red-500 hover:bg-red-500/10 cursor-pointer rounded-none font-mono text-xs uppercase tracking-widest p-3"
+                                  className="text-rose-400 hover:text-rose-300 focus:bg-rose-500/10 focus:text-rose-300 cursor-pointer rounded-md text-xs font-medium px-3 py-2"
                                   onClick={async () => {
                                     try {
                                       await deleteGeneration({ generationId: generation._id });
-                                      toast.success("Generation deleted");
+                                      toast.success("Generation removed from log");
                                     } catch (error) {
                                       toast.error("Failed to delete generation");
                                     }
                                   }}
                                 >
-                                  <Trash2 className="w-4 h-4 mr-3" /> Delete
+                                  <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete Audio
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
