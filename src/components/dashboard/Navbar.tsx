@@ -14,44 +14,46 @@ export default function Navbar() {
     .pop()
     ?.split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ') || 'DASHBOARD';
+    .join(' ') || 'Dashboard';
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0b0908]/80 backdrop-blur-md border-b border-white/5">
+    <header className="sticky top-0 z-50 w-full glass-panel border-b-0 border-white/5">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 md:px-8 w-full">
         
-        {/* Left: Premium Branding & Dynamic Path Breadcrumbs */}
+        {/* Left: Branding & Breadcrumbs */}
         <div className="flex items-center gap-2 sm:gap-4">
-          <SidebarTrigger className="text-[#948880] hover:text-[#e0a96d] transition-colors hover:bg-transparent" />
+          <SidebarTrigger className="text-muted-foreground hover:text-white hover:bg-white/5 transition-all rounded-lg" />
           
-          <div className="flex items-center gap-2 sm:gap-3 font-sans text-xs tracking-[0.15em] uppercase">
-            <div className="flex items-center gap-2 text-[#e0a96d] font-light shrink-0">
-              <Sparkles className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 sm:gap-3 font-sans text-sm font-medium text-white/80">
+            <div className="flex items-center gap-2 text-primary font-semibold shrink-0">
+              <Sparkles className="w-4 h-4" />
               <span>Studio</span>
             </div>
-            <span className="text-white/10">/</span>
-            <span className="text-[#948880] font-light truncate max-w-[120px] sm:max-w-none">
+            <span className="text-white/20">/</span>
+            <span className="text-white truncate max-w-[120px] sm:max-w-none">
               {formattedPath}
             </span>
           </div>
         </div>
 
-        {/* Right: Clean Status Elements & Profile Button */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <div className="hidden lg:flex items-center gap-2 font-sans text-[11px] tracking-wider text-[#948880] mr-2 font-light">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#e0a96d] animate-pulse" />
+        {/* Right: Status & Profile */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="hidden lg:flex items-center gap-2 font-sans text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
             <span>Workspace Active</span>
           </div>
 
-          <div className="h-4 w-px bg-white/10 hidden md:block" />
+          <div className="h-5 w-px bg-white/10 hidden md:block" />
           
-          <UserButton 
-            appearance={{
-              elements: {
-                avatarBox: "rounded-xl border border-white/10 w-8 h-8",
-              }
-            }}
-          />
+          <div className="hover:scale-105 transition-transform duration-200">
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
+                }
+              }}
+            />
+          </div>
         </div>
         
       </div>

@@ -116,7 +116,7 @@ export default function VoiceCloningPage() {
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
-      toast.success("ACTIVE VOICE LOADED INTO SPEECH MODULE");
+      toast.success("Voice loaded into synthesis module");
     }
   };
 
@@ -130,16 +130,16 @@ export default function VoiceCloningPage() {
     setVoiceToDelete(null);
 
     const toastId = toast.loading(
-      `DELETING NEURAL PROFILE "${name.toUpperCase()}"...`,
+      `Deleting profile "${name}"...`,
     );
     try {
       await deleteClonedVoice({ voiceId });
-      toast.success(`NEURAL PROFILE "${name.toUpperCase()}" PURGED`, {
+      toast.success(`Profile "${name}" deleted successfully`, {
         id: toastId,
       });
     } catch (error) {
       console.error(error);
-      toast.error(`FAILED TO PURGE NEURAL PROFILE`, { id: toastId });
+      toast.error(`Failed to delete profile`, { id: toastId });
     }
   };
 
@@ -200,9 +200,9 @@ export default function VoiceCloningPage() {
       try {
         ws = WaveSurfer.create({
           container,
-          waveColor: "rgba(204, 255, 0, 0.4)",
-          progressColor: "rgba(204, 255, 0, 1)",
-          cursorColor: "rgba(204, 255, 0, 1)",
+          waveColor: "rgba(167, 139, 250, 0.4)", // Primary color low opacity
+          progressColor: "rgba(167, 139, 250, 1)", // Primary color
+          cursorColor: "rgba(167, 139, 250, 1)",
           barWidth: 3,
           barGap: 3,
           height: 80,
@@ -346,7 +346,7 @@ export default function VoiceCloningPage() {
     if (!audioBlob) return;
     setIsProcessing(true);
 
-    const toastId = toast.loading("INITIALIZING NEURAL MAP...");
+    const toastId = toast.loading("Initializing neural map...");
 
     //Getting values from the UI inputs
     const voiceName = voiceNameRef.current?.value;
@@ -373,10 +373,10 @@ export default function VoiceCloningPage() {
         name: voiceName,
       });
 
-      toast.success("CLONING PROTOCOL COMPLETE", { id: toastId });
+      toast.success("Voice cloning complete", { id: toastId });
     } catch (error: unknown) {
       if (isAbortError(error)) return;
-      toast.error("CLONING PROTOCOL FAILED. ", { id: toastId });
+      toast.error("Voice cloning failed", { id: toastId });
       console.error("Cloning Protocol Failed: ", error);
     } finally {
       setIsProcessing(false);
@@ -384,25 +384,21 @@ export default function VoiceCloningPage() {
   };
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white selection:bg-primary selection:text-black pb-20">
-      {/* Background Grid */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-      </div>
+    <div className="min-h-screen relative w-full overflow-hidden text-foreground pb-20">
 
-      <div className="relative z-10 responsive-container">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
         {/* Header Section */}
-        <header className="mb-12 sm:mb-16 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-12 border-b border-white/5 pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
-              <Terminal className="w-3 h-3" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 mb-4 rounded-full text-xs font-medium text-primary">
+              <Sparkles className="w-3.5 h-3.5" />
               Module: Voice Extraction
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl md:text-6xl font-bold uppercase tracking-tighter text-white">
-              CLONE <span className="text-primary">VOICE</span>
+            <h1 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-white">
+              Clone Voice
             </h1>
           </div>
-          <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
+          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
             Initialize neural extraction protocol. Provide high-fidelity audio
             samples to map acoustic topography.
           </p>
@@ -410,64 +406,65 @@ export default function VoiceCloningPage() {
 
         <div className="grid lg:grid-cols-12 gap-8 w-full max-w-full">
           {/* Main Workspace */}
-          <div className="lg:col-span-8 flex flex-col gap-6 sm:gap-8">
-            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
-              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
-                Configuration
+          <div className="lg:col-span-8 flex flex-col gap-8 stagger-1">
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8 relative">
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
+                <Terminal className="w-4 h-4 text-muted-foreground" />
+                <h2 className="text-sm font-semibold text-white tracking-wide">Configuration</h2>
               </div>
 
-              <div className="space-y-6 sm:space-y-8 mt-4">
-                <div className="space-y-3">
+              <div className="space-y-6">
+                <div className="space-y-2">
                   <Label
                     htmlFor="voiceName"
-                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
+                    className="text-xs font-medium text-muted-foreground"
                   >
                     Voice Designation <span className="text-primary">*</span>
                   </Label>
                   <Input
                     id="voiceName"
                     ref={voiceNameRef}
-                    placeholder="E.G. MARK_01"
-                    className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] text-sm"
+                    placeholder="e.g. Mark_01"
+                    className="glass-card border-white/5 h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-white placeholder:text-muted-foreground/50 text-sm"
                   />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <Label
                     htmlFor="desc"
-                    className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
+                    className="text-xs font-medium text-muted-foreground"
                   >
                     Acoustic Profile <span className="text-primary">*</span>
                   </Label>
                   <Textarea
                     id="desc"
                     ref={descriptionRef}
-                    placeholder="DEFINE_TONE_PARAMETERS..."
-                    className="resize-none bg-[#111] border-[#333] h-24 sm:h-28 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] w-full text-sm"
+                    placeholder="Define tone parameters..."
+                    className="resize-none glass-card border-white/5 h-24 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-white placeholder:text-muted-foreground/50 w-full text-sm"
                   />
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-6">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor="langCode"
-                      className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
+                      className="text-xs font-medium text-muted-foreground"
                     >
                       Locale Code
                     </Label>
                     <Select value={langCode} onValueChange={setLangCode}>
                       <SelectTrigger
                         id="langCode"
-                        className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono text-white text-sm"
+                        className="glass-card border-white/5 h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-white text-sm"
                       >
-                        <SelectValue placeholder="LOCALE" />
+                        <SelectValue placeholder="Locale" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                      <SelectContent className="glass-panel border-white/10 rounded-xl text-white">
                         {LANG_CODES.map((code) => (
                           <SelectItem
                             key={code}
                             value={code}
-                            className="focus:bg-primary focus:text-black rounded-none cursor-pointer"
+                            className="focus:bg-white/10 focus:text-white rounded-lg cursor-pointer"
                           >
                             {code}
                           </SelectItem>
@@ -476,18 +473,18 @@ export default function VoiceCloningPage() {
                     </Select>
                   </div>
 
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <Label
                       htmlFor="tags"
-                      className="font-mono text-[10px] sm:text-xs uppercase tracking-widest text-[#888]"
+                      className="text-xs font-medium text-muted-foreground"
                     >
                       Metadata Tags
                     </Label>
                     <Input
                       id="tags"
                       ref={tagsRef}
-                      placeholder="TAG_1, TAG_2..."
-                      className="bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary font-mono uppercase placeholder:text-[#444] text-sm"
+                      placeholder="Tag 1, Tag 2..."
+                      className="glass-card border-white/5 h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-white placeholder:text-muted-foreground/50 text-sm"
                     />
                   </div>
                 </div>
@@ -495,9 +492,10 @@ export default function VoiceCloningPage() {
             </div>
 
             {/* Audio Input Module */}
-            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 relative">
-              <div className="absolute top-0 right-0 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-black font-mono text-[9px] sm:text-[10px] font-bold uppercase tracking-widest border-b border-l border-primary">
-                Input Source
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8 relative stagger-2">
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
+                <Mic className="w-4 h-4 text-muted-foreground" />
+                <h2 className="text-sm font-semibold text-white tracking-wide">Input Source</h2>
               </div>
 
               <div className="mt-4">
@@ -509,19 +507,19 @@ export default function VoiceCloningPage() {
                   }}
                   className="w-full"
                 >
-                  <TabsList className="bg-transparent p-0 rounded-none h-12 sm:h-14 w-full flex border border-[#333] mb-6 sm:mb-8 overflow-hidden">
+                  <TabsList className="glass-card p-1 rounded-xl h-12 w-full flex border-white/5 mb-6">
                     <TabsTrigger
                       value="upload"
-                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
+                      className="flex-1 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white font-medium text-xs h-full gap-2 px-2 transition-all"
                     >
-                      <UploadCloud className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />{" "}
+                      <UploadCloud className="w-4 h-4 shrink-0" />{" "}
                       <span className="truncate">Upload</span>
                     </TabsTrigger>
                     <TabsTrigger
                       value="record"
-                      className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 px-2"
+                      className="flex-1 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-white font-medium text-xs h-full gap-2 px-2 transition-all"
                     >
-                      <Mic className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />{" "}
+                      <Mic className="w-4 h-4 shrink-0" />{" "}
                       <span className="truncate">Record</span>
                     </TabsTrigger>
                   </TabsList>
@@ -534,15 +532,15 @@ export default function VoiceCloningPage() {
                           onDrop={handleDrop}
                           onDragOver={handleDragOver}
                           onClick={() => fileInputRef.current?.click()}
-                          className="border border-dashed border-[#444] hover:border-primary bg-[#111] hover:bg-primary/5 p-12 transition-colors flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[250px] w-full"
+                          className="border border-dashed border-white/10 hover:border-primary/50 bg-white/5 hover:bg-white/10 rounded-2xl p-12 transition-all flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[250px] w-full"
                         >
-                          <div className="w-16 h-16 bg-[#000] border border-[#333] flex items-center justify-center mb-6 group-hover/dropzone:border-primary transition-colors">
-                            <UploadCloud className="w-6 h-6 text-[#666] group-hover/dropzone:text-primary transition-colors" />
+                          <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mb-4 group-hover/dropzone:scale-110 transition-transform">
+                            <UploadCloud className="w-6 h-6 text-muted-foreground group-hover/dropzone:text-primary transition-colors" />
                           </div>
-                          <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">
+                          <p className="font-medium text-sm text-white mb-2">
                             Initialize Data Transfer
                           </p>
-                          <p className="text-xs font-mono text-[#666] uppercase tracking-wider max-w-xs">
+                          <p className="text-xs text-muted-foreground max-w-xs">
                             MP3/WAV. 10MB MAX. DROP PACKETS HERE.
                           </p>
                         </button>
@@ -561,53 +559,52 @@ export default function VoiceCloningPage() {
                     value="record"
                     className="mt-0 outline-none space-y-6"
                   >
-                    <div className="space-y-3">
-                      <Label className="font-mono text-xs uppercase tracking-widest text-[#888]">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground">
                         Calibration Script
                       </Label>
                       <Select
                         value={selectedSentence}
                         onValueChange={setSelectedSentence}
                       >
-                        <SelectTrigger className="bg-[#111] border-[#333] h-14 rounded-none font-mono text-white focus-visible:ring-primary focus-visible:border-primary">
-                          <SelectValue placeholder="SELECT_SCRIPT" />
+                        <SelectTrigger className="glass-card border-white/5 h-12 rounded-xl text-white focus-visible:ring-primary focus-visible:border-primary text-sm">
+                          <SelectValue placeholder="Select Script" />
                         </SelectTrigger>
-                        <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
+                        <SelectContent className="glass-panel border-white/10 rounded-xl text-white">
                           {RECORDING_SENTENCES.map((sentence, i) => (
                             <SelectItem
                               key={sentence}
                               value={sentence}
-                              className="focus:bg-primary focus:text-black rounded-none cursor-pointer text-xs py-3"
+                              className="focus:bg-white/10 focus:text-white rounded-lg cursor-pointer text-sm py-2"
                             >
                               {i === 0
                                 ? sentence
-                                : `SEQ_${i}: ${sentence.substring(0, 40)}...`}
+                                : `Seq ${i}: ${sentence.substring(0, 40)}...`}
                             </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
 
                       {selectedSentence !== "CUSTOM (READ_ANYTHING)" && (
-                        <div className="p-6 bg-[#111] border border-[#333] font-mono text-sm text-primary uppercase leading-relaxed">
-                          &gt; {selectedSentence}
+                        <div className="p-4 bg-white/5 rounded-xl border border-white/10 font-mono text-sm text-primary leading-relaxed mt-4">
+                          {selectedSentence}
                         </div>
                       )}
                     </div>
 
                     {!audioUrl && !isRecording && (
-                      <div className="border border-[#333] bg-[#111] p-12 flex flex-col items-center justify-center text-center min-h-[250px]">
+                      <div className="border border-white/10 bg-white/5 rounded-2xl p-12 flex flex-col items-center justify-center text-center min-h-[250px]">
                         <Button
                           onClick={startRecording}
-                          className="w-20 h-20 rounded-none bg-primary hover:bg-white text-black transition-colors mb-6 flex items-center justify-center border border-primary relative group"
+                          className="w-20 h-20 rounded-full bg-primary hover:bg-primary/90 text-white transition-all hover:scale-105 mb-6 flex items-center justify-center shadow-lg shadow-primary/20"
                         >
-                          <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 blur-xl transition-opacity" />
                           <Mic className="w-8 h-8" />
                         </Button>
-                        <p className="font-mono text-sm text-white uppercase tracking-widest mb-2">
+                        <p className="font-medium text-sm text-white mb-2">
                           Engage Microphone
                         </p>
-                        <p className="font-mono text-xs text-[#666] uppercase tracking-wider">
-                          AWAITING VOCAL INPUT...
+                        <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
+                          Awaiting vocal input...
                         </p>
                       </div>
                     )}
@@ -616,18 +613,18 @@ export default function VoiceCloningPage() {
 
                 {/* Audio Waveform Visualization */}
                 <div
-                  className={`mt-8 border border-[#333] bg-[#111] p-6 relative ${audioUrl || isRecording ? "block" : "hidden"}`}
+                  className={`mt-6 border border-white/5 glass-card rounded-2xl p-6 relative ${audioUrl || isRecording ? "block" : "hidden"}`}
                 >
                   {isRecording && (
                     <div className="absolute top-4 left-4 z-10 flex items-center gap-3">
                       <div
-                        className={`w-3 h-3 bg-red-500 rounded-none ${!isPaused ? "animate-pulse" : ""}`}
+                        className={`w-2.5 h-2.5 bg-red-400 rounded-full ${!isPaused ? "animate-pulse" : ""}`}
                       />
-                      <span className="font-mono text-xs text-red-500 uppercase tracking-widest">
+                      <span className="font-mono text-xs text-red-400 font-medium">
                         {formatTime(recordTime)} REC
                       </span>
                       {isPaused && (
-                        <span className="font-mono text-xs text-[#888] uppercase tracking-widest">
+                        <span className="font-mono text-xs text-muted-foreground font-medium">
                           [PAUSED]
                         </span>
                       )}
@@ -636,7 +633,7 @@ export default function VoiceCloningPage() {
 
                   {!isRecording && audioUrl && (
                     <div className="absolute top-4 right-4 z-10">
-                      <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-1 uppercase tracking-widest">
+                      <span className="font-mono text-[10px] text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-full">
                         {formatTime(currentTime)} / {formatTime(duration)}
                       </span>
                     </div>
@@ -649,13 +646,13 @@ export default function VoiceCloningPage() {
                   />
 
                   {/* Controls */}
-                  <div className="flex items-center justify-between pt-4 border-t border-[#333]">
+                  <div className="flex items-center justify-between pt-4 border-t border-white/5">
                     {isRecording ? (
                       <div className="flex items-center gap-4">
                         <Button
                           onClick={pauseRecording}
                           variant="outline"
-                          className="rounded-none border-[#444] bg-[#222] hover:bg-[#333] text-white font-mono uppercase tracking-widest text-xs h-10 px-4"
+                          className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium text-xs h-10 px-5"
                         >
                           {isPaused ? (
                             <Play className="w-4 h-4 mr-2" />
@@ -666,7 +663,7 @@ export default function VoiceCloningPage() {
                         </Button>
                         <Button
                           onClick={stopRecording}
-                          className="rounded-none border border-red-500 bg-red-500/10 hover:bg-red-500 hover:text-black text-red-500 font-mono uppercase tracking-widest text-xs h-10 px-6 transition-colors"
+                          className="rounded-xl bg-red-500/10 hover:bg-red-500 hover:text-white text-red-400 font-medium text-xs h-10 px-6 transition-colors border-none"
                         >
                           <Square className="w-4 h-4 mr-2" /> HALT
                         </Button>
@@ -675,7 +672,7 @@ export default function VoiceCloningPage() {
                       <div className="flex items-center justify-between w-full">
                         <Button
                           onClick={togglePlayback}
-                          className="rounded-none bg-primary text-black hover:bg-white h-10 w-16 flex items-center justify-center transition-colors"
+                          className="rounded-full bg-primary text-white hover:bg-primary/90 h-10 w-16 flex items-center justify-center transition-colors shadow-md shadow-primary/20"
                         >
                           {isPlaying ? (
                             <Pause className="w-4 h-4" />
@@ -686,9 +683,9 @@ export default function VoiceCloningPage() {
                         <Button
                           onClick={clearAudio}
                           variant="ghost"
-                          className="rounded-none hover:bg-red-500/10 text-[#888] hover:text-red-500 font-mono text-xs uppercase tracking-widest"
+                          className="rounded-xl hover:bg-red-400/10 text-muted-foreground hover:text-red-400 font-medium text-xs transition-colors"
                         >
-                          <Trash2 className="w-4 h-4 mr-2" /> JETTISON
+                          <Trash2 className="w-4 h-4 mr-2" /> DISCARD
                         </Button>
                       </div>
                     ) : null}
@@ -701,35 +698,39 @@ export default function VoiceCloningPage() {
             <Button
               disabled={!audioUrl || isRecording || isProcessing}
               onClick={handleExecuteProtocol}
-              className="w-full h-20 rounded-none bg-primary hover:bg-white text-black font-mono text-lg uppercase tracking-widest transition-colors border border-primary disabled:opacity-30 disabled:hover:bg-primary"
+              className="w-full h-14 rounded-full bg-primary hover:bg-primary/90 hover:scale-[1.02] text-white font-medium text-base transition-all border-none shadow-lg shadow-primary/20 disabled:opacity-50 disabled:hover:scale-100 stagger-3"
             >
-              <Sparkles className="w-6 h-6 mr-3" /> Execute Cloning Protocol
+              {isProcessing ? (
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              ) : (
+                <Sparkles className="w-5 h-5 mr-2" />
+              )}
+              {isProcessing ? "Processing..." : "Execute Cloning Protocol"}
             </Button>
           </div>
 
           {/* Sidebar Guidelines */}
-          <div className="lg:col-span-4 flex flex-col gap-8">
-            <div className="border border-[#222] bg-[#050505] p-8">
-              <h3 className="font-heading text-lg font-bold uppercase text-primary mb-6 flex items-center gap-3 border-b border-[#222] pb-4">
-                <AlertTriangle className="w-5 h-5" /> Protocol Directives
+          <div className="lg:col-span-4 flex flex-col gap-8 stagger-2">
+            <div className="glass-panel border border-white/5 rounded-3xl p-8">
+              <h3 className="font-heading text-base font-semibold text-primary mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+                <AlertTriangle className="w-4 h-4" /> Protocol Directives
               </h3>
 
               <div className="space-y-8">
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-[#666] mb-4">
+                  <h4 className="text-xs font-semibold text-white mb-4">
                     Acoustic Parameters
                   </h4>
-                  <ul className="space-y-4 font-mono text-xs uppercase text-[#aaa]">
+                  <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
-                      <span className="leading-relaxed">
-                        Full tonal spectrum required. Monotone input = monotone
-                        output.
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
+                      <span>
+                        Full tonal spectrum required. Monotone input yields monotone output.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
-                      <span className="leading-relaxed">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
+                      <span>
                         Zero ambient interference. Clean signals only.
                       </span>
                     </li>
@@ -737,25 +738,25 @@ export default function VoiceCloningPage() {
                 </div>
 
                 <div>
-                  <h4 className="font-mono text-[10px] uppercase tracking-widest text-[#666] mb-4">
+                  <h4 className="text-xs font-semibold text-white mb-4">
                     Extraction Limits
                   </h4>
-                  <ul className="space-y-4 font-mono text-xs uppercase text-[#aaa]">
+                  <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
-                      <span className="leading-relaxed">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
+                      <span>
                         Optimal window: 5-15 seconds.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
-                      <span className="leading-relaxed">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
+                      <span>
                         Min SR: 22kHz / 16-bit depth.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary mt-1 shrink-0" />
-                      <span className="leading-relaxed">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
+                      <span>
                         Peak limit: Avoid 0dB clipping.
                       </span>
                     </li>
@@ -765,73 +766,74 @@ export default function VoiceCloningPage() {
             </div>
 
             {/* Active Cloned Voices Database */}
-            <div className="border border-[#222] bg-[#050505] p-6 sm:p-8">
-              <h3 className="font-mono text-sm uppercase text-white mb-6 flex items-center justify-between border-b border-[#222] pb-4">
-                <span className="flex items-center gap-3">
+            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8">
+              <h3 className="font-heading text-sm font-semibold text-white mb-6 flex items-center justify-between border-b border-white/5 pb-4">
+                <span className="flex items-center gap-2">
                   <Waves className="w-4 h-4 text-primary" /> CLONE REGISTRY
                 </span>
                 {clonedVoices && (
-                  <span className="text-primary font-bold text-xs bg-primary/10 border border-primary/20 px-2 py-0.5 font-mono">
-                    [{clonedVoices.length}]
+                  <span className="text-primary font-mono text-[10px] bg-primary/10 px-2 py-0.5 rounded-full">
+                    {clonedVoices.length}
                   </span>
                 )}
               </h3>
 
               {clonedVoices === undefined ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
-                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
-                  <span className="font-mono text-xs text-[#666] uppercase tracking-widest animate-pulse">
-                    Retrieving neural archive...
+                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
+                  <span className="text-xs text-muted-foreground font-medium">
+                    Retrieving archive...
                   </span>
                 </div>
               ) : clonedVoices.length === 0 ? (
-                <div className="text-center py-12 border border-dashed border-[#222] bg-[#020202]">
-                  <Terminal className="w-8 h-8 text-[#333] mx-auto mb-4" />
-                  <p className="font-mono text-xs text-[#666] uppercase tracking-widest mb-2">
-                    REGISTRY_EMPTY
+                <div className="text-center py-10 bg-white/[0.02] border border-white/5 rounded-2xl">
+                  <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Terminal className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-medium text-white mb-1">
+                    Registry Empty
                   </p>
-                  <p className="font-mono text-[10px] text-[#444] uppercase leading-relaxed max-w-xs mx-auto px-4">
-                    No neural signatures mapped. Run a cloning protocol on the
-                    left to initialize a voice profile.
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px] mx-auto px-4">
+                    No neural signatures mapped. Run a cloning protocol to initialize a voice profile.
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1 no-scrollbar">
+                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                   {clonedVoices.map((voice) => (
                     <div
                       key={voice._id}
-                      className="border border-[#222] bg-[#080808] hover:border-primary/40 transition-colors p-4 flex flex-col gap-3 relative group"
+                      className="glass-card border border-white/5 hover:bg-white/5 hover:border-white/10 transition-colors p-4 rounded-2xl flex flex-col gap-3 group"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="min-w-0 flex-1">
-                          <h4 className="font-heading text-sm font-bold text-white uppercase truncate">
+                          <h4 className="font-heading text-sm font-semibold text-white truncate">
                             {voice.displayName}
                           </h4>
-                          <span className="font-mono text-[8px] text-[#444] uppercase tracking-widest block mt-0.5 truncate">
+                          <span className="font-mono text-[10px] text-muted-foreground block mt-1 truncate">
                             ID: {voice.inworldVoiceId}
                           </span>
                         </div>
-                        <span className="font-mono text-[9px] text-primary border border-primary/20 bg-primary/5 px-2 py-0.5 uppercase shrink-0">
+                        <span className="font-mono text-[9px] text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
                           {voice.langCode || "EN_US"}
                         </span>
                       </div>
 
                       {voice.description ? (
-                        <p className="font-mono text-[10px] text-[#888] uppercase leading-relaxed line-clamp-2">
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mt-1">
                           {voice.description}
                         </p>
                       ) : (
-                        <p className="font-mono text-[10px] text-[#333] uppercase italic">
-                          NO_PARAMETERS_DEFINED
+                        <p className="text-xs text-muted-foreground/50 italic mt-1">
+                          No parameters defined
                         </p>
                       )}
 
                       {voice.tags && voice.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-1.5 mt-1">
                           {voice.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="font-mono text-[8px] text-[#666] border border-[#222] bg-[#0c0c0c] px-1.5 py-0.5 uppercase"
+                              className="font-mono text-[9px] text-muted-foreground bg-white/5 px-2 py-0.5 rounded-md"
                             >
                               #{tag}
                             </span>
@@ -839,12 +841,12 @@ export default function VoiceCloningPage() {
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#111]">
+                      <div className="flex items-center justify-between gap-2 pt-3 mt-1 border-t border-white/5">
                         <Button
                           asChild
-                          variant="outline"
+                          variant="ghost"
                           onClick={() => handleUseVoice(voice.inworldVoiceId!)}
-                          className="flex-1 rounded-none border-primary/30 hover:border-primary bg-transparent text-primary hover:bg-primary hover:text-black font-mono text-[10px] uppercase tracking-widest h-8"
+                          className="flex-1 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white font-medium text-xs h-8 transition-colors"
                         >
                           <Link href="/app/text-to-speech">Use Voice</Link>
                         </Button>
@@ -853,7 +855,7 @@ export default function VoiceCloningPage() {
                             handleDeleteVoice(voice._id, voice.displayName)
                           }
                           variant="ghost"
-                          className="rounded-none hover:bg-red-500/10 text-[#888] hover:text-red-500 font-mono text-[10px] uppercase tracking-widest h-8 px-3 border border-transparent hover:border-red-500/20"
+                          className="rounded-xl hover:bg-red-400/10 text-muted-foreground hover:text-red-400 h-8 px-3 transition-colors"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
@@ -871,30 +873,29 @@ export default function VoiceCloningPage() {
         open={voiceToDelete !== null}
         onOpenChange={(open) => !open && setVoiceToDelete(null)}
       >
-        <AlertDialogContent className="border border-[#222] bg-black rounded-none font-mono max-w-md">
+        <AlertDialogContent className="glass-panel border-white/10 rounded-2xl max-w-md">
           <AlertDialogHeader className="text-left">
-            <AlertDialogTitle className="text-sm font-bold uppercase tracking-widest text-red-500 flex items-center gap-2 border-b border-[#222] pb-3">
-              <AlertTriangle className="w-4 h-4 text-red-500" /> DECOMMISSION
-              NEURAL PROFILE
+            <AlertDialogTitle className="text-base font-semibold text-red-400 flex items-center gap-2 border-b border-white/5 pb-4">
+              <AlertTriangle className="w-4 h-4" /> Decommission Profile
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs uppercase text-[#aaa] leading-relaxed pt-2">
-              YOU ARE ABOUT TO PURGE THE NEURAL PROFILE:
-              <span className="block my-2 text-white font-bold bg-[#111] border border-[#222] p-2 truncate">
-                &ldquo;{voiceToDelete?.name.toUpperCase()}&rdquo;
+            <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-4">
+              You are about to purge the neural profile:
+              <span className="block my-3 text-white font-medium bg-white/5 border border-white/10 p-3 rounded-xl truncate">
+                "{voiceToDelete?.name}"
               </span>
-              WARNING: THIS ACTION CANNOT BE UNDONE. THE DATA SIGNATURE WILL BE
-              PERMANENTLY DELETED FROM THE REGISTRY.
+              Warning: This action cannot be undone. The data signature will be
+              permanently deleted from the registry.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex sm:justify-end gap-2 border-t border-[#111] pt-3">
-            <AlertDialogCancel className="rounded-none border-[#333] bg-[#111] hover:bg-[#222] text-[#888] hover:text-white font-mono text-xs uppercase tracking-widest h-10">
-              ABORT PROTOCOL
+          <AlertDialogFooter className="flex sm:justify-end gap-3 border-t border-white/5 pt-4">
+            <AlertDialogCancel className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium text-xs h-10 px-5">
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
-              className="rounded-none bg-red-600 hover:bg-red-700 text-white font-mono text-xs uppercase tracking-widest h-10 border border-red-600"
+              className="rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-xs h-10 px-5 border-none shadow-lg shadow-red-500/20"
             >
-              PURGE DATA
+              Purge Data
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

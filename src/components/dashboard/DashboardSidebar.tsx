@@ -11,6 +11,7 @@ import {
   Settings,
   Volume2,
   Sparkles,
+  Waves,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -64,15 +65,15 @@ export default function DashboardSidebar() {
 
   function NavSection({ label, items, pathname }: NavSectionProps) {
     return (
-      <SidebarGroup className="border-b border-white/5 py-4">
+      <SidebarGroup className="py-2">
         {label && (
-          <SidebarGroupLabel className="font-sans text-[10px] uppercase text-[#948880] tracking-[0.2em] px-4 mb-2 h-auto flex items-center gap-2 font-medium">
-            <Sparkles className="w-3 h-3 text-[#e0a96d]" />
+          <SidebarGroupLabel className="font-sans text-xs font-semibold text-muted-foreground px-4 mb-2 h-auto flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-primary" />
             {label}
           </SidebarGroupLabel>
         )}
         <SidebarGroupContent>
-          <SidebarMenu className="space-y-1 px-2">
+          <SidebarMenu className="space-y-1.5 px-3">
             {items.map((item) => {
               const isActive = item.url
                 ? item.url === "/app"
@@ -91,21 +92,21 @@ export default function DashboardSidebar() {
                         item.onClick?.();
                       }}
                       tooltip={item.title}
-                      className={`font-sans text-xs tracking-wider h-10 rounded-xl border transition-all duration-300 ${
+                      className={`font-sans text-sm font-medium h-11 rounded-xl transition-all duration-300 ${
                         isActive 
-                          ? "bg-[#e0a96d]/10 text-[#e0a96d] border-[#e0a96d]/20 hover:bg-[#e0a96d]/15 hover:text-[#e0a96d]" 
-                          : "text-[#948880] border-transparent hover:text-white hover:bg-white/[0.02]"
+                          ? "bg-primary text-white shadow-md shadow-primary/25 hover:bg-primary/90 hover:text-white" 
+                          : "text-muted-foreground hover:text-white hover:bg-white/5"
                       }`}
                     >
                       {item.url ? (
                         <Link href={item.url} className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-[#e0a96d]" : "text-[#555]"}`} />
-                          <span className="font-light">{item.title}</span>
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+                          <span>{item.title}</span>
                         </Link>
                       ) : (
                         <div className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-[#e0a96d]" : "text-[#555]"}`} />
-                          <span className="font-light">{item.title}</span>
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+                          <span>{item.title}</span>
                         </div>
                       )}
                     </SidebarMenuButton>
@@ -120,49 +121,47 @@ export default function DashboardSidebar() {
   }
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border-r border-white/5 bg-[#0b0908]">
+    <Sidebar variant="inset" collapsible="icon" className="border-r border-white/5 bg-background/40 backdrop-blur-md">
       {/* Brand Header */}
-      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-[#0b0908] border-b border-white/5">
+      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-transparent border-b border-white/5">
         <Link
           href="/"
           className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 transition-opacity"
         >
-          <div className="w-12 h-12 bg-transparent flex items-center justify-center shrink-0 relative">
-            <Image src="/logo.png" alt="Resonance Logo" fill className="object-contain" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
+            <Waves className="w-5 h-5 text-white" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-sans font-light tracking-[0.2em] uppercase text-white text-xs">
-              RESONANCE
-            </span>
-            <span className="font-sans text-[9px] text-[#948880] tracking-widest uppercase mt-0.5">
-              Atelier Space
+            <span className="font-heading font-semibold text-white text-lg tracking-tight">
+              Resonance
             </span>
           </div>
         </Link>
       </SidebarHeader>
 
       {/* Navigation Space */}
-      <SidebarContent className="bg-[#0b0908] scrollbar-none">
+      <SidebarContent className="bg-transparent scrollbar-none py-4">
         <NavSection items={mainMenuItems} pathname={pathname} />
+        <div className="my-2 mx-6 h-px bg-white/5" />
         <NavSection label="Preferences" items={otherMenuItems} pathname={pathname} />
       </SidebarContent>
       
       <SidebarRail />
 
       {/* Profile/User Menu Footer Container */}
-      <SidebarFooter className="border-t border-white/5 p-4 bg-[#0e0c0b]">
+      <SidebarFooter className="border-t border-white/5 p-4 bg-background/20 backdrop-blur-lg">
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton
               showName={state === "expanded"}
               appearance={{
                 elements: {
-                  userButtonBox: "flex-row-reverse gap-3 font-sans text-xs font-light text-[#948880] hover:text-white transition-colors uppercase tracking-wider",
-                  avatarBox: "rounded-xl border border-white/10 w-8 h-8",
+                  userButtonBox: "flex-row-reverse gap-3 font-sans text-sm font-medium text-muted-foreground hover:text-white transition-colors",
+                  avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
                 }
               }}
               fallback={
-                <Skeleton className="w-8 h-8 rounded-xl border border-white/5 bg-white/[0.02]" />
+                <Skeleton className="w-9 h-9 rounded-xl border border-white/5 bg-white/5" />
               }
             />
           </SidebarMenuItem>
