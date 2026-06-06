@@ -408,8 +408,8 @@ export default function VoiceCloningPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 animate-fade-up">
         {/* Header Section */}
-        <header className="mb-8 sm:mb-12 border-b border-white/5 pb-6 sm:pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
-          <div>
+        <header className="mb-6 sm:mb-8 lg:mb-12 border-b border-white/5 pb-6 sm:pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
+          <div className="w-full md:w-auto">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 mb-3 sm:mb-4 rounded-full text-xs font-medium text-primary">
               <Sparkles className="w-3.5 h-3.5" />
               Voice Cloning
@@ -418,16 +418,16 @@ export default function VoiceCloningPage() {
               Clone a Voice
             </h1>
           </div>
-          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+          <p className="text-sm text-muted-foreground w-full md:w-auto max-w-md leading-relaxed md:text-right">
             Record or upload a clear audio sample, and we&apos;ll create a
             custom voice you can use to generate speech.
           </p>
         </header>
 
-        <div className="grid lg:grid-cols-12 gap-6 sm:gap-8 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 w-full">
           {/* Main Workspace */}
           <div className="lg:col-span-8 flex flex-col gap-8 stagger-1">
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8 relative">
+            <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
                 <User className="w-4 h-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-white">Voice Details</h2>
@@ -464,7 +464,7 @@ export default function VoiceCloningPage() {
                   />
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                   <div className="space-y-2">
                     <Label
                       htmlFor="langCode"
@@ -512,7 +512,7 @@ export default function VoiceCloningPage() {
             </div>
 
             {/* Audio Input Module */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8 relative stagger-2">
+            <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative stagger-2">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
                 <Mic className="w-4 h-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-white">Audio Sample</h2>
@@ -552,7 +552,7 @@ export default function VoiceCloningPage() {
                           onDrop={handleDrop}
                           onDragOver={handleDragOver}
                           onClick={() => fileInputRef.current?.click()}
-                          className="border border-dashed border-white/10 hover:border-primary/50 bg-white/5 hover:bg-white/10 rounded-2xl p-8 sm:p-12 transition-all flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[220px] sm:min-h-[250px] w-full"
+                          className="border border-dashed border-white/10 hover:border-primary/50 bg-white/5 hover:bg-white/10 rounded-2xl p-6 sm:p-8 lg:p-12 transition-all flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[200px] sm:min-h-[250px] w-full"
                         >
                           <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/5 border border-white/10 rounded-full flex items-center justify-center mb-4 group-hover/dropzone:scale-110 transition-transform">
                             <UploadCloud className="w-6 h-6 text-muted-foreground group-hover/dropzone:text-primary transition-colors" />
@@ -615,7 +615,7 @@ export default function VoiceCloningPage() {
                     </div>
 
                     {!audioUrl && !isRecording && (
-                      <div className="border border-white/10 bg-white/5 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center text-center min-h-[220px] sm:min-h-[250px]">
+                      <div className="border border-white/10 bg-white/5 rounded-2xl p-6 sm:p-8 lg:p-12 flex flex-col items-center justify-center text-center min-h-[200px] sm:min-h-[250px] w-full">
                         <Button
                           onClick={startRecording}
                           className="w-20 h-20 rounded-full bg-primary hover:bg-primary/90 text-white transition-all hover:scale-105 mb-6 flex items-center justify-center shadow-lg shadow-primary/20"
@@ -668,24 +668,24 @@ export default function VoiceCloningPage() {
                   {/* Controls */}
                   <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-white/5">
                     {isRecording ? (
-                      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                         <Button
                           onClick={pauseRecording}
                           variant="outline"
-                          className="rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium text-xs sm:text-sm h-10 px-4 sm:px-5"
+                          className="flex-1 sm:flex-none justify-center rounded-xl border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium text-xs sm:text-sm h-10 px-4 sm:px-5"
                         >
                           {isPaused ? (
-                            <Play className="w-4 h-4 mr-2" />
+                            <Play className="w-4 h-4 mr-2 shrink-0" />
                           ) : (
-                            <Pause className="w-4 h-4 mr-2" />
+                            <Pause className="w-4 h-4 mr-2 shrink-0" />
                           )}
                           {isPaused ? "Resume" : "Pause"}
                         </Button>
                         <Button
                           onClick={stopRecording}
-                          className="rounded-xl bg-red-500/10 hover:bg-red-500 hover:text-white text-red-400 font-medium text-xs sm:text-sm h-10 px-4 sm:px-5 transition-colors border-none"
+                          className="flex-1 sm:flex-none justify-center rounded-xl bg-red-500/10 hover:bg-red-500 hover:text-white text-red-400 font-medium text-xs sm:text-sm h-10 px-4 sm:px-5 transition-colors border-none"
                         >
-                          <Square className="w-4 h-4 mr-2" /> Stop
+                          <Square className="w-4 h-4 mr-2 shrink-0" /> Stop
                         </Button>
                       </div>
                     ) : audioUrl ? (
@@ -730,7 +730,7 @@ export default function VoiceCloningPage() {
 
           {/* Sidebar Guidelines */}
           <div className="lg:col-span-4 flex flex-col gap-6 sm:gap-8 stagger-2">
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8">
+            <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
               <h3 className="font-heading text-base font-semibold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
                 <Lightbulb className="w-4 h-4 text-primary" /> Tips for best results
               </h3>
@@ -785,7 +785,7 @@ export default function VoiceCloningPage() {
             </div>
 
             {/* Active Cloned Voices Database */}
-            <div className="glass-panel border border-white/5 rounded-3xl p-6 sm:p-8">
+            <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
               <h3 className="font-heading text-sm font-semibold text-white mb-6 flex items-center justify-between border-b border-white/5 pb-4">
                 <span className="flex items-center gap-2">
                   <Waves className="w-4 h-4 text-primary" /> Your voices
@@ -892,7 +892,7 @@ export default function VoiceCloningPage() {
         open={voiceToDelete !== null}
         onOpenChange={(open) => !open && setVoiceToDelete(null)}
       >
-        <AlertDialogContent className="glass-panel border-white/10 rounded-2xl max-w-md mx-4">
+        <AlertDialogContent className="glass-panel border-white/10 rounded-2xl w-[calc(100%-2rem)] sm:w-full sm:max-w-md mx-auto">
           <AlertDialogHeader className="text-left">
             <AlertDialogTitle className="text-base font-semibold text-red-400 flex items-center gap-2 border-b border-white/5 pb-4">
               <AlertTriangle className="w-4 h-4" /> Delete voice
