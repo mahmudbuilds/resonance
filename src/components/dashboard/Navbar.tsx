@@ -4,6 +4,7 @@ import { SidebarTrigger } from "../ui/sidebar";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
+import { clerkAppearance } from "@/lib/clerk-config";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -48,7 +49,9 @@ export default function Navbar() {
           <div className="hover:scale-105 transition-transform duration-200">
             <UserButton 
               appearance={{
+                ...clerkAppearance,
                 elements: {
+                  ...clerkAppearance.elements,
                   avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
                 }
               }}
