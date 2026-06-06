@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Syne, Manrope, JetBrains_Mono } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
@@ -13,12 +13,12 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-const manrope = Manrope({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
 });
@@ -42,13 +42,13 @@ export default function RootLayout({
       className={cn(
         "h-full",
         "antialiased",
-        manrope.variable,
-        syne.variable,
+        plusJakarta.variable,
+        outfit.variable,
         jetbrainsMono.variable,
         "font-sans"
       )}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary selection:text-black">
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-white">
         <ClerkProvider 
           publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
           appearance={clerkAppearance}
@@ -60,6 +60,12 @@ export default function RootLayout({
               enableSystem={false}
               disableTransitionOnChange
             >
+              {/* Aurora Glass Background Wrapper */}
+              <div className="aurora-bg">
+                <div className="aurora-orb-1"></div>
+                <div className="aurora-orb-2"></div>
+                <div className="aurora-orb-3"></div>
+              </div>
               <UserSync />
               {children}
               <Toaster />

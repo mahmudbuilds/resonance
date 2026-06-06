@@ -38,7 +38,8 @@ export default defineSchema({
 
   // 3. Generation History
   generations: defineTable({
-    userId: v.id("users"),
+    userId: v.optional(v.id("users")),
+    isPreview: v.optional(v.boolean()),
     inworldVoiceId: v.string(),
     prompt: v.string(),
     storageId: v.id("_storage"), // Store the audio in Convex's built-in file storage

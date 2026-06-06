@@ -3,7 +3,7 @@
 import { SidebarTrigger } from "../ui/sidebar";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
-import { Terminal } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -14,37 +14,46 @@ export default function Navbar() {
     .pop()
     ?.split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ') || 'DASHBOARD';
+    .join(' ') || 'Dashboard';
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-black/80 backdrop-blur-md border-b border-[#222]">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b-0 border-white/5">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 md:px-8 w-full">
         
         {/* Left: Branding & Breadcrumbs */}
         <div className="flex items-center gap-2 sm:gap-4">
-          <SidebarTrigger className="text-[#888] hover:text-primary transition-colors hover:bg-transparent" />
+          <SidebarTrigger className="text-muted-foreground hover:text-white hover:bg-white/5 transition-all rounded-lg" />
           
-          <div className="flex items-center gap-2 sm:gap-3 font-mono text-[10px] uppercase tracking-[0.2em]">
-            <div className="flex items-center gap-2 text-primary bg-primary/5 px-2 py-1 border border-primary/20 shrink-0">
-              <Terminal className="w-3 h-3" />
-              <span className="hidden xs:inline">RESONANCE</span>
-              <span className="xs:hidden">RSN</span>
+          <div className="flex items-center gap-2 sm:gap-3 font-sans text-sm font-medium text-white/80">
+            <div className="flex items-center gap-2 text-primary font-semibold shrink-0">
+              <Sparkles className="w-4 h-4" />
+              <span>Studio</span>
             </div>
-            <span className="text-[#333]">/</span>
-            <span className="text-[#888] truncate max-w-[100px] sm:max-w-none">{formattedPath}</span>
+            <span className="text-white/20">/</span>
+            <span className="text-white truncate max-w-[120px] sm:max-w-none">
+              {formattedPath}
+            </span>
           </div>
         </div>
 
-        {/* Right: Actions & Profile */}
-        <div className="flex items-center gap-2 sm:gap-4">
-          <div className="hidden lg:flex items-center gap-2 font-mono text-[10px] text-primary/60 mr-2">
-            <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
-            <span>SYSTEM_LIVE</span>
+        {/* Right: Status & Profile */}
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="hidden lg:flex items-center gap-2 font-sans text-xs font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full border border-primary/20">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.8)]" />
+            <span>Workspace Active</span>
           </div>
 
-          <div className="h-6 w-px bg-[#222] hidden md:block" />
+          <div className="h-5 w-px bg-white/10 hidden md:block" />
           
-          <UserButton />
+          <div className="hover:scale-105 transition-transform duration-200">
+            <UserButton 
+              appearance={{
+                elements: {
+                  avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
+                }
+              }}
+            />
+          </div>
         </div>
         
       </div>

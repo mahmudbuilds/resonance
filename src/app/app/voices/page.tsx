@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import {
   Activity,
   Filter,
@@ -8,22 +8,20 @@ import {
   LayoutGrid,
   List,
   Play,
-  Pause,
   Plus,
   Search,
   Star,
-  Terminal,
-  Download,
-  Trash2,
   History,
   Music,
   Loader2,
+  Sparkles,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,270 +33,133 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../convex/_generated/api";
-import { Doc } from "../../../../convex/_generated/dataModel";
+import type { Doc } from "../../../../convex/_generated/dataModel";
+
+const NO_DESCRIPTION = "No vocal description available for this voice.";
 
 export default function VoicesPage() {
   const router = useRouter();
-  const library = [
-    {
-      displayName: "Marcus",
-      gender: "MALE",
-      langCode: "EN_US",
-      mood: "AUTHORITATIVE",
-      plays: "2.4M",
-      description: "Deep, resonant acoustic profile. Ideal for heavy exposition.",
-      inworldVoiceId: "VOX-01",
-      isPublic: true,
-    },
-    {
-      displayName: "Elara",
-      gender: "FEMALE",
-      langCode: "EN_UK",
-      mood: "WARM",
-      plays: "1.8M",
-      description: "High fidelity conversational tone with natural mid-range.",
-      inworldVoiceId: "VOX-02",
-      isPublic: true,
-    },
-    {
-      displayName: "Kai",
-      gender: "NEUTRAL",
-      langCode: "EN_AU",
-      mood: "CASUAL",
-      plays: "1.2M",
-      description: "Energetic frequency response. Optimized for broadcast.",
-      inworldVoiceId: "VOX-03",
-      isPublic: true,
-    },
-    {
-      displayName: "Nadia",
-      gender: "FEMALE",
-      langCode: "RU_RU",
-      mood: "PROFESSIONAL",
-      plays: "980K",
-      description: "Strict timing parameters. Perfect for corporate instruction.",
-      inworldVoiceId: "VOX-04",
-      isPublic: true,
-    },
-    {
-      displayName: "Theo",
-      gender: "MALE",
-      langCode: "FR_FR",
-      mood: "ROMANTIC",
-      plays: "875K",
-      description: "Smooth velocity curve. Designed for narrative immersion.",
-      inworldVoiceId: "VOX-05",
-      isPublic: true,
-    },
-    {
-      displayName: "Zara",
-      gender: "FEMALE",
-      langCode: "NG_NG",
-      mood: "ENERGETIC",
-      plays: "762K",
-      description: "High-amplitude delivery. Sharp transients for commercial impact.",
-      inworldVoiceId: "VOX-06",
-      isPublic: true,
-    },
-    {
-      displayName: "Jin",
-      gender: "MALE",
-      langCode: "KO_KR",
-      mood: "CALM",
-      plays: "640K",
-      description: "Low-noise, subdued output. Calibrated for ambient contexts.",
-      inworldVoiceId: "VOX-07",
-      isPublic: true,
-    },
-    {
-      displayName: "Sofia",
-      gender: "FEMALE",
-      langCode: "ES_ES",
-      mood: "UPBEAT",
-      plays: "590K",
-      description: "Clear articulation index. Suitable for semantic analysis tasks.",
-      inworldVoiceId: "VOX-08",
-      isPublic: true,
-    },
-  ];
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocale, setSelectedLocale] = useState("all");
   const [selectedClass, setSelectedClass] = useState("all");
   const [activeTab, setActiveTab] = useState("registry");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 8;
-
-  const [playingId, setPlayingId] = useState<string | null>(null);
-  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
 
   // Convex Queries
   const voices = useQuery(api.voice.getUserVoices);
   const generations = useQuery(api.inworld.listUserGenerations);
-  const deleteGeneration = useMutation(api.inworld.deleteUserGeneration);
 
-  // Reset page number on filter/tab changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedLocale, selectedClass, activeTab]);
+  const voicesList: Doc<"voices">[] = voices ?? [];
+  const historyList: Doc<"generations">[] = (generations ?? []).filter(
+    (g) => !g.isPreview,
+  );
 
-  // Dynamic voice data using DB query falling back to static predefined array
-  const voicesList: any[] = voices && voices.length > 0 ? voices : library;
-
-  const handleUseVoice = (inworldVoiceId: string) => {
+  const handleUseVoice = (id: string) => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
-      toast.success("ACTIVE VOICE LOADED INTO SPEECH MODULE");
+      localStorage.setItem("selectedVoice", JSON.stringify(id));
+      toast.success("Voice profile loaded into speech module");
       router.push("/app/text-to-speech");
     }
   };
 
-  const handleDeleteGeneration = async (id: any) => {
-    const toastId = toast.loading("PURGING GENERATION FROM REGISTRY...");
-    try {
-      await deleteGeneration({ generationId: id });
-      toast.success("GENERATION PURGED SUCCESSFULLY", { id: toastId });
-    } catch (error) {
-      console.error(error);
-      toast.error("FAILED TO PURGE GENERATION", { id: toastId });
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft } = scrollContainerRef.current;
+      const scrollAmount = direction === "left" ? -340 : 340;
+      scrollContainerRef.current.scrollTo({
+        left: scrollLeft + scrollAmount,
+        behavior: "smooth",
+      });
     }
   };
 
-  // Filters logic
-  const filteredVoices = voicesList.filter((voice: any) => {
-    const voiceName = voice.displayName || voice.name || "";
-    const voiceDesc = voice.description || voice.desc || "";
-    const nameMatch = voiceName.toLowerCase().includes(searchQuery.toLowerCase());
-    const descMatch = voiceDesc.toLowerCase().includes(searchQuery.toLowerCase());
-    const searchMatch = searchQuery === "" || nameMatch || descMatch;
+  const filteredVoices = voicesList.filter((voice) => {
+    const name = voice.displayName ?? "Unnamed voice";
+    const desc = voice.description ?? "";
+    const searchMatch =
+      searchQuery === "" ||
+      name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      desc.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const accentVal = voice.langCode || voice.accent || "";
+    const accent = voice.langCode ?? "";
     const localeMatch =
       selectedLocale === "all" ||
-      accentVal.toLowerCase().startsWith(selectedLocale.toLowerCase());
+      accent.toLowerCase().startsWith(selectedLocale.toLowerCase());
 
-    const isPublic = voice.isPublic ?? true;
+    const isCloned = !voice.isPublic;
     const classMatch =
       selectedClass === "all" ||
-      (selectedClass === "public" && isPublic) ||
-      (selectedClass === "cloned" && !isPublic);
+      (selectedClass === "public" && !isCloned) ||
+      (selectedClass === "cloned" && isCloned);
 
     return searchMatch && localeMatch && classMatch;
   });
-
-  const filteredGenerations = (generations || []).filter((gen) => {
-    const promptMatch = (gen.prompt || "").toLowerCase().includes(searchQuery.toLowerCase());
-    const voiceIdMatch = (gen.inworldVoiceId || "").toLowerCase().includes(searchQuery.toLowerCase());
-
-    const voiceObj = voicesList.find(
-      (v: any) => v.inworldVoiceId === gen.inworldVoiceId || v.id === gen.inworldVoiceId,
-    );
-    const voiceName = voiceObj
-      ? voiceObj.displayName || voiceObj.name || ""
-      : gen.inworldVoiceId || "";
-    const voiceNameMatch = voiceName.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const searchMatch = searchQuery === "" || promptMatch || voiceIdMatch || voiceNameMatch;
-
-    const voiceAccent = voiceObj ? voiceObj.langCode || voiceObj.accent || "" : "";
-    const localeMatch =
-      selectedLocale === "all" ||
-      voiceAccent.toLowerCase().startsWith(selectedLocale.toLowerCase());
-
-    const isPublic = voiceObj ? (voiceObj.isPublic ?? true) : true;
-    const classMatch =
-      selectedClass === "all" ||
-      (selectedClass === "public" && isPublic) ||
-      (selectedClass === "cloned" && !isPublic);
-
-    return searchMatch && localeMatch && classMatch;
-  });
-
-  // Pagination calculation
-  const totalItems = activeTab === "registry" ? filteredVoices.length : filteredGenerations.length;
-  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-  const paginatedVoices = filteredVoices.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
-
-  const paginatedGenerations = filteredGenerations.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE,
-  );
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden bg-black text-white font-sans selection:bg-primary selection:text-black pb-24 sm:pb-32">
-      {/* Background Grid */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-50">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#222_1px,transparent_1px),linear-gradient(to_bottom,#222_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-      </div>
-
-      <div className="relative z-10 responsive-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <header className="mb-12 sm:mb-20 border-b border-[#222] pb-8 sm:pb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-8 pt-8">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#111] border border-[#333] mb-6 sm:mb-8 font-mono text-[10px] sm:text-xs uppercase text-primary">
-              <Terminal className="w-3.5 h-3.5" />
-              Database: Acoustic Models
+    <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-white pb-20">
+      <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-up">
+        
+        {/* Header Block */}
+        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 border-b border-white/5 pb-8 mb-8">
+          <div className="space-y-3 w-full lg:w-auto">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full font-medium text-xs text-primary">
+              <Sparkles className="w-3.5 h-3.5" /> Studio Library
             </div>
-            <h1 className="font-heading text-4xl sm:text-5xl md:text-7xl font-bold uppercase tracking-tighter text-white">
-              VOICE <span className="text-primary">REGISTRY</span>
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white font-heading">
+              Voice Library
             </h1>
           </div>
-          <div className="flex flex-col items-start md:items-end gap-4 w-full md:w-auto">
-            <p className="font-mono text-[10px] sm:text-xs md:text-sm text-[#888] max-w-md uppercase leading-relaxed tracking-wider text-left md:text-right">
-              Access the global repository of parameterized neural voices.
+          
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full lg:w-auto">
+            <p className="text-sm text-muted-foreground max-w-sm font-normal leading-relaxed">
+              Explore your refined repository of highly parameterized neural voice profiles built for creative narration.
             </p>
             <Button
               asChild
-              className="rounded-none bg-primary text-black hover:bg-white border border-primary font-mono text-xs uppercase tracking-widest h-12 px-8 transition-colors w-full sm:w-auto font-bold"
+              className="rounded-full bg-white text-black hover:bg-zinc-200 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shrink-0 w-full sm:w-auto shadow-lg"
             >
               <Link href="/app/voice-cloning">
-                <Plus className="w-4 h-4 mr-2" /> ADD_MODEL
+                <Plus className="w-4 h-4 mr-2" /> Clone Custom Voice
               </Link>
             </Button>
           </div>
         </header>
 
-        {/* Tabs and Views Selection */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mb-8 sm:mb-12 border-b border-[#222]/30 pb-4">
-            <TabsList className="bg-transparent p-0 rounded-none h-12 w-full sm:w-[380px] flex border border-[#222] overflow-hidden">
+        {/* Controls Switcher Bar */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-b border-white/5 pb-4">
+            <TabsList className="glass-card p-1 rounded-xl sm:rounded-full h-12 w-full sm:w-auto flex border-white/5">
               <TabsTrigger
                 value="registry"
-                className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 transition-colors border-r border-[#222]"
+                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-white text-xs font-medium h-full px-6 gap-2 transition-all"
               >
-                <LayoutGrid className="w-3.5 h-3.5 shrink-0" />
+                <LayoutGrid className="w-4 h-4" />
                 <span>Profiles</span>
               </TabsTrigger>
               <TabsTrigger
                 value="generations"
-                className="flex-1 rounded-none data-[state=active]:bg-primary data-[state=active]:text-black font-mono uppercase tracking-widest text-[10px] sm:text-xs h-full gap-2 transition-colors"
+                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-white text-xs font-medium h-full px-6 gap-2 transition-all"
               >
-                <History className="w-3.5 h-3.5 shrink-0" />
-                <span>Logs</span>
-                {generations && generations.length > 0 && (
-                  <span className="ml-1 text-[9px] bg-primary/20 text-primary border border-primary/30 px-1.5 py-0.5 font-bold font-mono">
-                    {generations.length}
+                <History className="w-4 h-4" />
+                <span>History Logs</span>
+                {historyList.length > 0 && (
+                  <span className="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded-full ml-1">
+                    {historyList.length}
                   </span>
                 )}
               </TabsTrigger>
             </TabsList>
 
-            {/* View Mode Toggle Switcher */}
-            <div className="flex items-center justify-end gap-3 font-mono text-xs text-[#666]">
-              <span className="uppercase tracking-wider hidden xs:inline">
-                Layout View:
-              </span>
-              <div className="flex items-center border border-[#222] bg-[#050505] p-1 shrink-0">
+            {/* Layout Switchers */}
+            <div className="flex items-center justify-between sm:justify-end gap-4">
+              <div className="flex items-center gap-1 border border-white/5 bg-white/5 p-1 rounded-xl">
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={() => setViewMode("grid")}
-                  className={`h-9 w-9 rounded-none transition-colors ${viewMode === "grid" ? "bg-primary text-black hover:bg-primary" : "text-[#888] hover:text-white"}`}
+                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "grid" ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white"}`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </Button>
@@ -306,312 +167,257 @@ export default function VoicesPage() {
                   size="icon"
                   variant="ghost"
                   onClick={() => setViewMode("list")}
-                  className={`h-9 w-9 rounded-none transition-colors ${viewMode === "list" ? "bg-primary text-black hover:bg-primary" : "text-[#888] hover:text-white"}`}
+                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "list" ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white"}`}
                 >
                   <List className="w-4 h-4" />
                 </Button>
               </div>
+
+              {viewMode === "grid" && filteredVoices.length > 0 && activeTab === "registry" && (
+                <div className="flex items-center gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => scroll("left")}
+                    className="h-10 w-10 rounded-full bg-white/5 border-white/10 hover:border-primary hover:text-primary transition-all text-white"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={() => scroll("right")}
+                    className="h-10 w-10 rounded-full bg-white/5 border-white/10 hover:border-primary hover:text-primary transition-all text-white"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Filters Dashboard */}
-          <div className="border border-[#222] bg-[#050505] p-6 sm:p-8 mb-10 sm:mb-12 relative overflow-hidden">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-primary/10 border-b border-l border-[#222] font-mono text-[9px] text-[#666] uppercase tracking-widest">
-              TELEMETRY_FILTER
-            </div>
+          {/* Filtering Dropdowns */}
+          {activeTab === "registry" && (
+            <div className="glass-panel rounded-2xl p-4 relative z-50 border border-white/5">
+              <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+                <div className="relative flex-1 w-full">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search profiles..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 glass-card border-white/5 h-11 rounded-xl text-sm placeholder:text-muted-foreground focus-visible:ring-primary/50 transition-all w-full text-white"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 shrink-0 w-full lg:w-auto">
+                  {/* Locale Dropdown */}
+                  <Select value={selectedLocale} onValueChange={setSelectedLocale}>
+                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-white/5 h-11 rounded-xl text-white text-xs px-4 focus:ring-1 focus:ring-primary">
+                      <div className="flex items-center gap-2 truncate">
+                        <Globe2 className="w-4 h-4 text-primary shrink-0" />
+                        <SelectValue placeholder="Locales" />
+                      </div>
+                    </SelectTrigger>
+                    
+                    <SelectContent 
+                      position="popper" 
+                      sideOffset={8}
+                      className="w-[210px] max-h-[240px] overflow-y-auto glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                    >
+                      <SelectItem value="all" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">All Locales</SelectItem>
+                      <SelectItem value="en" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">English (EN)</SelectItem>
+                      <SelectItem value="fr" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Français (FR)</SelectItem>
+                      <SelectItem value="hi" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Hindi (HI)</SelectItem>
+                      <SelectItem value="es" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Español (ES)</SelectItem>
+                      <SelectItem value="de" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Deutsch (DE)</SelectItem>
+                      <SelectItem value="ja" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">日本語 (JA)</SelectItem>
+                      <SelectItem value="it" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Italiano (IT)</SelectItem>
+                      <SelectItem value="zh" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">中文 (ZH)</SelectItem>
+                    </SelectContent>
+                  </Select>
 
-            <div className="flex flex-col md:flex-row gap-6 items-stretch md:items-center mt-2">
-              <div className="relative flex-1 min-w-0">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#666]" />
-                <Input
-                  placeholder="QUERY_DATABASE..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus-visible:ring-primary focus-visible:border-primary w-full font-mono uppercase placeholder:text-[#444] text-white text-xs sm:text-sm tracking-wider"
-                />
-              </div>
-              <div className="flex flex-wrap sm:flex-nowrap gap-3 sm:gap-4 shrink-0 min-w-0">
-                <Select value={selectedLocale} onValueChange={setSelectedLocale}>
-                  <SelectTrigger className="w-[140px] sm:w-[160px] shrink-0 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus:ring-primary font-mono uppercase text-white text-[10px] sm:text-xs">
-                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                      <Globe2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
-                      <SelectValue placeholder="LOCALE" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
-                    <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      ALL_LOCALES
-                    </SelectItem>
-                    <SelectItem value="ar" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      AR
-                    </SelectItem>
-                    <SelectItem value="en" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      EN
-                    </SelectItem>
-                    <SelectItem value="es" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      ES
-                    </SelectItem>
-                    <SelectItem value="fr" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      FR
-                    </SelectItem>
-                    <SelectItem value="hi" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      HI
-                    </SelectItem>
-                    <SelectItem value="it" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      IT
-                    </SelectItem>
-                    <SelectItem value="ja" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      JA
-                    </SelectItem>
-                    <SelectItem value="ko" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      KO
-                    </SelectItem>
-                    <SelectItem value="nl" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      NL
-                    </SelectItem>
-                    <SelectItem value="pt" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      PT
-                    </SelectItem>
-                    <SelectItem value="ru" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      RU
-                    </SelectItem>
-                    <SelectItem value="zh" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      ZH
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select value={selectedClass} onValueChange={setSelectedClass}>
-                  <SelectTrigger className="w-[140px] sm:w-[160px] shrink-0 bg-[#111] border-[#333] h-12 sm:h-14 rounded-none focus:ring-primary font-mono uppercase text-white text-[10px] sm:text-xs">
-                    <div className="flex items-center gap-2 overflow-hidden min-w-0">
-                      <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary shrink-0" />
-                      <SelectValue placeholder="CLASS" />
-                    </div>
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#111] border-[#333] rounded-none font-mono text-white">
-                    <SelectItem value="all" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      ALL_CLASSES
-                    </SelectItem>
-                    <SelectItem value="public" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      PUBLIC
-                    </SelectItem>
-                    <SelectItem value="cloned" className="focus:bg-primary focus:text-black rounded-none cursor-pointer">
-                      CLONED
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                  {/* Class Dropdown */}
+                  <Select value={selectedClass} onValueChange={setSelectedClass}>
+                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-white/5 h-11 rounded-xl text-white text-xs px-4 focus:ring-1 focus:ring-primary">
+                      <div className="flex items-center gap-2 truncate">
+                        <Filter className="w-4 h-4 text-primary shrink-0" />
+                        <SelectValue placeholder="Classes" />
+                      </div>
+                    </SelectTrigger>
+                    
+                    <SelectContent 
+                      position="popper"
+                      sideOffset={8}
+                      className="w-[210px] glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                    >
+                      <SelectItem value="all" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">All Classes</SelectItem>
+                      <SelectItem value="public" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Public Studio</SelectItem>
+                      <SelectItem value="cloned" className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none">Cloned Voice</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* Voices Profiles Listing */}
-          <TabsContent value="registry" className="mt-0 outline-none w-full">
+          {/* Voices Registry Content */}
+          <TabsContent value="registry" className="mt-0 outline-none relative z-10 w-full stagger-1">
             {voices === undefined ? (
-              <div className="flex flex-col items-center justify-center py-24 text-center gap-4 border border-[#222] bg-[#050505]">
-                <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                <span className="font-mono text-xs text-[#666] uppercase tracking-widest animate-pulse">
-                  RETRIEVING NEURAL MODELS...
-                </span>
+              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-white/5 glass-panel rounded-3xl">
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                <span className="text-sm text-muted-foreground font-medium">Syncing library...</span>
+              </div>
+            ) : voicesList.length === 0 ? (
+              <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                  <Music className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-base font-semibold text-white mb-2">No voice profiles found</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">
+                  Your voice library is empty. Clone a voice to get started.
+                </p>
+                <Button
+                  asChild
+                  className="rounded-full bg-white text-black hover:bg-zinc-200 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shadow-lg"
+                >
+                  <Link href="/app/voice-cloning">
+                    <Plus className="w-4 h-4 mr-2" /> Clone Custom Voice
+                  </Link>
+                </Button>
               </div>
             ) : filteredVoices.length === 0 ? (
-              <div className="text-center py-24 border border-dashed border-[#222] bg-[#050505]">
-                <Terminal className="w-12 h-12 text-[#333] mx-auto mb-4" />
-                <p className="font-mono text-xs text-[#666] uppercase tracking-widest mb-2">
-                  NO_PROFILES_FOUND
-                </p>
-                <p className="font-mono text-[10px] text-[#444] uppercase leading-relaxed max-w-sm mx-auto px-4">
-                  No voice profiles match the active database query parameters.
-                </p>
+              <div className="text-center py-20 border border-white/10 glass-panel rounded-3xl">
+                <Music className="w-8 h-8 text-muted-foreground mx-auto mb-4" />
+                <p className="text-sm text-muted-foreground">No active parameters match your search filters.</p>
               </div>
             ) : viewMode === "list" ? (
-              <div className="border border-[#222] bg-[#050505] divide-y divide-[#222] overflow-x-auto w-full">
-                {/* Headers */}
-                <div className="hidden md:flex items-center px-6 py-4 bg-[#111] font-mono text-[10px] uppercase tracking-widest text-[#666]">
-                  <div className="w-24 shrink-0">ID</div>
-                  <div className="w-16 shrink-0 text-center">Avatar</div>
-                  <div className="w-48 shrink-0 pl-4">Name</div>
-                  <div className="w-28 shrink-0">Accent</div>
-                  <div className="w-28 shrink-0">Gender</div>
-                  <div className="flex-1 px-4">Description</div>
-                  <div className="w-32 shrink-0">Mood</div>
-                  <div className="w-32 shrink-0 text-right">Plays</div>
-                  <div className="w-24 shrink-0 text-right">Use</div>
-                </div>
-                {/* Rows */}
-                <div className="flex flex-col divide-y divide-[#222]">
-                  {paginatedVoices.map((voice: any) => {
-                    const isPublic = voice.isPublic ?? true;
-                    const accent = voice.langCode || voice.accent || "EN_US";
-                    const gender = voice.gender || "FEMALE";
-                    const moodVal = voice.mood || "BALANCED";
-                    const playsVal = voice.plays || voice.playCount || "0";
-                    const description =
-                      voice.description ||
-                      voice.desc ||
-                      "Neural voice profile mapped with nominal characteristics.";
-                    const idVal = voice.inworldVoiceId
-                      ? voice.inworldVoiceId.substring(0, 8).toUpperCase()
-                      : (voice.id || "VOX-00").substring(0, 8).toUpperCase();
-                    const voiceDisplayName = voice.displayName || voice.name || "Unknown";
-
-                    return (
-                      <div
-                        key={voice.inworldVoiceId || voice.id}
-                        className="flex flex-col md:flex-row md:items-center px-6 py-5 md:py-4 hover:bg-[#0a0a0a] transition-colors gap-4 md:gap-0 font-sans"
-                      >
-                        {/* ID Column */}
-                        <div className="w-24 shrink-0 font-mono text-[11px] text-[#666] flex items-center justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">
-                            ID:{" "}
-                          </span>
-                          <span>{idVal}</span>
-                        </div>
-                        {/* Avatar */}
-                        <div className="w-16 shrink-0 hidden md:flex items-center justify-center">
-                          <div className="w-9 h-9 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-sm text-white">
-                            {voiceDisplayName[0]}
-                          </div>
-                        </div>
-                        {/* Name */}
-                        <div className="w-48 shrink-0 pl-4 flex items-center gap-3">
-                          <div className="md:hidden w-8 h-8 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-xs text-white">
-                            {voiceDisplayName[0]}
-                          </div>
-                          <div>
-                            <span className="font-heading font-bold text-white group-hover:text-primary transition-colors text-sm uppercase tracking-wide">
-                              {voiceDisplayName}
-                            </span>
-                          </div>
-                          <span className="font-mono text-[8px] uppercase tracking-wider text-black bg-primary px-1.5 py-0.5">
-                            {isPublic ? "PUBLIC" : "CLONED"}
-                          </span>
-                        </div>
-                        {/* Accent */}
-                        <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">
-                            Accent:{" "}
-                          </span>
-                          <span className="text-primary">{accent}</span>
-                        </div>
-                        {/* Gender */}
-                        <div className="w-28 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">
-                            Gender:{" "}
-                          </span>
-                          <span className="text-[#888]">{gender}</span>
-                        </div>
-                        {/* Description */}
-                        <div className="flex-1 px-0 md:px-4 text-xs text-[#888] font-mono leading-relaxed line-clamp-1 md:line-clamp-2 uppercase">
-                          {description}
-                        </div>
-                        {/* Mood */}
-                        <div className="w-32 shrink-0 font-mono text-xs flex justify-between md:block">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">
-                            Mood:{" "}
-                          </span>
-                          <span className="border border-[#333] px-2 py-0.5 text-[#666] bg-[#0c0c0c]">
-                            {moodVal}
-                          </span>
-                        </div>
-                        {/* Plays */}
-                        <div className="w-32 shrink-0 font-mono text-xs flex justify-between md:block md:text-right">
-                          <span className="md:hidden text-[#444] uppercase tracking-wider">
-                            Plays:{" "}
-                          </span>
-                          <span className="text-white">{playsVal}</span>
-                        </div>
-                        {/* Use Action */}
-                        <div className="w-24 shrink-0 text-right flex justify-end">
-                          <Button
-                            size="sm"
-                            onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
-                            className="rounded-none bg-primary hover:bg-white text-black font-mono text-[10px] uppercase h-8 px-4 border border-primary font-bold"
-                          >
-                            Use
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  })}
+              /* Data Table View */
+              <div className="border border-white/5 glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
+                <div className="w-full overflow-x-auto block">
+                  <table className="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+                    <thead>
+                      <tr className="border-b border-white/5 bg-white/5 text-xs font-semibold text-muted-foreground">
+                        <th className="pl-8 pr-4 py-5 w-16">Avatar</th>
+                        <th className="px-6 py-5 w-40">Name</th>
+                        <th className="px-6 py-5 w-32">Locale Accent</th>
+                        <th className="px-6 py-5">Vocal Description</th>
+                        <th className="px-6 py-5 text-right w-32">Studio Plays</th>
+                        <th className="pl-4 pr-8 py-5 text-right w-28">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 text-sm text-white">
+                      {filteredVoices.map((voice) => {
+                        const isCloned = !voice.isPublic;
+                        const voiceName = voice.displayName || "Unnamed voice";
+                        const description = voice.description?.trim() || null;
+                        const plays = voice.playCount?.toLocaleString() ?? "0";
+                        return (
+                          <tr key={voice._id} className="hover:bg-white/5 transition-all group duration-200">
+                            <td className="pl-8 pr-4 py-4">
+                              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-sm font-semibold">
+                                {voiceName[0]}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="flex flex-col gap-1.5">
+                                <span className="font-semibold">{voiceName}</span>
+                                <span className={`text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 w-fit rounded-full ${isCloned ? 'bg-pink-500/20 text-pink-300' : 'bg-primary/20 text-primary'}`}>
+                                  {isCloned ? "Cloned" : "Public"}
+                                </span>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 text-primary font-mono text-xs">{voice.langCode ?? "—"}</td>
+                            <td className="px-6 py-4 max-w-md xl:max-w-xl text-xs">
+                              {description ? (
+                                <span className="text-muted-foreground truncate block">{description}</span>
+                              ) : (
+                                <span className="italic text-muted-foreground/70">{NO_DESCRIPTION}</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{plays}</td>
+                            <td className="pl-4 pr-8 py-4 text-right">
+                              <Button
+                                size="sm"
+                                onClick={() => handleUseVoice(voice.inworldVoiceId ?? voice._id)}
+                                className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs px-6 h-9 transition-all duration-300 border-none font-medium"
+                              >
+                                Select
+                              </Button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             ) : (
-              /* GRID VIEW WITH GENEROUS SPACING */
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 w-full max-w-full">
-                {paginatedVoices.map((voice: any) => {
-                  const isPublic = voice.isPublic ?? true;
-                  const accent = voice.langCode || voice.accent || "EN_US";
-                  const gender = voice.gender || "FEMALE";
-                  const moodVal = voice.mood || "BALANCED";
-                  const playsVal = voice.plays || voice.playCount || "0";
-                  const description =
-                    voice.description ||
-                    voice.desc ||
-                    "Neural voice profile mapped with nominal characteristics.";
-                  const idVal = voice.inworldVoiceId
-                    ? voice.inworldVoiceId.substring(0, 8).toUpperCase()
-                    : (voice.id || "VOX-00").substring(0, 8).toUpperCase();
-                  const voiceDisplayName = voice.displayName || voice.name || "Unknown";
-
+              /* Carousel Grid View */
+              <div 
+                ref={scrollContainerRef}
+                className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth w-full custom-scrollbar"
+              >
+                {filteredVoices.map((voice) => {
+                  const voiceName = voice.displayName || "Unnamed voice";
+                  const isCloned = !voice.isPublic;
+                  const description = voice.description?.trim() || null;
+                  const mood = voice.tags?.[0]?.toLowerCase() ?? "balanced";
+                  const plays = voice.playCount?.toLocaleString() ?? "0";
                   return (
                     <div
-                      key={voice.inworldVoiceId || voice.id}
-                      className="group relative border border-[#222] bg-[#050505] hover:bg-[#0a0a0a] transition-all hover:border-primary/50 flex flex-col w-full max-w-full overflow-hidden"
+                      key={voice._id}
+                      className="snap-start shrink-0 w-full sm:w-[310px] rounded-[24px] border border-white/5 glass-card hover:bg-white/10 transition-all duration-300 hover:border-primary/30 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
                     >
-                      {/* Top Banner */}
-                      <div className="h-10 w-full border-b border-[#222] bg-[#111] flex items-center justify-between px-4">
-                        <span className="font-mono text-[9px] sm:text-[10px] text-[#666] uppercase">
-                          ID: {idVal}
+                      <div className="pt-6 px-6 pb-2 flex items-center justify-between">
+                        <span className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full ${isCloned ? 'bg-pink-500/20 text-pink-300' : 'bg-primary/20 text-primary'}`}>
+                          {isCloned ? "Cloned Voice" : "Public Studio"}
                         </span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest text-black bg-primary px-1.5 py-0.5">
-                            {isPublic ? "PUBLIC" : "CLONED"}
-                          </span>
-                          <Star className="w-3.5 h-3.5 text-[#555] group-hover:text-primary transition-colors cursor-pointer" />
-                        </div>
+                        <Star className="w-4 h-4 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />
                       </div>
 
-                      {/* Main Content */}
-                      <div className="p-6 flex flex-col flex-1 gap-4">
-                        <div className="flex justify-between items-start">
-                          <div className="w-16 h-16 bg-[#111] border border-[#333] flex items-center justify-center font-heading font-black text-2xl text-white group-hover:border-primary transition-colors">
-                            {voiceDisplayName[0]}
+                      <div className="px-6 pt-3 pb-6 flex flex-col gap-4 flex-1">
+                        <div className="flex justify-between items-center">
+                          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center font-heading font-semibold text-lg text-white">
+                            {voiceName[0]}
                           </div>
                           <Button
                             size="icon"
-                            onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
-                            className="h-11 w-11 rounded-none bg-primary hover:bg-white text-black transition-colors border border-primary"
+                            onClick={() => handleUseVoice(voice.inworldVoiceId ?? voice._id)}
+                            className="h-10 w-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 border-none group-hover:scale-105"
                           >
                             <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
                           </Button>
                         </div>
 
-                        <div>
-                          <h3 className="font-heading text-2xl font-bold uppercase text-white group-hover:text-primary transition-colors truncate">
-                            {voiceDisplayName}
+                        <div className="space-y-1.5">
+                          <h3 className="text-xl font-heading font-semibold text-white truncate">
+                            {voiceName}
                           </h3>
-                          <div className="flex gap-2 mt-2">
-                            <span className="font-mono text-[9px] sm:text-[10px] text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">
-                              {accent}
-                            </span>
-                            <span className="font-mono text-[9px] sm:text-[10px] text-[#888] border border-[#333] px-2 py-0.5 bg-[#111]">
-                              {gender}
+                          <div className="flex gap-1.5">
+                            <span className="font-mono text-[10px] text-muted-foreground">
+                              {voice.langCode ?? "—"}
                             </span>
                           </div>
                         </div>
 
-                        <p className="font-mono text-[11px] sm:text-xs text-[#888] uppercase leading-relaxed flex-1 pt-2 border-t border-[#111]">
-                          {description}
-                        </p>
+                        {description ? (
+                          <p className="text-sm text-muted-foreground leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                            {description}
+                          </p>
+                        ) : (
+                          <p className="text-sm italic text-muted-foreground/70 leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                            {NO_DESCRIPTION}
+                          </p>
+                        )}
                       </div>
 
-                      {/* Footer */}
-                      <div className="px-6 py-4 border-t border-[#222] bg-[#0a0a0a] flex items-center justify-between">
-                        <span className="font-mono text-[9px] sm:text-[10px] text-[#555] border border-[#333] px-2 py-1">
-                          {moodVal}
+                      <div className="px-6 py-4 border-t border-white/5 bg-white/5 flex items-center justify-between text-xs text-muted-foreground font-medium">
+                        <span className="uppercase">
+                          {mood}
                         </span>
-                        <span className="flex items-center gap-2 font-mono text-[9px] sm:text-[10px] text-[#666]">
-                          <Activity className="w-3.5 h-3.5 text-primary" /> {playsVal} PLAYS
+                        <span className="flex items-center gap-1.5">
+                          <Activity className="w-3.5 h-3.5 text-primary" /> {plays}
                         </span>
                       </div>
                     </div>
@@ -620,8 +426,74 @@ export default function VoicesPage() {
               </div>
             )}
           </TabsContent>
-          
-          {/* Logs / Generations Content can go here */}
+
+          {/* History Logs Content */}
+          <TabsContent value="generations" className="mt-0 outline-none relative z-10 w-full">
+            {generations === undefined ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-white/5 glass-panel rounded-3xl">
+                <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                <span className="text-sm font-medium text-muted-foreground">Fetching history...</span>
+              </div>
+            ) : historyList.length === 0 ? (
+              <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                  <History className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-base font-semibold text-white mb-2">No History Logs</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
+                  Generate audio from the speech module to populate your history.
+                </p>
+              </div>
+            ) : (
+              <div className="border border-white/5 glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
+                <div className="w-full overflow-x-auto block">
+                  <table className="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+                    <thead>
+                      <tr className="border-b border-white/5 bg-white/5 text-xs font-semibold text-muted-foreground">
+                        <th className="pl-8 pr-4 py-5 w-24">Preview</th>
+                        <th className="px-6 py-5">Prompt</th>
+                        <th className="px-6 py-5 w-48">Voice ID</th>
+                        <th className="px-6 py-5 w-24">Format</th>
+                        <th className="pl-4 pr-8 py-5 text-right w-40">Generated</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 text-sm text-white">
+                      {historyList.map((g) => (
+                        <tr key={g._id} className="hover:bg-white/5 transition-all duration-200">
+                          <td className="pl-8 pr-4 py-4">
+                            <audio
+                              src={g.audioUrl}
+                              controls
+                              preload="none"
+                              className="h-9 w-32"
+                            >
+                              <track kind="captions" />
+                            </audio>
+                          </td>
+                          <td className="px-6 py-4 max-w-md xl:max-w-xl">
+                            <span className="text-xs text-muted-foreground line-clamp-2 block">
+                              {g.prompt}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-primary font-mono text-xs">
+                            {g.inworldVoiceId}
+                          </td>
+                          <td className="px-6 py-4 text-xs">
+                            <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+                              {g.format}
+                            </span>
+                          </td>
+                          <td className="pl-4 pr-8 py-4 text-right font-mono text-xs text-muted-foreground">
+                            {new Date(g._creationTime).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </div>

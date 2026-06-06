@@ -16,16 +16,20 @@ export const getCurrentUser = mutation({
 });
 export const saveAudio = mutation({
   args: {
-    userId: v.id("users"),
+    userId: v.optional(v.id("users")),
     inworldVoiceId: v.string(),
     prompt: v.string(),
     storageId: v.id("_storage"),
     audioUrl: v.string(),
+    isPreview: v.optional(v.boolean())
   },
-  handler: async (ctx, { userId, inworldVoiceId, prompt, storageId, audioUrl }) => {
+  handler: async (ctx, { userId, inworldVoiceId, prompt, storageId, audioUrl, isPreview }) => {
     const voice = await ctx.db.query("voices").withIndex("by_voiceID", (q) => q.eq("inworldVoiceId", inworldVoiceId)).first();
     if (!voice) throw new Error("Voice not found");
     await ctx.db.patch(voice._id, { playCount: (voice.playCount || 0) + 1 });
+
+    if (!isPreview) {isPreview == false}
+    
     return await ctx.db.insert("generations", {
       userId,
       inworldVoiceId,
@@ -33,6 +37,7 @@ export const saveAudio = mutation({
       storageId,
       format: "mp3",
       audioUrl,
+      isPreview
     });
   },
 });
