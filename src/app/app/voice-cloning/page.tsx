@@ -42,6 +42,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -124,6 +125,7 @@ function formatTime(seconds: number) {
 }
 
 export default function VoiceCloningPage() {
+  const trigger = useHaptics();
   const cloneVoice = useAction(api.cloneVoice.cloneVoice);
   const clonedVoices = useQuery(api.voice.listClonedVoices);
   const deleteClonedVoice = useMutation(api.voice.deleteClonedVoice);
@@ -137,6 +139,7 @@ export default function VoiceCloningPage() {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
       toast.success("Voice ready to use in speech studio");
+      trigger("success");
     }
   };
 
@@ -304,6 +307,7 @@ export default function VoiceCloningPage() {
     if (recordPluginRef.current) {
       try {
         setAudioUrl(null);
+        trigger("nudge");
         await recordPluginRef.current.startRecording();
       } catch (error: unknown) {
         console.error("Microphone access denied:", error);
@@ -324,6 +328,7 @@ export default function VoiceCloningPage() {
   const stopRecording = () => {
     if (recordPluginRef.current) {
       recordPluginRef.current.stopRecording();
+      trigger("success");
     }
   };
 
@@ -383,6 +388,7 @@ export default function VoiceCloningPage() {
       : [];
 
     try {
+      trigger("nudge");
       const audioArrayBuffer = await audioBlob.arrayBuffer();
 
       await cloneVoice({
@@ -394,8 +400,10 @@ export default function VoiceCloningPage() {
       });
 
       toast.success("Voice created successfully", { id: toastId });
+      trigger("success");
     } catch (error: unknown) {
       if (isAbortError(error)) return;
+      trigger("error");
       toast.error("Could not create voice", { id: toastId });
       console.error("Voice cloning error: ", error);
     } finally {
@@ -910,7 +918,10 @@ export default function VoiceCloningPage() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleConfirmDelete}
+              onClick={() => {
+                trigger("error");
+                handleConfirmDelete();
+              }}
               className="rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium text-sm h-10 px-5 border-none shadow-lg shadow-red-500/20"
             >
               Delete

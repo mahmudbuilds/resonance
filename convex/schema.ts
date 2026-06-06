@@ -11,6 +11,7 @@ export default defineSchema({
     systemUpdates: v.optional(v.boolean()),
     usageAlerts: v.optional(v.boolean()),
     securityLogs: v.optional(v.boolean()),
+    useHaptics: v.optional(v.boolean()),
   }).index("by_token", ["tokenIdentifier"]),
 
   // 2. The Cloned Voices

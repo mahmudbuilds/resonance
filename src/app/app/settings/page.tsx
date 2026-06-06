@@ -53,6 +53,7 @@ export default function SettingsPage() {
   const [systemUpdates, setSystemUpdates] = useState(true);
   const [usageAlerts, setUsageAlerts] = useState(true);
   const [securityLogs, setSecurityLogs] = useState(true);
+  const [hapticsEnabled, setHapticsEnabled] = useState(false);
 
   // Load initial values from Clerk / Convex
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function SettingsPage() {
       setSystemUpdates(currentUser.systemUpdates ?? true);
       setUsageAlerts(currentUser.usageAlerts ?? true);
       setSecurityLogs(currentUser.securityLogs ?? true);
+      setHapticsEnabled(currentUser.useHaptics ?? false);
     }
   }, [currentUser]);
 
@@ -93,6 +95,7 @@ export default function SettingsPage() {
         systemUpdates,
         usageAlerts,
         securityLogs,
+        useHaptics: hapticsEnabled,
       });
 
       toast.success("Settings saved", {
@@ -166,7 +169,7 @@ export default function SettingsPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Manage your profile, notifications, and account settings all in one place.
+            Manage your profile, preferences, and account settings all in one place.
           </p>
         </header>
 
@@ -184,8 +187,8 @@ export default function SettingsPage() {
               value="appearance"
               className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
             >
-              <Activity className="w-4 h-4 shrink-0" />
-Notifications
+              <Settings2 className="w-4 h-4 shrink-0" />
+               Preferences
             </TabsTrigger>
           </TabsList>
 
@@ -313,15 +316,15 @@ Notifications
                 </div>
               </TabsContent>
 
-              {/* Protocols Tab */}
+              {/* Preferences Tab */}
               <TabsContent
                 value="appearance"
                 className="m-0 space-y-8 outline-none"
               >
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
-                    <Activity className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">Notification Settings</h2>
+                    <Settings2 className="w-4 h-4 text-primary" />
+                    <h2 className="text-sm font-semibold text-white tracking-wide">Notifications & Haptic Feedback</h2>
                   </div>
 
                   <div className="space-y-4">
@@ -369,6 +372,22 @@ Notifications
                       <Switch
                         checked={securityLogs}
                         onCheckedChange={setSecurityLogs}
+                        className="data-[state=checked]:bg-primary shrink-0"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                      <div className="space-y-1 min-w-0 pr-4">
+                        <Label className="text-sm font-medium text-white block">
+                          Haptic Feedback
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Tactile confirmation taps on supported devices.
+                        </p>
+                      </div>
+                      <Switch
+                        checked={hapticsEnabled}
+                        onCheckedChange={setHapticsEnabled}
                         className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>

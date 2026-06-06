@@ -1,10 +1,8 @@
-import {
-  SidebarProvider,
-  SidebarInset,
-} from "@/components/ui/sidebar";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import { cookies } from "next/headers";
+import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import Navbar from "@/components/dashboard/Navbar";
+import { HapticsProvider } from "@/components/haptics/HapticsProvider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default async function DashboardLayout({
   children,
@@ -24,7 +22,7 @@ export default async function DashboardLayout({
           <SidebarInset className="min-h-0 min-w-0">
             <main className="flex flex-col min-h-0 flex-1">
               <Navbar />
-              {children}
+              <HapticsProvider>{children}</HapticsProvider>
             </main>
           </SidebarInset>
         </SidebarProvider>

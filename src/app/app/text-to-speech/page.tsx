@@ -20,8 +20,9 @@ import {
   Volume2,
   Wand2,
 } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,9 +44,10 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { api } from "../../../../convex/_generated/api";
-import { Id } from "../../../../convex/_generated/dataModel";
+import type { Id } from "../../../../convex/_generated/dataModel";
 
 export default function TextToSpeechPage() {
+  const trigger = useHaptics();
   const [selectedVoice, setSelectedVoice, mounted] = useLocalStorage<
     string | null
   >("selectedVoice", null);
@@ -54,7 +56,7 @@ export default function TextToSpeechPage() {
     "inworld-tts-1.5-mini",
   );
   const voices = useQuery(api.voice.getUserVoices);
-  
+
   useEffect(() => {
     if (!mounted) return;
     const fetchVoices = async () => {
@@ -69,11 +71,13 @@ export default function TextToSpeechPage() {
   const [speakingRate, setSpeakingRate] = useState([1.0]);
   const [temperature, setTemperature] = useState([0.7]);
   const [playingId, setPlayingId] = useState<Id<"generations"> | null>(null);
-  const [downloadingId, setDownloadingId] = useState<Id<"generations"> | null>(null);
+  const [downloadingId, setDownloadingId] = useState<Id<"generations"> | null>(
+    null,
+  );
   const [isSsml, setIsSsml] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
-  
+
   const userGenerations = useQuery(api.inworld.listUserGenerations);
   const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
   const deleteGeneration = useMutation(api.inworld.deleteUserGeneration);
@@ -84,6 +88,7 @@ export default function TextToSpeechPage() {
       return;
     }
 
+    trigger("nudge");
     setIsGenerating(true);
 
     const promise = generateSpeech({
@@ -102,7 +107,9 @@ export default function TextToSpeechPage() {
 
     try {
       await promise;
+      trigger("success");
     } catch (e) {
+      trigger("error");
       console.error(e);
     } finally {
       setIsGenerating(false);
@@ -113,7 +120,6 @@ export default function TextToSpeechPage() {
 
   return (
     <div className="min-h-screen relative w-full overflow-hidden text-foreground font-sans pb-20">
-
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
         {/* Header Section */}
         <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-white/5">
@@ -127,7 +133,9 @@ export default function TextToSpeechPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Convert your written text into high-quality, natural-sounding audio script. Refine vocal vectors and tuning rules with advanced neural models.
+            Convert your written text into high-quality, natural-sounding audio
+            script. Refine vocal vectors and tuning rules with advanced neural
+            models.
           </p>
         </header>
 
@@ -137,7 +145,9 @@ export default function TextToSpeechPage() {
             <div className="glass-panel rounded-3xl p-6 shadow-xl shadow-black/20 border border-white/5">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
                 <Settings2 className="w-4 h-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-white tracking-wide">Voice Configuration</h2>
+                <h2 className="text-sm font-semibold text-white tracking-wide">
+                  Voice Configuration
+                </h2>
               </div>
 
               <div className="space-y-6">
@@ -154,7 +164,9 @@ export default function TextToSpeechPage() {
                     <SelectTrigger className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all">
                       <SelectValue
                         placeholder={
-                          isReady ? "Select a voice profile..." : "Loading system voices..."
+                          isReady
+                            ? "Select a voice profile..."
+                            : "Loading system voices..."
                         }
                       />
                     </SelectTrigger>
@@ -199,7 +211,10 @@ export default function TextToSpeechPage() {
                     <Label className="text-xs font-medium text-muted-foreground">
                       Neural Model
                     </Label>
-                    <Badge variant="outline" className="text-[10px] text-primary bg-primary/10 border-primary/20 px-2 py-0 rounded-full">
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] text-primary bg-primary/10 border-primary/20 px-2 py-0 rounded-full"
+                    >
                       v2.0 Adaptive
                     </Badge>
                   </div>
@@ -289,7 +304,9 @@ export default function TextToSpeechPage() {
               <div className="border-b border-white/5 p-4 flex flex-row items-center justify-between bg-white/[0.02]">
                 <div className="flex items-center gap-2">
                   <Type className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-semibold text-white">Script Editor</span>
+                  <span className="text-sm font-semibold text-white">
+                    Script Editor
+                  </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
@@ -346,7 +363,8 @@ export default function TextToSpeechPage() {
                     wrap={isSsml ? "off" : "soft"}
                     onScroll={(e) => {
                       if (isSsml && lineNumbersRef.current) {
-                        lineNumbersRef.current.scrollTop = e.currentTarget.scrollTop;
+                        lineNumbersRef.current.scrollTop =
+                          e.currentTarget.scrollTop;
                       }
                     }}
                     style={isSsml ? { lineHeight: "28px" } : undefined}
@@ -366,14 +384,24 @@ export default function TextToSpeechPage() {
               <div className="border-t border-white/5 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/[0.02]">
                 <div className="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-start">
                   <span className="text-xs font-medium text-muted-foreground">
-                    <span className={text.length > 4500 ? "text-rose-400 font-semibold" : "text-white font-mono"}>
+                    <span
+                      className={
+                        text.length > 4500
+                          ? "text-rose-400 font-semibold"
+                          : "text-white font-mono"
+                      }
+                    >
                       {text.length.toLocaleString()}
                     </span>
-                    <span className="text-muted-foreground"> / </span>5,000 chars
+                    <span className="text-muted-foreground"> / </span>5,000
+                    chars
                   </span>
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
                     <Clock className="w-3.5 h-3.5" />
-                    Est. Duration: <span className="font-mono text-white">{Math.ceil(text.length / 18)}s</span>
+                    Est. Duration:{" "}
+                    <span className="font-mono text-white">
+                      {Math.ceil(text.length / 18)}s
+                    </span>
                   </div>
                 </div>
 
@@ -398,64 +426,102 @@ export default function TextToSpeechPage() {
             <div className="border border-white/5 glass-panel rounded-3xl shadow-xl shadow-black/20 overflow-hidden w-full stagger-3">
               <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                  <History className="w-4 h-4 text-primary" /> Generation History
+                  <History className="w-4 h-4 text-primary" /> Generation
+                  History
                 </h3>
               </div>
-              
+
               <div className="p-0">
                 {!userGenerations || userGenerations.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
                     <div className="p-4 bg-white/5 rounded-2xl border border-white/10 mb-4">
                       <Mic2 className="w-6 h-6 text-muted-foreground" />
                     </div>
-                    <p className="text-sm font-medium text-white">No audio generations yet</p>
-                    <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">Synthesize text above to begin building your audio catalog.</p>
+                    <p className="text-sm font-medium text-white">
+                      No audio generations yet
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">
+                      Synthesize text above to begin building your audio
+                      catalog.
+                    </p>
                   </div>
                 ) : (
                   <div className="divide-y divide-white/5 max-h-[400px] overflow-y-auto">
                     {[...userGenerations].reverse().map((generation) => {
                       const date = new Date(generation._creationTime);
-                      const isToday = new Date().toDateString() === date.toDateString();
-                      const timeString = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-                      const dateString = isToday ? `Today, ${timeString}` : `${date.toLocaleDateString()} at ${timeString}`;
+                      const isToday =
+                        new Date().toDateString() === date.toDateString();
+                      const timeString = date.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      });
+                      const dateString = isToday
+                        ? `Today, ${timeString}`
+                        : `${date.toLocaleDateString()} at ${timeString}`;
 
-                      const voice = voices?.find((v) => v.inworldVoiceId === generation.inworldVoiceId);
-                      const voiceName = voice?.displayName || generation.inworldVoiceId || "System Voice";
+                      const voice = voices?.find(
+                        (v) => v.inworldVoiceId === generation.inworldVoiceId,
+                      );
+                      const voiceName =
+                        voice?.displayName ||
+                        generation.inworldVoiceId ||
+                        "System Voice";
 
                       return (
-                        <div key={generation._id} className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors gap-4 group">
+                        <div
+                          key={generation._id}
+                          className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors gap-4 group"
+                        >
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <Button
                               variant="outline"
                               size="icon"
                               className={`h-10 w-10 shrink-0 rounded-xl transition-all border-none shadow-sm ${
-                                playingId === generation._id 
-                                  ? "bg-primary text-white hover:bg-primary/90" 
+                                playingId === generation._id
+                                  ? "bg-primary text-white hover:bg-primary/90"
                                   : "bg-white/5 text-white hover:bg-white/10"
                               }`}
                               onClick={() => {
-                                const audio = document.getElementById(`audio-${generation._id}`) as HTMLAudioElement;
+                                const audio = document.getElementById(
+                                  `audio-${generation._id}`,
+                                ) as HTMLAudioElement;
                                 if (audio) {
                                   if (audio.paused) {
-                                    document.querySelectorAll("audio").forEach((a) => {
-                                      if (a.id !== `audio-${generation._id}`) a.pause();
-                                    });
+                                    document
+                                      .querySelectorAll("audio")
+                                      .forEach((a) => {
+                                        if (a.id !== `audio-${generation._id}`)
+                                          a.pause();
+                                      });
                                     audio.play();
+                                    trigger("success");
                                   } else {
                                     audio.pause();
                                   }
                                 }
                               }}
                             >
-                              {playingId === generation._id ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                              {playingId === generation._id ? (
+                                <Pause className="w-4 h-4 fill-current" />
+                              ) : (
+                                <Play className="w-4 h-4 fill-current ml-0.5" />
+                              )}
                             </Button>
                             <audio
                               id={`audio-${generation._id}`}
                               src={generation.audioUrl}
                               className="hidden"
                               onPlay={() => setPlayingId(generation._id)}
-                              onPause={() => setPlayingId((current) => current === generation._id ? null : current)}
-                              onEnded={() => setPlayingId((current) => current === generation._id ? null : current)}
+                              onPause={() =>
+                                setPlayingId((current) =>
+                                  current === generation._id ? null : current,
+                                )
+                              }
+                              onEnded={() =>
+                                setPlayingId((current) =>
+                                  current === generation._id ? null : current,
+                                )
+                              }
                             />
                             <div className="flex flex-col min-w-0 flex-1 gap-1">
                               <p className="text-sm font-medium text-white truncate pr-2">
@@ -465,23 +531,32 @@ export default function TextToSpeechPage() {
                                 <Badge className="text-[10px] font-medium bg-white/5 text-muted-foreground hover:bg-white/10 border-none px-2 py-0 rounded-full">
                                   {voiceName}
                                 </Badge>
-                                <span className="text-muted-foreground/30">•</span>
-                                <span className="text-muted-foreground text-[11px]">{dateString}</span>
+                                <span className="text-muted-foreground/30">
+                                  •
+                                </span>
+                                <span className="text-muted-foreground text-[11px]">
+                                  {dateString}
+                                </span>
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center gap-1.5 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                             <Button
                               variant="outline"
                               size="icon"
                               className="h-9 w-9 rounded-lg bg-white/5 border-none hover:bg-white/10 text-muted-foreground hover:text-white shadow-sm"
-                              disabled={downloadingId === generation._id || !generation.audioUrl}
+                              disabled={
+                                downloadingId === generation._id ||
+                                !generation.audioUrl
+                              }
                               onClick={async () => {
                                 if (!generation.audioUrl) return;
                                 try {
                                   setDownloadingId(generation._id);
-                                  const response = await fetch(generation.audioUrl);
+                                  const response = await fetch(
+                                    generation.audioUrl,
+                                  );
                                   const blob = await response.blob();
                                   const url = window.URL.createObjectURL(blob);
                                   const a = document.createElement("a");
@@ -491,6 +566,7 @@ export default function TextToSpeechPage() {
                                   document.body.appendChild(a);
                                   a.click();
                                   window.URL.revokeObjectURL(url);
+                                  trigger("success");
                                 } catch (error) {
                                   console.error("Download failed:", error);
                                 } finally {
@@ -498,28 +574,47 @@ export default function TextToSpeechPage() {
                                 }
                               }}
                             >
-                              {downloadingId === generation._id ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                              {downloadingId === generation._id ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                <Download className="w-4 h-4" />
+                              )}
                             </Button>
-                            
+
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg bg-white/5 border-none hover:bg-white/10 text-muted-foreground hover:text-white shadow-sm">
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  className="h-9 w-9 rounded-lg bg-white/5 border-none hover:bg-white/10 text-muted-foreground hover:text-white shadow-sm"
+                                >
                                   <MoreVertical className="w-4 h-4" />
                                 </Button>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-36 rounded-xl border-white/10 glass-card p-1 shadow-lg shadow-black/20">
+                              <DropdownMenuContent
+                                align="end"
+                                className="w-36 rounded-xl border-white/10 glass-card p-1 shadow-lg shadow-black/20"
+                              >
                                 <DropdownMenuItem
                                   className="text-rose-400 hover:text-rose-300 focus:bg-rose-400/10 focus:text-rose-400 cursor-pointer rounded-lg text-xs font-medium px-3 py-2"
                                   onClick={async () => {
+                                    trigger("error");
                                     try {
-                                      await deleteGeneration({ generationId: generation._id });
-                                      toast.success("Generation removed from log");
+                                      await deleteGeneration({
+                                        generationId: generation._id,
+                                      });
+                                      toast.success(
+                                        "Generation removed from log",
+                                      );
                                     } catch (error) {
-                                      toast.error("Failed to delete generation");
+                                      toast.error(
+                                        "Failed to delete generation",
+                                      );
                                     }
                                   }}
                                 >
-                                  <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete Audio
+                                  <Trash2 className="w-3.5 h-3.5 mr-2" /> Delete
+                                  Audio
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
