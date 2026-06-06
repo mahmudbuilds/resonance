@@ -105,7 +105,8 @@ export default function SettingsPage() {
       console.error(error);
       toast.error("Update failed", {
         description:
-          error.message || "Something went wrong while saving your settings. Please try again.",
+          error.message ||
+          "Something went wrong while saving your settings. Please try again.",
       });
     } finally {
       setIsUpdating(false);
@@ -169,7 +170,8 @@ export default function SettingsPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Manage your profile, preferences, and account settings all in one place.
+            Manage your profile, notifications, and account settings all in one
+            place.
           </p>
         </header>
 
@@ -188,7 +190,7 @@ export default function SettingsPage() {
               className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
             >
               <Settings2 className="w-4 h-4 shrink-0" />
-               Preferences
+              Preferences
             </TabsTrigger>
           </TabsList>
 
@@ -202,13 +204,18 @@ export default function SettingsPage() {
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
                     <User className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">Personal Information</h2>
+                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                      Personal Information
+                    </h2>
                   </div>
 
                   <div className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-xs font-medium text-muted-foreground">
+                        <Label
+                          htmlFor="firstName"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
                           First Name
                         </Label>
                         <Input
@@ -219,7 +226,10 @@ export default function SettingsPage() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-xs font-medium text-muted-foreground">
+                        <Label
+                          htmlFor="lastName"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
                           Last Name
                         </Label>
                         <Input
@@ -231,7 +241,10 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="email"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
                         Email Address (Read-Only)
                       </Label>
                       <div className="relative">
@@ -275,7 +288,9 @@ export default function SettingsPage() {
                   </div>
 
                   <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-                    Once you delete your account, all of your data, generated audio files, and personal settings will be permanently removed. This action cannot be undone.
+                    Once you delete your account, all of your data, generated
+                    audio files, and personal settings will be permanently
+                    removed. This action cannot be undone.
                   </p>
 
                   <AlertDialog>
@@ -297,7 +312,9 @@ export default function SettingsPage() {
                           Confirm Deletion
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed">
-                          This action cannot be undone. All your data, generated audio files, and personal settings will be permanently removed from our servers.
+                          This action cannot be undone. All your data, generated
+                          audio files, and personal settings will be permanently
+                          removed from our servers.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter className="mt-8 gap-3 sm:gap-0">
@@ -324,7 +341,9 @@ export default function SettingsPage() {
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
                     <Settings2 className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">Notifications & Haptic Feedback</h2>
+                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                      {"Notifications & Haptic Feedback"}{" "}
+                    </h2>
                   </div>
 
                   <div className="space-y-4">
@@ -366,7 +385,8 @@ export default function SettingsPage() {
                           Security Logs
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Receive security alerts about unusual account access and changes.
+                          Receive security alerts about unusual account access
+                          and changes.
                         </p>
                       </div>
                       <Switch
@@ -420,7 +440,8 @@ export default function SettingsPage() {
                   <AlertTriangle className="w-4 h-4 text-primary" /> Need Help?
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed mb-6">
-                  Our support team is available 24/7. Reach out if you experience any issues or need assistance with the platform.
+                  Our support team is available 24/7. Reach out if you
+                  experience any issues or need assistance with the platform.
                 </p>
                 <Button
                   variant="outline"
