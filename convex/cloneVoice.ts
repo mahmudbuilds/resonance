@@ -92,7 +92,6 @@ export const cloneVoice = action({
 
         const clonedVoiceId = getClonedVoiceId(clonedVoice);
         if (clonedVoiceId) {
-          console.log("Cloned Voice ID:", clonedVoiceId, "on key slot:", keySlot);
 
           await ctx.runMutation(internal.voice.saveClonedVoice, {
             voiceId: clonedVoiceId,
