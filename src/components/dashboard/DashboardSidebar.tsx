@@ -1,6 +1,7 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/clerk-config";
 import Image from "next/image";
 import {
   AudioLines,
@@ -159,7 +160,9 @@ export default function DashboardSidebar() {
             <UserButton
               showName={state === "expanded"}
               appearance={{
+                ...clerkAppearance,
                 elements: {
+                  ...clerkAppearance.elements,
                   userButtonBox: "flex-row-reverse gap-3 font-sans text-sm font-medium text-muted-foreground hover:text-white transition-colors",
                   avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
                 }

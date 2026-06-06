@@ -1,29 +1,31 @@
 "use client";
 
+import { useQuery } from "convex/react";
 import {
   Activity,
   ArrowRight,
   AudioLines,
   ChevronRight,
-  Globe,
-  Mic2,
-  Play,
-  Volume2,
   Cpu,
-  Radio,
+  Globe,
   Loader2,
+  Mic2,
   Music,
+  Play,
+  Radio,
   Sparkles,
+  Volume2,
 } from "lucide-react";
 import Link from "next/link";
-import UserGreeting from "@/components/dashboard/UserGreeting";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import { Doc } from "../../../convex/_generated/dataModel";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import UserGreeting from "@/components/dashboard/UserGreeting";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
+import { api } from "../../../convex/_generated/api";
+import type { Doc } from "../../../convex/_generated/dataModel";
 
 export default function Home() {
+  const trigger = useHaptics();
   const router = useRouter();
 
   // External data requests
@@ -75,6 +77,7 @@ export default function Home() {
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
+      trigger("success");
       toast.success("Voice loaded successfully!");
       router.push("/app/text-to-speech");
     }
@@ -115,9 +118,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-white pb-20">
-      
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 animate-fade-up">
-        
         {/* Clean Editorial Greeting Header */}
         <header className="mb-14 pt-12 pb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-6 text-xs font-medium text-primary">
@@ -128,7 +129,8 @@ export default function Home() {
             <UserGreeting />
           </h1>
           <p className="text-base text-muted-foreground max-w-2xl font-normal leading-relaxed">
-            Welcome to your creative dashboard. Your digital narration space is active, fully prepared, and waiting for your next text input.
+            Welcome to your creative dashboard. Your digital narration space is
+            active, fully prepared, and waiting for your next text input.
           </p>
         </header>
 
@@ -143,12 +145,19 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <Link key={feature.title} href={feature.href} className="group block">
+              <Link
+                key={feature.title}
+                href={feature.href}
+                className="group block"
+              >
                 <div className="glass-card rounded-[2rem] p-8 h-full flex flex-col justify-between min-h-[260px]">
-                  
                   <div className="space-y-6">
-                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${feature.bgClass} ${feature.borderClass} border ${feature.hoverBgClass} ${feature.hoverBorderClass}`}>
-                      <feature.icon className={`w-6 h-6 transition-colors ${feature.colorClass}`} />
+                    <div
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${feature.bgClass} ${feature.borderClass} border ${feature.hoverBgClass} ${feature.hoverBorderClass}`}
+                    >
+                      <feature.icon
+                        className={`w-6 h-6 transition-colors ${feature.colorClass}`}
+                      />
                     </div>
 
                     <div className="space-y-2">
@@ -162,7 +171,8 @@ export default function Home() {
                   </div>
 
                   <div className="mt-8 flex items-center gap-2 font-sans text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                    Open Workspace <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    Open Workspace{" "}
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </Link>
@@ -172,7 +182,6 @@ export default function Home() {
 
         {/* Voice Discovery and Activity Trackers */}
         <div className="grid lg:grid-cols-12 gap-8 mb-16 stagger-2">
-          
           {/* Curated Voice Profiles Portfolio */}
           <section className="lg:col-span-8 glass-panel rounded-[2.5rem] overflow-hidden flex flex-col">
             <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
@@ -180,7 +189,10 @@ export default function Home() {
                 <Music className="w-4 h-4 text-primary" />
                 Featured Voice Styles
               </h2>
-              <Link href="/app/voices" className="text-xs font-medium text-primary hover:text-white transition-colors">
+              <Link
+                href="/app/voices"
+                className="text-xs font-medium text-primary hover:text-white transition-colors"
+              >
                 Browse Full Library
               </Link>
             </div>
@@ -199,7 +211,10 @@ export default function Home() {
                 showcaseVoices.map((voice, i) => (
                   <div
                     key={i}
-                    onClick={() => voice.inworldVoiceId && handleUseVoice(voice.inworldVoiceId)}
+                    onClick={() =>
+                      voice.inworldVoiceId &&
+                      handleUseVoice(voice.inworldVoiceId)
+                    }
                     className="p-5 hover:bg-white/[0.03] transition-all duration-300 flex items-center gap-5 group cursor-pointer"
                   >
                     {/* Activation Icon Button Container */}
@@ -219,7 +234,9 @@ export default function Home() {
                       </div>
 
                       <div className="hidden sm:block font-sans text-sm text-muted-foreground truncate">
-                        <span className="text-white/80">{voice.tags?.join(", ")}</span>
+                        <span className="text-white/80">
+                          {voice.tags?.join(", ")}
+                        </span>
                       </div>
 
                       <div className="flex justify-end sm:justify-start items-center gap-2 font-sans text-sm font-medium">
@@ -286,12 +303,12 @@ export default function Home() {
               Supported Regions
             </h2>
           </div>
-          
+
           <div className="relative py-6 flex items-center">
             {/* Visual gradient mask overlays */}
             <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-[#030305] to-transparent z-20 pointer-events-none" />
             <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-[#030305] to-transparent z-20 pointer-events-none" />
-            
+
             <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] gap-6 px-4">
               {targetLocales.map((lang, idx) => (
                 <div

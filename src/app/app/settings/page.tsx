@@ -14,6 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../convex/_generated/api";
 
 export default function SettingsPage() {
+  const trigger = useHaptics();
   const router = useRouter();
   const { signOut } = useClerk();
   const { user, isLoaded: isClerkLoaded } = useUser();
@@ -53,6 +55,7 @@ export default function SettingsPage() {
   const [systemUpdates, setSystemUpdates] = useState(true);
   const [usageAlerts, setUsageAlerts] = useState(true);
   const [securityLogs, setSecurityLogs] = useState(true);
+  const [hapticsEnabled, setHapticsEnabled] = useState(false);
 
   // Load initial values from Clerk / Convex
   useEffect(() => {
@@ -67,6 +70,7 @@ export default function SettingsPage() {
       setSystemUpdates(currentUser.systemUpdates ?? true);
       setUsageAlerts(currentUser.usageAlerts ?? true);
       setSecurityLogs(currentUser.securityLogs ?? true);
+      setHapticsEnabled(currentUser.useHaptics ?? false);
     }
   }, [currentUser]);
 
@@ -80,6 +84,7 @@ export default function SettingsPage() {
 
   const handleCommitChanges = async () => {
     if (!user) return;
+    trigger("nudge");
     setIsUpdating(true);
     try {
       await user.update({
@@ -93,16 +98,20 @@ export default function SettingsPage() {
         systemUpdates,
         usageAlerts,
         securityLogs,
+        useHaptics: hapticsEnabled,
       });
 
+      trigger("success");
       toast.success("Settings saved", {
         description: "Your preferences have been saved successfully.",
       });
     } catch (error: any) {
+      trigger("error");
       console.error(error);
       toast.error("Update failed", {
         description:
-          error.message || "Something went wrong while saving your settings. Please try again.",
+          error.message ||
+          "Something went wrong while saving your settings. Please try again.",
       });
     } finally {
       setIsUpdating(false);
@@ -110,6 +119,7 @@ export default function SettingsPage() {
   };
 
   const handleDecommission = async () => {
+    trigger("error");
     setIsDecommissioning(true);
     try {
       toast.loading("Deleting your account...");
@@ -166,7 +176,8 @@ export default function SettingsPage() {
             </h1>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Manage your profile, notifications, and account settings all in one place.
+            Manage your profile, notifications, and account settings all in one
+            place.
           </p>
         </header>
 
@@ -184,8 +195,8 @@ export default function SettingsPage() {
               value="appearance"
               className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
             >
-              <Activity className="w-4 h-4 shrink-0" />
-Notifications
+              <Settings2 className="w-4 h-4 shrink-0" />
+              Preferences
             </TabsTrigger>
           </TabsList>
 
@@ -199,13 +210,18 @@ Notifications
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
                     <User className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">Personal Information</h2>
+                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                      Personal Information
+                    </h2>
                   </div>
 
                   <div className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="firstName" className="text-xs font-medium text-muted-foreground">
+                        <Label
+                          htmlFor="firstName"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
                           First Name
                         </Label>
                         <Input
@@ -216,7 +232,10 @@ Notifications
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="lastName" className="text-xs font-medium text-muted-foreground">
+                        <Label
+                          htmlFor="lastName"
+                          className="text-xs font-medium text-muted-foreground"
+                        >
                           Last Name
                         </Label>
                         <Input
@@ -228,7 +247,10 @@ Notifications
                       </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-xs font-medium text-muted-foreground">
+                      <Label
+                        htmlFor="email"
+                        className="text-xs font-medium text-muted-foreground"
+                      >
                         Email Address (Read-Only)
                       </Label>
                       <div className="relative">
@@ -272,7 +294,9 @@ Notifications
                   </div>
 
                   <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-                    Once you delete your account, all of your data, generated audio files, and personal settings will be permanently removed. This action cannot be undone.
+                    Once you delete your account, all of your data, generated
+                    audio files, and personal settings will be permanently
+                    removed. This action cannot be undone.
                   </p>
 
                   <AlertDialog>
@@ -294,7 +318,9 @@ Notifications
                           Confirm Deletion
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed">
-                          This action cannot be undone. All your data, generated audio files, and personal settings will be permanently removed from our servers.
+                          This action cannot be undone. All your data, generated
+                          audio files, and personal settings will be permanently
+                          removed from our servers.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter className="mt-8 gap-3 sm:gap-0">
@@ -313,15 +339,17 @@ Notifications
                 </div>
               </TabsContent>
 
-              {/* Protocols Tab */}
+              {/* Preferences Tab */}
               <TabsContent
                 value="appearance"
                 className="m-0 space-y-8 outline-none"
               >
                 <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
                   <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
-                    <Activity className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">Notification Settings</h2>
+                    <Settings2 className="w-4 h-4 text-primary" />
+                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                      {"Notifications & Haptic Feedback"}{" "}
+                    </h2>
                   </div>
 
                   <div className="space-y-4">
@@ -363,12 +391,29 @@ Notifications
                           Security Logs
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Receive security alerts about unusual account access and changes.
+                          Receive security alerts about unusual account access
+                          and changes.
                         </p>
                       </div>
                       <Switch
                         checked={securityLogs}
                         onCheckedChange={setSecurityLogs}
+                        className="data-[state=checked]:bg-primary shrink-0"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                      <div className="space-y-1 min-w-0 pr-4">
+                        <Label className="text-sm font-medium text-white block">
+                          Haptic Feedback
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          Tactile confirmation taps on supported devices.
+                        </p>
+                      </div>
+                      <Switch
+                        checked={hapticsEnabled}
+                        onCheckedChange={setHapticsEnabled}
                         className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>
@@ -401,7 +446,8 @@ Notifications
                   <AlertTriangle className="w-4 h-4 text-primary" /> Need Help?
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed mb-6">
-                  Our support team is available 24/7. Reach out if you experience any issues or need assistance with the platform.
+                  Our support team is available 24/7. Reach out if you
+                  experience any issues or need assistance with the platform.
                 </p>
                 <Button
                   variant="outline"

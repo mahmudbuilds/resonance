@@ -52,6 +52,7 @@ export const updateUser = mutation({
     systemUpdates: v.optional(v.boolean()),
     usageAlerts: v.optional(v.boolean()),
     securityLogs: v.optional(v.boolean()),
+    useHaptics: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -75,6 +76,7 @@ export const updateUser = mutation({
       patchData.usageAlerts = args.usageAlerts;
     if (args.securityLogs !== undefined)
       patchData.securityLogs = args.securityLogs;
+    if (args.useHaptics !== undefined) patchData.useHaptics = args.useHaptics;
 
     await ctx.db.patch(user._id, patchData);
     return { success: true };

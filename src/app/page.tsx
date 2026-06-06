@@ -41,12 +41,13 @@ const kineticStyles = `
   }
 
   .text-stroke-custom {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
-    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
   }
   
   .text-stroke-custom:hover {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 1);
     transition: all 0.4s ease;
   }
 `;
@@ -79,14 +80,14 @@ export default function LandingPage() {
         
         {/* Kinetic Light Orbs */}
         <div 
-          className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-primary/10 rounded-full mix-blend-screen"
+          className="absolute top-[-10%] left-[20%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] bg-primary/25 lg:bg-primary/10 rounded-full mix-blend-screen"
           style={{
             animation: "fluid-pulse 12s ease-in-out infinite",
             transform: `translate(${mouseCoord.x * -50}px, ${mouseCoord.y * -50}px)`
           }}
         />
         <div 
-          className="absolute bottom-[10%] right-[15%] w-[500px] h-[500px] bg-pink-600/10 rounded-full mix-blend-screen"
+          className="absolute bottom-[10%] right-[15%] w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] bg-pink-600/25 lg:bg-pink-600/10 rounded-full mix-blend-screen"
           style={{
             animation: "fluid-pulse 16s ease-in-out infinite red",
             transform: `translate(${mouseCoord.x * 70}px, ${mouseCoord.y * 70}px)`
@@ -105,17 +106,17 @@ export default function LandingPage() {
       >
         
         {/* Navigation */}
-        <nav className="w-full pt-8 px-6 lg:px-16 preserve-3d transform translate-z-[50px]">
-          <div className="max-w-7xl mx-auto flex items-center justify-between border-b border-white/10 pb-6">
-            <div className="flex items-center gap-3 group cursor-pointer">
+        <nav className="w-full pt-6 lg:pt-8 px-5 lg:px-16 preserve-3d transform translate-z-[50px]">
+          <div className="max-w-7xl mx-auto flex items-center justify-between border-b border-white/10 pb-5 lg:pb-6">
+            <div className="flex items-center gap-2 lg:gap-3 group cursor-pointer">
               <Image
                 src="/logo.png"
                 alt="Resonance"
                 width={56}
                 height={56}
-                className="w-14 h-14 group-hover:scale-110 transition-transform duration-500 object-contain"
+                className="w-10 h-10 lg:w-14 lg:h-14 group-hover:scale-110 transition-transform duration-500 object-contain"
               />
-              <span className="text-xl font-bold tracking-tight text-white">
+              <span className="text-lg lg:text-xl font-bold tracking-tight text-white">
                 Resonance
               </span>
             </div>
@@ -129,7 +130,7 @@ export default function LandingPage() {
 
             <div>
               <Link href="/app">
-                <Button className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-medium text-sm h-10 px-6 transition-all duration-300">
+                <Button className="rounded-full border border-white/30 lg:border-white/20 bg-white/10 lg:bg-transparent text-white hover:bg-white hover:text-black font-medium text-sm h-9 lg:h-10 px-5 lg:px-6 transition-all duration-300">
                   Dashboard
                 </Button>
               </Link>
@@ -138,17 +139,17 @@ export default function LandingPage() {
         </nav>
 
         {/* Hero Area */}
-        <header className="max-w-7xl mx-auto w-full px-6 lg:px-16 pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start preserve-3d">
+        <header className="max-w-7xl mx-auto w-full px-5 lg:px-16 pt-12 lg:pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start preserve-3d">
           
           {/* Typography Matrix */}
-          <div className="lg:col-span-7 space-y-8 text-left preserve-3d z-20">
-            <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-2 border border-white/10">
+          <div className="lg:col-span-7 space-y-10 lg:space-y-8 text-left preserve-3d z-20">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 lg:bg-white/5 lg:from-transparent lg:to-transparent rounded-full px-4 py-2 border border-pink-500/30 lg:border-white/10">
               <Sparkles className="w-4 h-4 text-pink-400 animate-pulse" />
-              <span className="text-sm font-medium text-zinc-300">Next-Generation AI Voice Generator</span>
+              <span className="text-sm font-medium text-white lg:text-zinc-300">Next-Generation AI Voice Generator</span>
             </div>
 
-            <h1 className="text-6xl sm:text-7xl lg:text-[6rem] font-bold tracking-tight leading-[1] preserve-3d">
-              <span className="block transform translate-z-[60px] text-white pb-2">
+            <h1 className="text-5xl sm:text-7xl lg:text-[6rem] font-bold tracking-tight leading-[1.15] lg:leading-[1] preserve-3d">
+              <span className="block transform translate-z-[60px] text-white pb-3 lg:pb-2">
                 Voices that
               </span>
               <span className="block transform translate-z-[110px] text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
@@ -156,19 +157,38 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-zinc-400 max-w-xl leading-relaxed transform translate-z-[40px]">
+            <p className="text-base sm:text-xl text-zinc-200 lg:text-zinc-400 max-w-xl leading-relaxed transform translate-z-[40px]">
               Create incredibly realistic, human-sounding voiceovers in seconds. Perfect for creators, developers, and businesses looking to bring their words to life.
             </p>
 
-            <div className="pt-6 flex flex-wrap gap-4 transform translate-z-[80px]">
-              <Link href="/app/voice-cloning">
-                <Button size="lg" className="rounded-full h-14 px-8 bg-white text-black hover:bg-zinc-200 font-semibold text-base transition-all duration-300 shadow-2xl flex items-center gap-2">
+            {/* Mobile-only mini visualizer for visual interest */}
+            <div className="lg:hidden flex items-center gap-3 p-4 rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl">
+              <Disc className="w-5 h-5 text-primary animate-[spin_4s_linear_infinite] shrink-0" />
+              <div className="flex-1 flex items-center gap-1 h-10">
+                {[...Array(14)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-full bg-gradient-to-t from-primary via-purple-500 to-pink-500 rounded-full"
+                    style={{
+                      height: '100%',
+                      animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
+                      animationDelay: `${i * 0.08}s`
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="text-xs font-semibold text-pink-400 bg-pink-500/15 px-2.5 py-1 rounded-full shrink-0">98%</span>
+            </div>
+
+            <div className="pt-2 lg:pt-6 flex flex-col sm:flex-row gap-3 lg:gap-4 transform translate-z-[80px]">
+              <Link href="/app/voice-cloning" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto rounded-full h-14 px-8 bg-white text-black hover:bg-zinc-200 font-semibold text-base transition-all duration-300 shadow-2xl flex items-center justify-center gap-2">
                   Clone Your Voice
                   <ArrowUpRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <Link href="/app/text-to-speech">
-                <Button size="lg" variant="outline" className="rounded-full h-14 px-8 bg-transparent border-white/20 hover:border-white hover:bg-white/5 text-white font-semibold text-base transition-all duration-300">
+              <Link href="/app/text-to-speech" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full h-14 px-8 bg-white/5 lg:bg-transparent border-white/30 lg:border-white/20 hover:border-white hover:bg-white/5 text-white font-semibold text-base transition-all duration-300">
                   <Play className="w-5 h-5 mr-2 fill-current text-pink-500" /> Try Text to Speech
                 </Button>
               </Link>
@@ -217,62 +237,68 @@ export default function LandingPage() {
         </header>
 
         {/* Features Section */}
-        <main className="max-w-7xl mx-auto w-full px-6 lg:px-16 pt-32 pb-24 preserve-3d">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16 border-t border-white/5 pt-12">
+        <main className="max-w-7xl mx-auto w-full px-5 lg:px-16 pt-20 lg:pt-32 pb-24 preserve-3d">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end mb-12 lg:mb-16 border-t border-white/5 pt-12">
             <div className="lg:col-span-5">
-              <h2 className="text-sm font-semibold text-pink-500 mb-3">Explore Features</h2>
+              <h2 className="text-sm font-semibold text-pink-400 lg:text-pink-500 mb-3 uppercase tracking-wider lg:tracking-normal lg:normal-case">Explore Features</h2>
               <p className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
                 Powerful AI Audio Tools
               </p>
             </div>
             <div className="lg:col-span-7">
-              <p className="text-base text-zinc-400 max-w-lg leading-relaxed">
+              <p className="text-base text-zinc-300 lg:text-zinc-400 max-w-lg leading-relaxed">
                 Everything you need to generate, clone, and manage AI voices with stunning realism and emotion. Designed to be as simple as typing.
               </p>
             </div>
           </div>
 
           {/* Interactive Stacked Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start preserve-3d">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 items-start preserve-3d">
             
             {/* App Action 1: Voices */}
             <Link href="/app/voices" className="group preserve-3d block">
-              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-primary/40 group-hover:bg-primary/[0.02] relative transform group-hover:translate-z-[30px] rounded-3xl">
-                <div className="text-stroke-custom text-5xl font-extrabold select-none">01</div>
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-primary border border-white/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+              <div className="border border-primary/30 lg:border-white/5 bg-gradient-to-br from-primary/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-primary/40 group-hover:bg-primary/[0.02] relative transform group-hover:translate-z-[30px] rounded-3xl">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 lg:bg-white/5 flex items-center justify-center text-primary border border-primary/40 lg:border-white/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
                     <AudioLines className="w-5 h-5" />
                   </div>
+                  <div className="text-stroke-custom text-5xl font-extrabold select-none">01</div>
+                </div>
+                <div className="space-y-2">
                   <h3 className="text-xl font-bold text-white">Voice Library</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">Browse our collection of highly realistic AI voices ready for your next project.</p>
+                  <p className="text-sm text-zinc-300 lg:text-zinc-400 leading-relaxed">Browse our collection of highly realistic AI voices ready for your next project.</p>
                 </div>
               </div>
             </Link>
 
             {/* App Action 2: Text to Speech */}
             <Link href="/app/text-to-speech" className="group preserve-3d block">
-              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-purple-500/40 group-hover:bg-purple-500/[0.02] relative transform group-hover:translate-z-[50px] md:-translate-y-4 rounded-3xl">
-                <div className="text-stroke-custom text-5xl font-extrabold select-none">02</div>
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-purple-400 border border-white/10 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
+              <div className="border border-purple-500/30 lg:border-white/5 bg-gradient-to-br from-purple-500/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-purple-500/40 group-hover:bg-purple-500/[0.02] relative transform group-hover:translate-z-[50px] md:-translate-y-4 rounded-3xl">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 rounded-full bg-purple-500/20 lg:bg-white/5 flex items-center justify-center text-purple-300 lg:text-purple-400 border border-purple-500/40 lg:border-white/10 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
                     <Zap className="w-5 h-5" />
                   </div>
+                  <div className="text-stroke-custom text-5xl font-extrabold select-none">02</div>
+                </div>
+                <div className="space-y-2">
                   <h3 className="text-xl font-bold text-white">Text to Speech</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">Type your script and generate studio-quality voiceovers with natural pacing and emotion.</p>
+                  <p className="text-sm text-zinc-300 lg:text-zinc-400 leading-relaxed">Type your script and generate studio-quality voiceovers with natural pacing and emotion.</p>
                 </div>
               </div>
             </Link>
 
             {/* App Action 3: Voice Cloning */}
             <Link href="/app/voice-cloning" className="group preserve-3d block">
-              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-pink-500/40 group-hover:bg-pink-500/[0.02] relative transform group-hover:translate-z-[30px] md:translate-y-4 rounded-3xl">
-                <div className="text-stroke-custom text-5xl font-extrabold select-none">03</div>
-                <div className="space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-pink-400 border border-white/10 group-hover:bg-pink-500 group-hover:text-white transition-all duration-500">
+              <div className="border border-pink-500/30 lg:border-white/5 bg-gradient-to-br from-pink-500/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-pink-500/40 group-hover:bg-pink-500/[0.02] relative transform group-hover:translate-z-[30px] md:translate-y-4 rounded-3xl">
+                <div className="flex items-start justify-between">
+                  <div className="w-12 h-12 rounded-full bg-pink-500/20 lg:bg-white/5 flex items-center justify-center text-pink-300 lg:text-pink-400 border border-pink-500/40 lg:border-white/10 group-hover:bg-pink-500 group-hover:text-white transition-all duration-500">
                     <Mic2 className="w-5 h-5" />
                   </div>
+                  <div className="text-stroke-custom text-5xl font-extrabold select-none">03</div>
+                </div>
+                <div className="space-y-2">
                   <h3 className="text-xl font-bold text-white">Voice Cloning</h3>
-                  <p className="text-sm text-zinc-400 leading-relaxed">Create a perfect digital replica of your own voice using just 60 seconds of audio.</p>
+                  <p className="text-sm text-zinc-300 lg:text-zinc-400 leading-relaxed">Create a perfect digital replica of your own voice using just 60 seconds of audio.</p>
                 </div>
               </div>
             </Link>
