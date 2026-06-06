@@ -41,12 +41,13 @@ const kineticStyles = `
   }
 
   .text-stroke-custom {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
-    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.5);
   }
   
   .text-stroke-custom:hover {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 1);
     transition: all 0.4s ease;
   }
 `;
