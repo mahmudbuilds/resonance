@@ -20,6 +20,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record.esm.js";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -42,7 +43,6 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { useHaptics } from "@/components/haptics/HapticsProvider";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 
@@ -152,9 +152,7 @@ export default function VoiceCloningPage() {
     const { id: voiceId, name } = voiceToDelete;
     setVoiceToDelete(null);
 
-    const toastId = toast.loading(
-      `Deleting "${name}"...`,
-    );
+    const toastId = toast.loading(`Deleting "${name}"...`);
     try {
       await deleteClonedVoice({ voiceId });
       toast.success(`"${name}" deleted`, {
@@ -202,7 +200,11 @@ export default function VoiceCloningPage() {
       }
     };
 
-    window.addEventListener("unhandledrejection", handleUnhandledRejection, true);
+    window.addEventListener(
+      "unhandledrejection",
+      handleUnhandledRejection,
+      true,
+    );
     return () => {
       window.removeEventListener(
         "unhandledrejection",
@@ -300,6 +302,7 @@ export default function VoiceCloningPage() {
   const togglePlayback = () => {
     if (wavesurferRef.current) {
       wavesurferRef.current.playPause();
+      if (!isPlaying) trigger("success");
     }
   };
 
@@ -322,6 +325,7 @@ export default function VoiceCloningPage() {
       } else {
         recordPluginRef.current.pauseRecording();
       }
+      trigger("nudge");
     }
   };
 
@@ -413,7 +417,6 @@ export default function VoiceCloningPage() {
 
   return (
     <div className="min-h-screen relative w-full overflow-x-hidden text-foreground pb-20">
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 animate-fade-up">
         {/* Header Section */}
         <header className="mb-6 sm:mb-8 lg:mb-12 border-b border-white/5 pb-6 sm:pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
@@ -438,7 +441,9 @@ export default function VoiceCloningPage() {
             <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
                 <User className="w-4 h-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-white">Voice Details</h2>
+                <h2 className="text-sm font-semibold text-white">
+                  Voice Details
+                </h2>
               </div>
 
               <div className="space-y-6">
@@ -523,7 +528,9 @@ export default function VoiceCloningPage() {
             <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative stagger-2">
               <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
                 <Mic className="w-4 h-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-white">Audio Sample</h2>
+                <h2 className="text-sm font-semibold text-white">
+                  Audio Sample
+                </h2>
               </div>
 
               <div className="mt-4">
@@ -569,7 +576,8 @@ export default function VoiceCloningPage() {
                             Upload an audio file
                           </p>
                           <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                            MP3 or WAV, up to 10MB. Drag and drop or click to browse.
+                            MP3 or WAV, up to 10MB. Drag and drop or click to
+                            browse.
                           </p>
                         </button>
                         <input
@@ -740,7 +748,8 @@ export default function VoiceCloningPage() {
           <div className="lg:col-span-4 flex flex-col gap-6 sm:gap-8 stagger-2">
             <div className="glass-panel border border-white/5 rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
               <h3 className="font-heading text-base font-semibold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
-                <Lightbulb className="w-4 h-4 text-primary" /> Tips for best results
+                <Lightbulb className="w-4 h-4 text-primary" /> Tips for best
+                results
               </h3>
 
               <div className="space-y-8">
@@ -752,13 +761,15 @@ export default function VoiceCloningPage() {
                     <li className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
                       <span>
-                        Speak naturally with expression. Flat, monotone audio produces flat, monotone results.
+                        Speak naturally with expression. Flat, monotone audio
+                        produces flat, monotone results.
                       </span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
                       <span>
-                        Record in a quiet space with no background noise or echo.
+                        Record in a quiet space with no background noise or
+                        echo.
                       </span>
                     </li>
                   </ul>
@@ -771,15 +782,11 @@ export default function VoiceCloningPage() {
                   <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                     <li className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>
-                        Best length: 5 to 15 seconds of clear speech.
-                      </span>
+                      <span>Best length: 5 to 15 seconds of clear speech.</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>
-                        Minimum quality: 22kHz sample rate, 16-bit.
-                      </span>
+                      <span>Minimum quality: 22kHz sample rate, 16-bit.</span>
                     </li>
                     <li className="flex items-start gap-3">
                       <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
@@ -821,7 +828,8 @@ export default function VoiceCloningPage() {
                     No voices yet
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed max-w-[220px] mx-auto px-4">
-                    You haven&apos;t created any voices yet. Add an audio sample above to create your first one.
+                    You haven&apos;t created any voices yet. Add an audio sample
+                    above to create your first one.
                   </p>
                 </div>
               ) : (
@@ -841,7 +849,9 @@ export default function VoiceCloningPage() {
                           </span>
                         </div>
                         <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
-                          {LANG_LABELS[voice.langCode ?? "EN_US"] ?? voice.langCode ?? "English (US)"}
+                          {LANG_LABELS[voice.langCode ?? "EN_US"] ??
+                            voice.langCode ??
+                            "English (US)"}
                         </span>
                       </div>
 

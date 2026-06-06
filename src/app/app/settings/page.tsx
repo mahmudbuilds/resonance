@@ -14,6 +14,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useHaptics } from "@/components/haptics/HapticsProvider";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../convex/_generated/api";
 
 export default function SettingsPage() {
+  const trigger = useHaptics();
   const router = useRouter();
   const { signOut } = useClerk();
   const { user, isLoaded: isClerkLoaded } = useUser();
@@ -82,6 +84,7 @@ export default function SettingsPage() {
 
   const handleCommitChanges = async () => {
     if (!user) return;
+    trigger("nudge");
     setIsUpdating(true);
     try {
       await user.update({
@@ -98,10 +101,12 @@ export default function SettingsPage() {
         useHaptics: hapticsEnabled,
       });
 
+      trigger("success");
       toast.success("Settings saved", {
         description: "Your preferences have been saved successfully.",
       });
     } catch (error: any) {
+      trigger("error");
       console.error(error);
       toast.error("Update failed", {
         description:
@@ -114,6 +119,7 @@ export default function SettingsPage() {
   };
 
   const handleDecommission = async () => {
+    trigger("error");
     setIsDecommissioning(true);
     try {
       toast.loading("Deleting your account...");
