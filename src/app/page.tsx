@@ -169,7 +169,7 @@ export default function LandingPage() {
               </Link>
               <Link href="/app/text-to-speech">
                 <Button size="lg" variant="outline" className="rounded-full h-14 px-8 bg-transparent border-white/20 hover:border-white hover:bg-white/5 text-white font-semibold text-base transition-all duration-300">
-                  <Play className="w-5 h-5 mr-2 fill-current text-pink-500" /> Watch Demo
+                  <Play className="w-5 h-5 mr-2 fill-current text-pink-500" /> Try Text to Speech
                 </Button>
               </Link>
             </div>
