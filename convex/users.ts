@@ -15,7 +15,7 @@ export const storeUser = mutation({
       )
       .unique();
 
-    console.log(identity);
+    
     // If user exists, return them
     if (user) return user;
     // If new user, create them

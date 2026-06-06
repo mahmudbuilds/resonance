@@ -3,15 +3,16 @@
 import { useAction, useMutation, useQuery } from "convex/react";
 import {
   AlertTriangle,
+  Lightbulb,
   Loader2,
   Mic,
   Pause,
   Play,
   Sparkles,
   Square,
-  Terminal,
   Trash2,
   UploadCloud,
+  User,
   Waves,
 } from "lucide-react";
 import Link from "next/link";
@@ -63,8 +64,27 @@ const LANG_CODES = [
   "HE_IL",
 ];
 
+const LANG_LABELS: Record<string, string> = {
+  EN_US: "English (US)",
+  ZH_CN: "Chinese (Simplified)",
+  KO_KR: "Korean",
+  JA_JP: "Japanese",
+  RU_RU: "Russian",
+  AUTO: "Auto-detect",
+  IT_IT: "Italian",
+  ES_ES: "Spanish",
+  PT_BR: "Portuguese (Brazil)",
+  DE_DE: "German",
+  FR_FR: "French",
+  AR_SA: "Arabic",
+  PL_PL: "Polish",
+  NL_NL: "Dutch",
+  HI_IN: "Hindi",
+  HE_IL: "Hebrew",
+};
+
 const RECORDING_SENTENCES = [
-  "CUSTOM (READ_ANYTHING)",
+  "Custom (read your own text)",
   "Are you ready to save big? Get set for the sale of the century! Deals and discounts like never before! You won’t want to miss this.",
   "Every challenge we face is an opportunity in disguise. Wouldn’t you agree? So cheer up! It’ll all be okay.",
   "How have you been? It’s been way too long since we last caught up. By the way, I heard about your recent promotion. Congratulations! I’m so excited for you!",
@@ -116,7 +136,7 @@ export default function VoiceCloningPage() {
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
-      toast.success("Voice loaded into synthesis module");
+      toast.success("Voice ready to use in speech studio");
     }
   };
 
@@ -130,16 +150,16 @@ export default function VoiceCloningPage() {
     setVoiceToDelete(null);
 
     const toastId = toast.loading(
-      `Deleting profile "${name}"...`,
+      `Deleting "${name}"...`,
     );
     try {
       await deleteClonedVoice({ voiceId });
-      toast.success(`Profile "${name}" deleted successfully`, {
+      toast.success(`"${name}" deleted`, {
         id: toastId,
       });
     } catch (error) {
       console.error(error);
-      toast.error(`Failed to delete profile`, { id: toastId });
+      toast.error(`Could not delete voice`, { id: toastId });
     }
   };
 
@@ -346,12 +366,12 @@ export default function VoiceCloningPage() {
     if (!audioBlob) return;
     setIsProcessing(true);
 
-    const toastId = toast.loading("Initializing neural map...");
+    const toastId = toast.loading("Cloning your voice...");
 
     //Getting values from the UI inputs
     const voiceName = voiceNameRef.current?.value;
     if (!voiceName) {
-      toast.error("Voice Designation is required", { id: toastId });
+      toast.error("Please enter a name for your voice", { id: toastId });
       setIsProcessing(false);
       return;
     }
@@ -373,11 +393,11 @@ export default function VoiceCloningPage() {
         name: voiceName,
       });
 
-      toast.success("Voice cloning complete", { id: toastId });
+      toast.success("Voice created successfully", { id: toastId });
     } catch (error: unknown) {
       if (isAbortError(error)) return;
-      toast.error("Voice cloning failed", { id: toastId });
-      console.error("Cloning Protocol Failed: ", error);
+      toast.error("Could not create voice", { id: toastId });
+      console.error("Voice cloning error: ", error);
     } finally {
       setIsProcessing(false);
     }
@@ -388,19 +408,19 @@ export default function VoiceCloningPage() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
         {/* Header Section */}
-        <header className="mb-12 border-b border-white/5 pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+        <header className="mb-10 sm:mb-12 border-b border-white/5 pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 mb-4 rounded-full text-xs font-medium text-primary">
               <Sparkles className="w-3.5 h-3.5" />
-              Module: Voice Extraction
+              Voice Cloning
             </div>
             <h1 className="font-heading text-3xl sm:text-4xl font-semibold tracking-tight text-white">
-              Clone Voice
+              Clone a Voice
             </h1>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Initialize neural extraction protocol. Provide high-fidelity audio
-            samples to map acoustic topography.
+            Record or upload a clear audio sample, and we&apos;ll create a
+            custom voice you can use to generate speech.
           </p>
         </header>
 
