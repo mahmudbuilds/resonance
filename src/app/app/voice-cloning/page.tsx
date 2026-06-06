@@ -599,8 +599,8 @@ export default function VoiceCloningPage() {
                             >
                               {i === 0
                                 ? sentence
-                                : sentence.length > 55
-                                  ? `${sentence.substring(0, 55)}...`
+                                : sentence.length > 30
+                                  ? `${sentence.substring(0, 30)}...`
                                   : sentence}
                             </SelectItem>
                           ))}
@@ -821,7 +821,7 @@ export default function VoiceCloningPage() {
                   {clonedVoices.map((voice) => (
                     <div
                       key={voice._id}
-                      className="glass-card border border-white/5 hover:bg-white/5 hover:border-white/10 transition-colors p-4 rounded-2xl flex flex-col gap-3 group"
+                      className="glass-card border border-white/5 hover:bg-white/5 hover:border-white/10 transition-colors p-4 rounded-2xl flex flex-col gap-3 group mt-1"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0 flex-1">
