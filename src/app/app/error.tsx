@@ -78,7 +78,7 @@ export default function DashboardError({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.error("APP.DASHBOARD // MODULE CRASH:", error);
+    console.error("Dashboard error:", error);
   }, [error]);
 
   useEffect(() => {
@@ -95,12 +95,12 @@ export default function DashboardError({
 
   const handleSendReport = () => {
     setIsReporting(true);
-    const toastId = toast.loading("TRANSMITTING TELEMETRY LOG TO CENTRAL CORE...");
+    const toastId = toast.loading("Sending error report...");
 
     setTimeout(() => {
       setIsReporting(false);
       setReportSent(true);
-      toast.success("DIAGNOSTIC TELEMETRY RECORDED AND PURGED", { id: toastId });
+      toast.success("Error report sent. Thank you for your feedback.", { id: toastId });
     }, 1500);
   };
 
@@ -141,14 +141,14 @@ export default function DashboardError({
             <div className="inline-flex items-center gap-2 bg-pink-500/10 border border-pink-500/20 rounded-full px-4 py-2">
               <FileWarning className="w-3.5 h-3.5 text-pink-400" />
               <span className="text-xs font-medium text-pink-300 tracking-wide">
-                STATUS — SYSTEM_INTERRUPTED_CODE_500
+                Something went wrong
               </span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter leading-[1]">
-              <span className="block text-white">Module</span>
+              <span className="block text-white">Something</span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
-                anomaly.
+                went wrong.
               </span>
             </h1>
           </div>
@@ -156,7 +156,7 @@ export default function DashboardError({
           <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 self-start md:self-end">
             <Sparkles className="w-4 h-4 text-primary animate-pulse" />
             <span className="text-sm font-medium text-zinc-300">
-              Live cognitive sound mapping suspended
+              Audio generation is temporarily paused
             </span>
           </div>
         </header>
@@ -170,29 +170,29 @@ export default function DashboardError({
           >
             <div className="absolute top-0 right-0 px-4 py-1.5 bg-primary/10 border-b border-l border-primary/20 rounded-bl-2xl">
               <span className="font-mono text-[10px] uppercase tracking-widest text-primary">
-                Diagnostic Core
+                Error details
               </span>
             </div>
 
             <div className="flex items-center gap-2.5 mb-6">
               <TerminalIcon className="w-4 h-4 text-primary" />
               <span className="font-mono text-xs text-zinc-400 tracking-wider">
-                LOG_TRACE // ERROR_EXHIBIT
+                Error log
               </span>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                  Module Context
+                  Section
                 </div>
                 <div className="text-white font-mono text-xs sm:text-sm">
-                  ACTIVE_WORKSPACE
+                  Workspace
                 </div>
               </div>
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                  Compilation Time
+                  When it happened
                 </div>
                 <div className="text-white font-mono text-xs sm:text-sm break-all">
                   {timestamp}
@@ -200,10 +200,10 @@ export default function DashboardError({
               </div>
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                  Error Digest
+                  Reference ID
                 </div>
                 <div className="text-primary font-mono text-xs sm:text-sm select-all break-all">
-                  {error.digest || "CORE_DIGEST_PENDING"}
+                  {error.digest || "Not available"}
                 </div>
               </div>
             </div>
@@ -212,12 +212,12 @@ export default function DashboardError({
               <div className="flex items-center gap-2 mb-3">
                 <Activity className="w-3.5 h-3.5 text-pink-400" />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-pink-400 font-bold">
-                  Acoustic Signal Trace
+                  Error message
                 </span>
               </div>
               <div className="bg-black/50 border border-white/5 rounded-2xl p-5 text-zinc-300 font-mono text-xs overflow-auto max-h-[220px] leading-relaxed select-text whitespace-pre-wrap">
                 {error.message ||
-                  "A generic interface anomaly occurred within the React rendering engine of the workspace."}
+                  "Something went wrong while loading this page. Please try again, and let us know if the problem continues."}
               </div>
             </div>
 
@@ -228,7 +228,7 @@ export default function DashboardError({
                 className="rounded-full h-12 px-6 bg-white text-black hover:bg-zinc-200 font-semibold text-sm transition-all duration-300 w-full sm:w-auto flex items-center gap-2"
               >
                 <RotateCcw className="w-4 h-4" />
-                Reload Module
+Try again
               </Button>
 
               <Link href="/app" className="w-full sm:w-auto">
@@ -237,7 +237,7 @@ export default function DashboardError({
                   variant="outline"
                   className="rounded-full h-12 px-6 bg-transparent border-white/20 hover:border-white hover:bg-white/5 text-white font-medium text-sm transition-all duration-300 w-full"
                 >
-                  Terminal Root
+                  Back to dashboard
                 </Button>
               </Link>
 
@@ -255,12 +255,12 @@ export default function DashboardError({
                 {reportSent ? (
                   <>
                     <CheckCircle className="w-4 h-4" />
-                    Report Transmitted
+                    Report sent
                   </>
                 ) : (
                   <>
                     <Send className={`w-4 h-4 ${isReporting ? "animate-pulse" : ""}`} />
-                    {isReporting ? "Sending..." : "Dispatch Report"}
+                    {isReporting ? "Sending..." : "Send report"}
                   </>
                 )}
               </Button>
@@ -276,7 +276,7 @@ export default function DashboardError({
             >
               <div className="absolute top-0 right-0 px-4 py-1.5 bg-white/5 border-b border-l border-white/10 rounded-bl-2xl">
                 <span className="font-mono text-[10px] uppercase tracking-widest text-zinc-400">
-                  Advisory
+                  Tips
                 </span>
               </div>
 
@@ -285,29 +285,28 @@ export default function DashboardError({
                   <HelpCircle className="w-5 h-5 text-primary" />
                 </div>
                 <h3 className="text-lg font-bold text-white">
-                  Recovery Guidance
+                  What to try next
                 </h3>
               </div>
 
               <ul className="space-y-4 text-sm text-zinc-400 leading-relaxed">
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">01 //</span>
+                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">01</span>
                   <span>
-                    Attempt a workspace component hot-reload by activating{" "}
-                    <span className="text-white font-medium">Reload Module</span>.
+                    Click <span className="text-white font-medium">Try again</span> to reload this page.
                   </span>
                 </li>
                 <li className="flex gap-3 border-t border-white/5 pt-4">
-                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">02 //</span>
+                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">02</span>
                   <span>
-                    If hot-reloading fails, revert using{" "}
-                    <span className="text-white font-medium">Terminal Root</span> to reset session coordinates.
+                    If that doesn't work, go back to your{" "}
+                    <span className="text-white font-medium">dashboard</span> to start fresh.
                   </span>
                 </li>
                 <li className="flex gap-3 border-t border-white/5 pt-4">
-                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">03 //</span>
+                  <span className="text-primary font-bold font-mono text-xs pt-0.5 shrink-0">03</span>
                   <span>
-                    Dispatching a telemetry report alerts the development core with all parameters for inspection.
+                    Send us a report so our team can look into the issue and fix it.
                   </span>
                 </li>
               </ul>
@@ -320,11 +319,11 @@ export default function DashboardError({
                   style={{ animation: "status-blink 1.6s ease-in-out infinite" }}
                 />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-pink-300 font-bold">
-                  Monitoring Alert
+                  Good to know
                 </span>
               </div>
               <p className="text-sm text-zinc-300 leading-relaxed">
-                Telemetry monitoring reports that error log signatures are stored securely. No user voice data or custom clone waveforms were leaked. Secure layers remain fully locked.
+                Your error report is stored securely, and none of your voice recordings or custom audio files were affected. Your account remains safe and protected.
               </p>
             </div>
           </div>

@@ -79,14 +79,14 @@ export default function LandingPage() {
         
         {/* Kinetic Light Orbs */}
         <div 
-          className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-primary/10 rounded-full mix-blend-screen"
+          className="absolute top-[-10%] left-[20%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] bg-primary/25 lg:bg-primary/10 rounded-full mix-blend-screen"
           style={{
             animation: "fluid-pulse 12s ease-in-out infinite",
             transform: `translate(${mouseCoord.x * -50}px, ${mouseCoord.y * -50}px)`
           }}
         />
         <div 
-          className="absolute bottom-[10%] right-[15%] w-[500px] h-[500px] bg-pink-600/10 rounded-full mix-blend-screen"
+          className="absolute bottom-[10%] right-[15%] w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] bg-pink-600/25 lg:bg-pink-600/10 rounded-full mix-blend-screen"
           style={{
             animation: "fluid-pulse 16s ease-in-out infinite red",
             transform: `translate(${mouseCoord.x * 70}px, ${mouseCoord.y * 70}px)`

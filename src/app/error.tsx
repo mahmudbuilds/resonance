@@ -86,7 +86,7 @@ export default function GlobalError({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.error("SYS.LOG // CRITICAL ANOMALY DETECTED:", error);
+    console.error("An unexpected error occurred:", error);
   }, [error]);
 
   useEffect(() => {
@@ -162,7 +162,7 @@ export default function GlobalError({
                 style={{ animation: "status-blink 1.4s ease-in-out infinite" }}
               />
               <span className="text-xs font-medium text-pink-400 tracking-wide">
-                SYS.STATUS — FAULT_DETECTED
+                Something went wrong
               </span>
             </div>
           </div>
@@ -173,21 +173,21 @@ export default function GlobalError({
             <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-2 border border-white/10">
               <Sparkles className="w-4 h-4 text-pink-400 animate-pulse" />
               <span className="text-sm font-medium text-zinc-300">
-                Cognitive synthesis has been interrupted
+                We've hit an unexpected issue
               </span>
             </div>
 
             <h1 className="text-6xl sm:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[1] preserve-3d">
               <span className="block transform translate-z-[60px] text-white pb-2">
-                Critical
+                Something
               </span>
               <span className="block transform translate-z-[110px] text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
-                system fault.
+                went wrong.
               </span>
             </h1>
 
             <p className="text-lg sm:text-xl text-zinc-400 max-w-xl leading-relaxed transform translate-z-[40px]">
-              An unhandled exception interrupted the acoustic synthesis pipeline. The neural cognitive module returned a termination state — but the system can be reactivated below.
+              An unexpected error stopped things from working. Don't worry, your work is safe, and you can try again using the options below.
             </p>
 
             <div className="pt-6 flex flex-wrap gap-4 transform translate-z-[80px]">
@@ -197,7 +197,7 @@ export default function GlobalError({
                 className="rounded-full h-14 px-8 bg-white text-black hover:bg-zinc-200 font-semibold text-base transition-all duration-300 shadow-2xl flex items-center gap-2"
               >
                 <RefreshCw className="w-5 h-5" />
-                Reboot Module
+                Try again
                 <ArrowUpRight className="w-5 h-5" />
               </Button>
               <Link href="/">
@@ -225,11 +225,11 @@ export default function GlobalError({
                 <div className="flex items-center gap-2">
                   <Disc className="w-4 h-4 text-pink-500" style={{ animation: "status-blink 2s ease-in-out infinite" }} />
                   <span className="font-medium text-sm text-zinc-400">
-                    Signal interrupted...
+                    Loading interrupted...
                   </span>
                 </div>
                 <span className="text-xs font-semibold text-pink-400 bg-pink-500/10 px-3 py-1 rounded-full">
-                  Fault Trace
+Error details
                 </span>
               </div>
 
@@ -252,8 +252,8 @@ export default function GlobalError({
 
               <div className="border-t border-white/5 pt-5 space-y-3 transform translate-z-[50px]">
                 <div className="flex justify-between text-sm font-medium text-zinc-400">
-                  <span>Pipeline integrity</span>
-                  <span className="text-pink-400">42.18% degraded</span>
+                  <span>Service status</span>
+                  <span className="text-pink-400">Temporarily unavailable</span>
                 </div>
                 <div className="w-full h-1.5 bg-white/5 relative overflow-hidden rounded-full">
                   <div
@@ -273,24 +273,24 @@ export default function GlobalError({
           <div className="glass-card-3d relative rounded-3xl p-8 sm:p-10 overflow-hidden">
             <div className="absolute top-0 right-0 px-4 py-1.5 bg-pink-500/10 border-b border-l border-pink-500/20 rounded-bl-2xl">
               <span className="font-mono text-[10px] uppercase tracking-widest text-pink-400">
-                Fault Trace
+                Error details
               </span>
             </div>
 
             <div className="flex items-center gap-2 mb-6">
               <TerminalIcon className="w-4 h-4 text-primary" />
               <span className="font-mono text-xs text-zinc-400 tracking-wider">
-                DIAGNOSTIC_ARCHIVE // {timestamp.replace(/[^0-9]/g, "").substring(0, 14)}
+                Error log — {new Date(timestamp).toLocaleString()}
               </span>
             </div>
 
             <div className="grid sm:grid-cols-3 gap-4 mb-6">
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                  Exception ID
+                  Error ID
                 </div>
                 <div className="text-white font-mono text-sm select-all break-all">
-                  {error.digest || "ERR_0x9A7C8E"}
+                  {error.digest || "Not available"}
                 </div>
               </div>
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
@@ -303,10 +303,10 @@ export default function GlobalError({
               </div>
               <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
                 <div className="text-[10px] font-mono uppercase tracking-widest text-zinc-500 mb-1">
-                  Module Ref
+                  Page
                 </div>
                 <div className="text-primary font-mono text-sm">
-                  RESONANCE_ROUTER
+                  Home page
                 </div>
               </div>
             </div>
@@ -315,12 +315,12 @@ export default function GlobalError({
               <div className="flex items-center gap-2 mb-3">
                 <AlertTriangle className="w-3.5 h-3.5 text-pink-400" />
                 <span className="font-mono text-[10px] uppercase tracking-widest text-pink-400 font-bold">
-                  Fault Message
+                  What happened
                 </span>
               </div>
               <div className="bg-black/50 border border-white/5 rounded-2xl p-5 text-zinc-300 font-mono text-xs overflow-auto max-h-[160px] leading-relaxed select-text whitespace-pre-wrap">
                 {error.message ||
-                  "An unknown interruption occurred within the Next.js runtime routing framework."}
+                  "An unknown error occurred. Please try again, and let us know if the problem continues."}
               </div>
             </div>
           </div>
@@ -333,7 +333,7 @@ export default function GlobalError({
             </p>
             <div className="flex items-center gap-3 text-sm font-medium text-zinc-400">
               <Waves className="w-4 h-4 text-primary" />
-              <span>Secure protocol — SSL_TLS_v1.3</span>
+              <span>Secure connection</span>
             </div>
           </div>
         </footer>
