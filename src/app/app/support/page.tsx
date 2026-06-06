@@ -22,7 +22,7 @@ export default function SupportPage() {
     },
     {
       q: "What audio formats are supported?",
-      a: "We currently support MP3, WAV, FLAC, and OGG formats. The maximum file size allowed is 25MB.",
+      a: "We currently support MP3, WAV, FLAC, and OGG formats. The maximum file size allowed is 10MB.",
     },
     {
       q: "Is my data private and secure?",

@@ -12,7 +12,7 @@ export default function AuthLayout({
 
       {/* Left side - Visual Showcase */}
       <div className="relative hidden w-0 flex-1 md:flex items-center justify-center p-12 z-10">
-        <div className="glass-panel p-12 rounded-3xl max-w-2xl w-full border border-white/5 shadow-2xl flex flex-col justify-between h-[80%] relative overflow-hidden bg-white/[0.01]">
+        <div className="glass-panel p-12 rounded-3xl max-w-2xl w-full border border-white/5 shadow-2xl flex flex-col justify-between h-[80%] relative overflow-hidden">
           {/* subtle gradient orb */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full filter blur-[80px] opacity-50 pointer-events-none" />
 

@@ -1,171 +1,299 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { 
-  ArrowRight, 
+  ArrowUpRight, 
   AudioLines,
   Mic2,
-  Volume2,
   Sparkles,
-  Waves
+  Waves,
+  Play,
+  Zap,
+  Disc
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// --- Injected Avant-Garde Kinetic Styles ---
+const kineticStyles = `
+  @keyframes grid-drift {
+    0% { background-position: 0px 0px; }
+    100% { background-position: 40px 40px; }
+  }
+  @keyframes fluid-pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: blur(80px); }
+    50% { transform: scale(1.2) rotate(180deg); filter: blur(120px); }
+  }
+  @keyframes wave-dna {
+    0%, 100% { transform: scaleY(0.15) translateZ(10px); }
+    50% { transform: scaleY(1.1) translateZ(60px); }
+  }
+  .preserve-3d { transform-style: preserve-3d; }
+  .perspective-2500 { perspective: 2500px; }
+  
+  .sonic-grid-bg {
+    background-image: 
+      linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: grid-drift 20s linear infinite;
+  }
+
+  .text-stroke-custom {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+    color: transparent;
+  }
+  
+  .text-stroke-custom:hover {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.6);
+    transition: all 0.4s ease;
+  }
+`;
+
 export default function LandingPage() {
-  const [mounted, setMounted] = useState(false);
+  const [mouseCoord, setMouseCoord] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMounted(true);
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const { width, height, left, top } = containerRef.current.getBoundingClientRect();
+      // Normalize values between -0.5 and 0.5
+      const x = (e.clientX - left) / width - 0.5;
+      const y = (e.clientY - top) / height - 0.5;
+      setMouseCoord({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-white pb-20">
+    <div className="min-h-screen text-white bg-[#030305] overflow-hidden selection:bg-pink-500/30 relative font-sans">
+      <style dangerouslySetInnerHTML={{ __html: kineticStyles }} />
       
-      {/* Navigation */}
-      <nav className="relative z-50 w-full border-b border-white/5 bg-background/40 backdrop-blur-md animate-fade-up">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 h-20">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center shadow-lg shadow-primary/20">
-              <Waves className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-heading text-xl font-semibold tracking-tight text-white">
-              Resonance
-            </span>
-          </div>
-          
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#features" className="hover:text-white transition-colors duration-300">Features</a>
-            <a href="#technology" className="hover:text-white transition-colors duration-300">Technology</a>
-          </div>
-
-          <div>
-            <Link href="/app">
-              <Button className="rounded-full bg-primary text-white hover:bg-primary/90 font-medium text-sm h-10 px-6 transition-all duration-300 shadow-lg shadow-primary/20">
-                Dashboard
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <header className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-32 pb-24 text-center space-y-8">
-        <div className="animate-fade-up inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span className="text-[11px] font-semibold tracking-wider uppercase">Next-Generation Voice Synthesis</span>
-        </div>
-
-        <h1 className="animate-fade-up stagger-1 font-heading text-5xl sm:text-7xl lg:text-8xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.05]">
-          Breathe life into <br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
-            digital words.
-          </span>
-        </h1>
-
-        <p className="animate-fade-up stagger-2 text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto font-normal leading-relaxed">
-          Generate stunning voiceovers, clone voices with minimal audio samples, and explore a vast library of expressive AI voices engineered for creators.
-        </p>
-
-        <div className="animate-fade-up stagger-3 pt-6 flex justify-center gap-4 flex-col sm:flex-row items-center">
-          <Link href="/app">
-            <Button size="lg" className="rounded-full h-14 px-8 bg-primary text-white hover:bg-primary/90 hover:scale-105 font-medium tracking-wide text-sm transition-all duration-300 shadow-xl shadow-primary/25 group w-full sm:w-auto">
-              Start Creating
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-          <Button size="lg" variant="outline" className="rounded-full h-14 px-8 bg-white/5 border-white/10 hover:bg-white/10 hover:text-white text-zinc-300 font-medium tracking-wide text-sm transition-all duration-300 w-full sm:w-auto">
-            Explore Voices
-          </Button>
-        </div>
-      </header>
-
-      {/* Feature Showcase */}
-      <main className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 py-24 space-y-32">
+      {/* Structural Atmospheric Canvas */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 sonic-grid-bg opacity-70" />
         
-        <section id="features" className="space-y-16">
-          <div className="space-y-4 text-center animate-fade-up">
-            <h2 className="text-4xl sm:text-5xl font-heading font-semibold tracking-tight text-white">Powerful Audio Creation</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Everything you need to produce high-fidelity voice content in one seamless, beautiful workspace.
-            </p>
-          </div>
+        {/* Kinetic Light Orbs */}
+        <div 
+          className="absolute top-[-10%] left-[20%] w-[600px] h-[600px] bg-primary/10 rounded-full mix-blend-screen"
+          style={{
+            animation: "fluid-pulse 12s ease-in-out infinite",
+            transform: `translate(${mouseCoord.x * -50}px, ${mouseCoord.y * -50}px)`
+          }}
+        />
+        <div 
+          className="absolute bottom-[10%] right-[15%] w-[500px] h-[500px] bg-pink-600/10 rounded-full mix-blend-screen"
+          style={{
+            animation: "fluid-pulse 16s ease-in-out infinite red",
+            transform: `translate(${mouseCoord.x * 70}px, ${mouseCoord.y * 70}px)`
+          }}
+        />
+      </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+      {/* Main 3D Kinetic Field */}
+      <div 
+        ref={containerRef}
+        className="relative z-10 w-full min-h-screen preserve-3d perspective-2500 flex flex-col justify-between"
+        style={{
+          transform: `rotateX(${mouseCoord.y * -12}deg) rotateY(${mouseCoord.x * 12}deg)`,
+          transition: "transform 0.1s ease-out"
+        }}
+      >
+        
+        {/* Navigation */}
+        <nav className="w-full pt-8 px-6 lg:px-16 preserve-3d transform translate-z-[50px]">
+          <div className="max-w-7xl mx-auto flex items-center justify-between border-b border-white/10 pb-6">
+            <div className="flex items-center gap-3 group cursor-pointer">
+              <Image
+                src="/logo.png"
+                alt="Resonance"
+                width={56}
+                height={56}
+                className="w-14 h-14 group-hover:scale-110 transition-transform duration-500 object-contain"
+              />
+              <span className="text-xl font-bold tracking-tight text-white">
+                Resonance
+              </span>
+            </div>
             
-            {/* Feature 1 */}
-            <div className="glass-card rounded-3xl p-8 flex flex-col items-start gap-6 animate-fade-up stagger-1 group">
-              <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary w-fit group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
-                <AudioLines className="w-7 h-7" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-heading font-semibold text-white">Text to Speech</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Convert text into lifelike audio instantly. Adjust pacing, tone, and inflection with our intuitive parameters to get the exact read you need.
-                </p>
-              </div>
+            {/* Context Paths Nested Inside /app */}
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
+              <Link href="/app/voices" className="hover:text-white transition-colors">Voices</Link>
+              <Link href="/app/text-to-speech" className="hover:text-white transition-colors">Text to Speech</Link>
+              <Link href="/app/voice-cloning" className="hover:text-white transition-colors">Voice Cloning</Link>
             </div>
 
-            {/* Feature 2 */}
-            <div className="glass-card rounded-3xl p-8 flex flex-col items-start gap-6 animate-fade-up stagger-2 group">
-              <div className="p-4 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400 w-fit group-hover:scale-110 group-hover:bg-pink-500/20 transition-all duration-300">
-                <Mic2 className="w-7 h-7" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-heading font-semibold text-white">Voice Cloning</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Create an accurate digital replica of any voice using just a few minutes of audio. Perfect for scalable narration while maintaining brand identity.
-                </p>
-              </div>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="glass-card rounded-3xl p-8 flex flex-col items-start gap-6 animate-fade-up stagger-3 group">
-              <div className="p-4 rounded-2xl bg-sky-500/10 border border-sky-500/20 text-sky-400 w-fit group-hover:scale-110 group-hover:bg-sky-500/20 transition-all duration-300">
-                <Volume2 className="w-7 h-7" />
-              </div>
-              <div className="space-y-3">
-                <h3 className="text-2xl font-heading font-semibold text-white">Voice Library</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Browse a beautifully curated collection of high-fidelity voices across multiple languages, accents, and emotional tones.
-                </p>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* The Call to Action */}
-        <section className="relative rounded-[3rem] overflow-hidden p-[1px] glass-panel animate-fade-up">
-          <div className="w-full rounded-[3rem] py-24 px-6 text-center space-y-8 relative overflow-hidden bg-background/50">
-            
-            <div className="space-y-6 relative z-10 max-w-2xl mx-auto">
-              <h2 className="text-4xl sm:text-5xl font-heading font-semibold tracking-tight text-white leading-tight">
-                Ready to hear the difference?
-              </h2>
-              <p className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed">
-                Join thousands of creators producing studio-quality audio in minutes.
-              </p>
-            </div>
-
-            <div className="relative z-10 pt-4 flex justify-center">
+            <div>
               <Link href="/app">
-                <Button size="lg" className="rounded-full h-14 px-10 bg-white text-black hover:bg-zinc-200 hover:scale-105 font-medium tracking-wide text-sm transition-all duration-300 shadow-2xl">
-                  Open Studio Dashboard
+                <Button className="rounded-full border border-white/20 bg-transparent text-white hover:bg-white hover:text-black font-medium text-sm h-10 px-6 transition-all duration-300">
+                  Dashboard
                 </Button>
               </Link>
             </div>
-            
           </div>
-        </section>
+        </nav>
 
-      </main>
+        {/* Hero Area */}
+        <header className="max-w-7xl mx-auto w-full px-6 lg:px-16 pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start preserve-3d">
+          
+          {/* Typography Matrix */}
+          <div className="lg:col-span-7 space-y-8 text-left preserve-3d z-20">
+            <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-2 border border-white/10">
+              <Sparkles className="w-4 h-4 text-pink-400 animate-pulse" />
+              <span className="text-sm font-medium text-zinc-300">Next-Generation AI Voice Generator</span>
+            </div>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 py-12 relative z-10 text-center text-sm text-muted-foreground/60 tracking-wide mt-24">
-        <p>© 2026 Resonance Platform. Next-generation acoustic synthesis.</p>
-      </footer>
+            <h1 className="text-6xl sm:text-7xl lg:text-[6rem] font-bold tracking-tight leading-[1] preserve-3d">
+              <span className="block transform translate-z-[60px] text-white pb-2">
+                Voices that
+              </span>
+              <span className="block transform translate-z-[110px] text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
+                sound human.
+              </span>
+            </h1>
 
+            <p className="text-lg sm:text-xl text-zinc-400 max-w-xl leading-relaxed transform translate-z-[40px]">
+              Create incredibly realistic, human-sounding voiceovers in seconds. Perfect for creators, developers, and businesses looking to bring their words to life.
+            </p>
+
+            <div className="pt-6 flex flex-wrap gap-4 transform translate-z-[80px]">
+              <Link href="/app/voice-cloning">
+                <Button size="lg" className="rounded-full h-14 px-8 bg-white text-black hover:bg-zinc-200 font-semibold text-base transition-all duration-300 shadow-2xl flex items-center gap-2">
+                  Clone Your Voice
+                  <ArrowUpRight className="w-5 h-5" />
+                </Button>
+              </Link>
+              <Link href="/app/text-to-speech">
+                <Button size="lg" variant="outline" className="rounded-full h-14 px-8 bg-transparent border-white/20 hover:border-white hover:bg-white/5 text-white font-semibold text-base transition-all duration-300">
+                  <Play className="w-5 h-5 mr-2 fill-current text-pink-500" /> Watch Demo
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Visual Element */}
+          <div className="lg:col-span-5 w-full h-[520px] relative preserve-3d hidden lg:block z-10 transform translate-z-[40px] translate-y-6">
+            <div className="absolute inset-0 border border-white/10 bg-black/40 backdrop-blur-3xl p-8 flex flex-col justify-between preserve-3d rounded-3xl shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
+              
+              <div className="flex justify-between items-center border-b border-white/5 pb-4 transform translate-z-[30px]">
+                <div className="flex items-center gap-2">
+                  <Disc className="w-4 h-4 text-primary animate-[spin_4s_linear_infinite]" />
+                  <span className="font-medium text-sm text-zinc-400">Generating Voice...</span>
+                </div>
+                <span className="text-xs font-semibold text-pink-500 bg-pink-500/10 px-3 py-1 rounded-full">High Quality</span>
+              </div>
+
+              {/* Kinetic Sound Grid Visualizer */}
+              <div className="py-12 flex justify-between items-center gap-1.5 h-48 preserve-3d">
+                {[...Array(18)].map((_, i) => (
+                  <div 
+                    key={i} 
+                    className="w-full bg-gradient-to-t from-primary/40 via-purple-500 to-pink-500 rounded-full"
+                    style={{
+                      height: '100%',
+                      animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
+                      animationDelay: `${i * 0.08}s`
+                    }}
+                  />
+                ))}
+              </div>
+
+              <div className="border-t border-white/5 pt-5 space-y-3 transform translate-z-[50px]">
+                <div className="flex justify-between text-sm font-medium text-zinc-400">
+                  <span>Realism Score</span>
+                  <span className="text-white">98.43% match</span>
+                </div>
+                <div className="w-full h-1.5 bg-white/5 relative overflow-hidden rounded-full">
+                  <div className="absolute top-0 left-0 h-full w-4/5 bg-gradient-to-r from-primary to-pink-500 rounded-full" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </header>
+
+        {/* Features Section */}
+        <main className="max-w-7xl mx-auto w-full px-6 lg:px-16 pt-32 pb-24 preserve-3d">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-16 border-t border-white/5 pt-12">
+            <div className="lg:col-span-5">
+              <h2 className="text-sm font-semibold text-pink-500 mb-3">Explore Features</h2>
+              <p className="text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+                Powerful AI Audio Tools
+              </p>
+            </div>
+            <div className="lg:col-span-7">
+              <p className="text-base text-zinc-400 max-w-lg leading-relaxed">
+                Everything you need to generate, clone, and manage AI voices with stunning realism and emotion. Designed to be as simple as typing.
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Stacked Panels */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start preserve-3d">
+            
+            {/* App Action 1: Voices */}
+            <Link href="/app/voices" className="group preserve-3d block">
+              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-primary/40 group-hover:bg-primary/[0.02] relative transform group-hover:translate-z-[30px] rounded-3xl">
+                <div className="text-stroke-custom text-5xl font-extrabold select-none">01</div>
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-primary border border-white/10 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                    <AudioLines className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Voice Library</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">Browse our collection of highly realistic AI voices ready for your next project.</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* App Action 2: Text to Speech */}
+            <Link href="/app/text-to-speech" className="group preserve-3d block">
+              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-purple-500/40 group-hover:bg-purple-500/[0.02] relative transform group-hover:translate-z-[50px] md:-translate-y-4 rounded-3xl">
+                <div className="text-stroke-custom text-5xl font-extrabold select-none">02</div>
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-purple-400 border border-white/10 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Text to Speech</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">Type your script and generate studio-quality voiceovers with natural pacing and emotion.</p>
+                </div>
+              </div>
+            </Link>
+
+            {/* App Action 3: Voice Cloning */}
+            <Link href="/app/voice-cloning" className="group preserve-3d block">
+              <div className="border border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent p-8 h-[340px] flex flex-col justify-between transition-all duration-500 group-hover:border-pink-500/40 group-hover:bg-pink-500/[0.02] relative transform group-hover:translate-z-[30px] md:translate-y-4 rounded-3xl">
+                <div className="text-stroke-custom text-5xl font-extrabold select-none">03</div>
+                <div className="space-y-3">
+                  <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-pink-400 border border-white/10 group-hover:bg-pink-500 group-hover:text-white transition-all duration-500">
+                    <Mic2 className="w-5 h-5" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white">Voice Cloning</h3>
+                  <p className="text-sm text-zinc-400 leading-relaxed">Create a perfect digital replica of your own voice using just 60 seconds of audio.</p>
+                </div>
+              </div>
+            </Link>
+
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="w-full border-t border-white/10 bg-black/60 backdrop-blur-xl py-8 px-6 lg:px-16 preserve-3d transform translate-z-[40px]">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-zinc-500">
+              © 2026 Resonance Inc. All rights reserved.
+            </p>
+            <div className="flex items-center gap-3 text-sm font-medium text-zinc-400">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>All systems operational</span>
+            </div>
+          </div>
+        </footer>
+
+      </div>
     </div>
   );
 }

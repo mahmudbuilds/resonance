@@ -237,3 +237,5 @@ export const getTopVoices = query({args: {}, handler: async(ctx) => {
   return [...top3PublicVoices, ...topUserVoice];
 }})
 
+export const getVoicePreview = action({args: {voiceId: v.id("voices")}, handler: async(ctx, {voiceId}) => {
+}})

@@ -3,7 +3,7 @@ import { performance } from "node:perf_hooks";
 
 import { InworldTTS } from "@inworld/tts";
 import { action } from "./_generated/server";
-import { v } from "convex/values";
+import { convexToJson, v } from "convex/values";
 import { api, internal } from "./_generated/api";
 
 if (!globalThis.performance) {
@@ -182,3 +182,34 @@ export const generateSpeech = action({
     throw new Error("All Inworld API keys are exhausted.");
   },
 });
+
+
+export const generatePreviewSpeeches = action({
+  args: {voiceIds: v.array(v.string())}, 
+  handler: async(ctx, {voiceIds}) => {
+
+  const tts = InworldTTS();
+  const audioUrls = voiceIds.map(async(voiceId) => {
+    const audio = await tts.generate({
+      text: "Hi everyone! I am so excited to give you an exclusive first look at what we've been working on. This is just a quick preview to set the stage for what’s coming next, so let's get right into it!",
+      voice: voiceId,
+      model: "inworld-tts-2",
+      speakingRate: 1,
+      temperature: 0.7,
+      encoding: "MP3",
+    });
+    const audioBlob = new Blob([audio as unknown as Uint8Array<ArrayBuffer>], {
+      type: "audio/mpeg",
+    });
+    const storedAudioBlobUrl = await ctx.storage.store(audioBlob);
+    const audioUrl = await ctx.storage.getUrl(storedAudioBlobUrl);
+    await ctx.runMutation(api.inworld.saveAudio, {
+      inworldVoiceId: voiceId,
+      prompt: "Hi everyone! I am so excited to give you an exclusive first look at what we've been working on. This is just a quick preview to set the stage for what’s coming next, so let's get right into it!",
+      storageId: storedAudioBlobUrl,
+      audioUrl: audioUrl!,
+    });
+  })
+ 
+
+  }})

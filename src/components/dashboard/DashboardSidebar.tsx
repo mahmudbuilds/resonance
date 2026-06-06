@@ -121,16 +121,20 @@ export default function DashboardSidebar() {
   }
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border-r border-white/5 bg-background/40 backdrop-blur-md">
+    <Sidebar collapsible="icon" className="border-r border-white/5 bg-background/80 backdrop-blur-sm">
       {/* Brand Header */}
       <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-transparent border-b border-white/5">
         <Link
           href="/"
           className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 transition-opacity"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-pink-500 flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
-            <Waves className="w-5 h-5 text-white" />
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Resonance"
+            width={64}
+            height={64}
+            className="w-14 h-14 shrink-0 object-contain group-data-[collapsible=icon]:w-16 group-data-[collapsible=icon]:h-16"
+          />
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
             <span className="font-heading font-semibold text-white text-lg tracking-tight">
               Resonance
@@ -149,7 +153,7 @@ export default function DashboardSidebar() {
       <SidebarRail />
 
       {/* Profile/User Menu Footer Container */}
-      <SidebarFooter className="border-t border-white/5 p-4 bg-background/20 backdrop-blur-lg">
+      <SidebarFooter className="border-t border-white/5 p-4 bg-background/80 backdrop-blur-sm">
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton

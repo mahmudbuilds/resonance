@@ -33,21 +33,13 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../convex/_generated/api";
+import type { Doc } from "../../../../convex/_generated/dataModel";
+
+const NO_DESCRIPTION = "No vocal description available for this voice.";
 
 export default function VoicesPage() {
   const router = useRouter();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const library = [
-    { displayName: "Aanya", langCode: "HI_IN", mood: "BALANCED", plays: "0", description: "A professional adult female with a clear, formal, and authoritative voice, speaking Hindi in a studio environment." },
-    { displayName: "Aarav", langCode: "HI_IN", mood: "BALANCED", plays: "0", description: "A thoughtful adult male with an Indian accent speaking earnestly in a room with some background hum." },
-    { displayName: "Abby", langCode: "EN_US", mood: "BALANCED", plays: "3", description: "Bright, eager American female child voice, ideal for animated characters, upbeat educational content, and lively kids' commercials." },
-    { displayName: "Alain", langCode: "FR_FR", mood: "BALANCED", plays: "0", description: "Deep, smooth middle-aged male French voice. Composed and calm." },
-    { displayName: "Marcus", langCode: "EN_US", mood: "AUTHORITATIVE", plays: "12K", description: "Deep, resonant acoustic profile. Ideal for heavy cinematic exposition." },
-    { displayName: "Elara", langCode: "EN_UK", mood: "WARM", plays: "8K", description: "High fidelity conversational tone with natural mid-range presentation." },
-    { displayName: "Kai", langCode: "EN_AU", mood: "CASUAL", plays: "950", description: "Energetic frequency response. Optimized for modern broadcast streams." },
-    { displayName: "Nadia", langCode: "RU_RU", mood: "PROFESSIONAL", plays: "4.1K", description: "Strict timing parameters. Perfect for pristine corporate instructions." }
-  ];
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocale, setSelectedLocale] = useState("all");
@@ -59,7 +51,10 @@ export default function VoicesPage() {
   const voices = useQuery(api.voice.getUserVoices);
   const generations = useQuery(api.inworld.listUserGenerations);
 
-  const voicesList: any[] = voices && voices.length > 0 ? voices : library;
+  const voicesList: Doc<"voices">[] = voices ?? [];
+  const historyList: Doc<"generations">[] = (generations ?? []).filter(
+    (g) => !g.isPreview,
+  );
 
   const handleUseVoice = (id: string) => {
     if (typeof window !== "undefined") {
@@ -80,18 +75,22 @@ export default function VoicesPage() {
     }
   };
 
-  const filteredVoices = voicesList.filter((voice: any) => {
-    const name = voice.displayName || voice.name || "";
-    const desc = voice.description || voice.desc || "";
-    const searchMatch = searchQuery === "" || 
+  const filteredVoices = voicesList.filter((voice) => {
+    const name = voice.displayName ?? "Unnamed voice";
+    const desc = voice.description ?? "";
+    const searchMatch =
+      searchQuery === "" ||
       name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       desc.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const accent = voice.langCode || voice.accent || "";
-    const localeMatch = selectedLocale === "all" || accent.toLowerCase().startsWith(selectedLocale.toLowerCase());
+    const accent = voice.langCode ?? "";
+    const localeMatch =
+      selectedLocale === "all" ||
+      accent.toLowerCase().startsWith(selectedLocale.toLowerCase());
 
-    const isCloned = voice.isCloned || voice.source === "cloned" || false; 
-    const classMatch = selectedClass === "all" || 
+    const isCloned = !voice.isPublic;
+    const classMatch =
+      selectedClass === "all" ||
       (selectedClass === "public" && !isCloned) ||
       (selectedClass === "cloned" && isCloned);
 
@@ -145,9 +144,9 @@ export default function VoicesPage() {
               >
                 <History className="w-4 h-4" />
                 <span>History Logs</span>
-                {generations && generations.length > 0 && (
+                {historyList.length > 0 && (
                   <span className="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded-full ml-1">
-                    {generations.length}
+                    {historyList.length}
                   </span>
                 )}
               </TabsTrigger>
@@ -269,6 +268,24 @@ export default function VoicesPage() {
                 <Loader2 className="w-6 h-6 text-primary animate-spin" />
                 <span className="text-sm text-muted-foreground font-medium">Syncing library...</span>
               </div>
+            ) : voicesList.length === 0 ? (
+              <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                  <Music className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <h3 className="text-base font-semibold text-white mb-2">No voice profiles found</h3>
+                <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">
+                  Your voice library is empty. Clone a voice to get started.
+                </p>
+                <Button
+                  asChild
+                  className="rounded-full bg-white text-black hover:bg-zinc-200 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shadow-lg"
+                >
+                  <Link href="/app/voice-cloning">
+                    <Plus className="w-4 h-4 mr-2" /> Clone Custom Voice
+                  </Link>
+                </Button>
+              </div>
             ) : filteredVoices.length === 0 ? (
               <div className="text-center py-20 border border-white/10 glass-panel rounded-3xl">
                 <Music className="w-8 h-8 text-muted-foreground mx-auto mb-4" />
@@ -290,30 +307,39 @@ export default function VoicesPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-sm text-white">
-                      {filteredVoices.map((voice: any, i) => {
-                        const isCloned = voice.isCloned || voice.source === "cloned";
+                      {filteredVoices.map((voice) => {
+                        const isCloned = !voice.isPublic;
+                        const voiceName = voice.displayName || "Unnamed voice";
+                        const description = voice.description?.trim() || null;
+                        const plays = voice.playCount?.toLocaleString() ?? "0";
                         return (
-                          <tr key={i} className="hover:bg-white/5 transition-all group duration-200">
+                          <tr key={voice._id} className="hover:bg-white/5 transition-all group duration-200">
                             <td className="pl-8 pr-4 py-4">
                               <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-sm font-semibold">
-                                {(voice.displayName || voice.name || "U")[0]}
+                                {voiceName[0]}
                               </div>
                             </td>
                             <td className="px-6 py-4">
                               <div className="flex flex-col gap-1.5">
-                                <span className="font-semibold">{voice.displayName || voice.name}</span>
+                                <span className="font-semibold">{voiceName}</span>
                                 <span className={`text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 w-fit rounded-full ${isCloned ? 'bg-pink-500/20 text-pink-300' : 'bg-primary/20 text-primary'}`}>
                                   {isCloned ? "Cloned" : "Public"}
                                 </span>
                               </div>
                             </td>
-                            <td className="px-6 py-4 text-primary font-mono text-xs">{voice.langCode || voice.accent}</td>
-                            <td className="px-6 py-4 text-muted-foreground max-w-md xl:max-w-xl truncate text-xs">{voice.description || voice.desc}</td>
-                            <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{voice.plays || "0"}</td>
+                            <td className="px-6 py-4 text-primary font-mono text-xs">{voice.langCode ?? "—"}</td>
+                            <td className="px-6 py-4 max-w-md xl:max-w-xl text-xs">
+                              {description ? (
+                                <span className="text-muted-foreground truncate block">{description}</span>
+                              ) : (
+                                <span className="italic text-muted-foreground/70">{NO_DESCRIPTION}</span>
+                              )}
+                            </td>
+                            <td className="px-6 py-4 text-right font-mono text-xs text-muted-foreground">{plays}</td>
                             <td className="pl-4 pr-8 py-4 text-right">
                               <Button
                                 size="sm"
-                                onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
+                                onClick={() => handleUseVoice(voice.inworldVoiceId ?? voice._id)}
                                 className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs px-6 h-9 transition-all duration-300 border-none font-medium"
                               >
                                 Select
@@ -332,12 +358,15 @@ export default function VoicesPage() {
                 ref={scrollContainerRef}
                 className="flex gap-6 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory scroll-smooth w-full custom-scrollbar"
               >
-                {filteredVoices.map((voice: any, i) => {
-                  const voiceName = voice.displayName || voice.name || "Unknown";
-                  const isCloned = voice.isCloned || voice.source === "cloned";
+                {filteredVoices.map((voice) => {
+                  const voiceName = voice.displayName || "Unnamed voice";
+                  const isCloned = !voice.isPublic;
+                  const description = voice.description?.trim() || null;
+                  const mood = voice.tags?.[0]?.toLowerCase() ?? "balanced";
+                  const plays = voice.playCount?.toLocaleString() ?? "0";
                   return (
                     <div
-                      key={i}
+                      key={voice._id}
                       className="snap-start shrink-0 w-full sm:w-[310px] rounded-[24px] border border-white/5 glass-card hover:bg-white/10 transition-all duration-300 hover:border-primary/30 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
                     >
                       <div className="pt-6 px-6 pb-2 flex items-center justify-between">
@@ -354,7 +383,7 @@ export default function VoicesPage() {
                           </div>
                           <Button
                             size="icon"
-                            onClick={() => handleUseVoice(voice.inworldVoiceId || voice.id)}
+                            onClick={() => handleUseVoice(voice.inworldVoiceId ?? voice._id)}
                             className="h-10 w-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 border-none group-hover:scale-105"
                           >
                             <Play className="w-4 h-4 ml-0.5" fill="currentColor" />
@@ -367,22 +396,28 @@ export default function VoicesPage() {
                           </h3>
                           <div className="flex gap-1.5">
                             <span className="font-mono text-[10px] text-muted-foreground">
-                              {voice.langCode || voice.accent}
+                              {voice.langCode ?? "—"}
                             </span>
                           </div>
                         </div>
 
-                        <p className="text-sm text-muted-foreground leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
-                          {voice.description || voice.desc}
-                        </p>
+                        {description ? (
+                          <p className="text-sm text-muted-foreground leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                            {description}
+                          </p>
+                        ) : (
+                          <p className="text-sm italic text-muted-foreground/70 leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                            {NO_DESCRIPTION}
+                          </p>
+                        )}
                       </div>
 
                       <div className="px-6 py-4 border-t border-white/5 bg-white/5 flex items-center justify-between text-xs text-muted-foreground font-medium">
                         <span className="uppercase">
-                          {voice.mood?.toLowerCase() || "BALANCED"}
+                          {mood}
                         </span>
                         <span className="flex items-center gap-1.5">
-                          <Activity className="w-3.5 h-3.5 text-primary" /> {voice.plays || "0"}
+                          <Activity className="w-3.5 h-3.5 text-primary" /> {plays}
                         </span>
                       </div>
                     </div>
@@ -399,21 +434,63 @@ export default function VoicesPage() {
                 <Loader2 className="w-6 h-6 text-primary animate-spin" />
                 <span className="text-sm font-medium text-muted-foreground">Fetching history...</span>
               </div>
-            ) : generations.length === 0 ? (
+            ) : historyList.length === 0 ? (
               <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
                 <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
                   <History className="w-6 h-6 text-muted-foreground" />
                 </div>
                 <h3 className="text-base font-semibold text-white mb-2">No History Logs</h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-                  You haven't generated any audio tracks yet. Use the speech module to synthesize voices.
+                  Generate audio from the speech module to populate your history.
                 </p>
               </div>
             ) : (
               <div className="border border-white/5 glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
-                 <div className="p-10 text-center text-sm font-medium text-muted-foreground">
-                    History logs populated ({generations.length} items). Please use the Text-to-Speech page to view full history log capabilities.
-                 </div>
+                <div className="w-full overflow-x-auto block">
+                  <table className="w-full text-left border-collapse whitespace-nowrap min-w-[800px]">
+                    <thead>
+                      <tr className="border-b border-white/5 bg-white/5 text-xs font-semibold text-muted-foreground">
+                        <th className="pl-8 pr-4 py-5 w-24">Preview</th>
+                        <th className="px-6 py-5">Prompt</th>
+                        <th className="px-6 py-5 w-48">Voice ID</th>
+                        <th className="px-6 py-5 w-24">Format</th>
+                        <th className="pl-4 pr-8 py-5 text-right w-40">Generated</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5 text-sm text-white">
+                      {historyList.map((g) => (
+                        <tr key={g._id} className="hover:bg-white/5 transition-all duration-200">
+                          <td className="pl-8 pr-4 py-4">
+                            <audio
+                              src={g.audioUrl}
+                              controls
+                              preload="none"
+                              className="h-9 w-32"
+                            >
+                              <track kind="captions" />
+                            </audio>
+                          </td>
+                          <td className="px-6 py-4 max-w-md xl:max-w-xl">
+                            <span className="text-xs text-muted-foreground line-clamp-2 block">
+                              {g.prompt}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-primary font-mono text-xs">
+                            {g.inworldVoiceId}
+                          </td>
+                          <td className="px-6 py-4 text-xs">
+                            <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+                              {g.format}
+                            </span>
+                          </td>
+                          <td className="pl-4 pr-8 py-4 text-right font-mono text-xs text-muted-foreground">
+                            {new Date(g._creationTime).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
           </TabsContent>
