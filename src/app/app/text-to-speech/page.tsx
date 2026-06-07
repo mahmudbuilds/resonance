@@ -170,7 +170,7 @@ export default function TextToSpeechPage() {
                         }
                       />
                     </SelectTrigger>
-                    <SelectContent className="glass-card border-white/10 rounded-xl text-white p-1">
+                    <SelectContent className="rounded-xl text-white p-1">
                       {voices?.map((voice) => {
                         const isNew =
                           Date.now() - voice._creationTime <
@@ -225,7 +225,7 @@ export default function TextToSpeechPage() {
                     <SelectTrigger className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all">
                       <SelectValue placeholder="Select model..." />
                     </SelectTrigger>
-                    <SelectContent className="glass-card border-white/10 rounded-xl text-white p-1">
+                    <SelectContent className="rounded-xl text-white p-1">
                       <SelectItem
                         value="inworld-tts-2"
                         className="rounded-lg cursor-pointer focus:bg-white/5 focus:text-white px-3 py-2.5"
@@ -375,6 +375,26 @@ export default function TextToSpeechPage() {
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                        e.preventDefault();
+                        handleGenerateSpeech();
+                      }
+                      if (e.key === "Tab") {
+                        e.preventDefault();
+                        const start = e.currentTarget.selectionStart;
+                        const end = e.currentTarget.selectionEnd;
+                        const newValue =
+                          text.substring(0, start) +
+                          "    " +
+                          text.substring(end);
+                        setText(newValue);
+                        requestAnimationFrame(() => {
+                          e.currentTarget.selectionStart = start + 4;
+                          e.currentTarget.selectionEnd = start + 4;
+                        });
+                      }
+                    }}
                     maxLength={5000}
                     spellCheck={!isSsml}
                   />
@@ -593,7 +613,7 @@ export default function TextToSpeechPage() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent
                                 align="end"
-                                className="w-36 rounded-xl border-white/10 glass-card p-1 shadow-lg shadow-black/20"
+                                className="w-36 rounded-xl p-1 shadow-lg shadow-black/20"
                               >
                                 <DropdownMenuItem
                                   className="text-rose-400 hover:text-rose-300 focus:bg-rose-400/10 focus:text-rose-400 cursor-pointer rounded-lg text-xs font-medium px-3 py-2"

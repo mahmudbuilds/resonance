@@ -246,7 +246,7 @@ export default function VoicesPage() {
                     <SelectContent
                       position="popper"
                       sideOffset={8}
-                      className="w-[210px] max-h-[240px] overflow-y-auto glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                      className="w-[210px] max-h-[240px] overflow-y-auto border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
                     >
                       <SelectItem
                         value="all"
@@ -320,7 +320,7 @@ export default function VoicesPage() {
                     <SelectContent
                       position="popper"
                       sideOffset={8}
-                      className="w-[210px] glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                      className="w-[210px] border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
                     >
                       <SelectItem
                         value="all"

@@ -18,8 +18,8 @@ export default function Navbar() {
     .join(' ') || 'Dashboard';
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b-0 border-white/5">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 md:px-8 w-full">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-sm border-b-0 border-white/5 h-16 flex items-center">
+      <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 w-full">
         
         {/* Left: Branding & Breadcrumbs */}
         <div className="flex items-center gap-2 sm:gap-4">

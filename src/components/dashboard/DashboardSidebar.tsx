@@ -94,19 +94,19 @@ export default function DashboardSidebar() {
                       }}
                       tooltip={item.title}
                       className={`font-sans text-sm font-medium h-11 rounded-xl transition-all duration-300 ${
-                        isActive 
-                          ? "bg-primary text-white shadow-md shadow-primary/25 hover:bg-primary/90 hover:text-white" 
-                          : "text-muted-foreground hover:text-white hover:bg-white/5"
+                        isActive
+                          ? "bg-primary text-white shadow-md shadow-primary/25 hover:bg-primary/90 hover:text-white"
+                          : "text-zinc-300 hover:text-white hover:bg-white/10"
                       }`}
                     >
                       {item.url ? (
                         <Link href={item.url} className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}`} />
                           <span>{item.title}</span>
                         </Link>
                       ) : (
                         <div className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-muted-foreground group-hover:text-white"}`} />
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}`} />
                           <span>{item.title}</span>
                         </div>
                       )}
@@ -122,9 +122,9 @@ export default function DashboardSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-white/5 bg-background/80 backdrop-blur-sm">
+    <Sidebar collapsible="icon" className="border-r border-white/10 bg-background">
       {/* Brand Header */}
-      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-transparent border-b border-white/5">
+      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-background border-b border-white/10">
         <Link
           href="/"
           className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 transition-opacity"
@@ -147,14 +147,14 @@ export default function DashboardSidebar() {
       {/* Navigation Space */}
       <SidebarContent className="bg-transparent scrollbar-none py-4">
         <NavSection items={mainMenuItems} pathname={pathname} />
-        <div className="my-2 mx-6 h-px bg-white/5" />
+        <div className="my-2 mx-6 h-px bg-white/10" />
         <NavSection label="Preferences" items={otherMenuItems} pathname={pathname} />
       </SidebarContent>
       
       <SidebarRail />
 
       {/* Profile/User Menu Footer Container */}
-      <SidebarFooter className="border-t border-white/5 p-4 bg-background/80 backdrop-blur-sm">
+      <SidebarFooter className="border-t border-white/10 p-4 bg-background">
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton
