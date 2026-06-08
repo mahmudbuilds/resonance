@@ -53,7 +53,7 @@ export default function TextToSpeechPage() {
   >("selectedVoice", null);
   const [model, setModel, modelMounted] = useLocalStorage<string>(
     "model",
-    "inworld-tts-1.5-mini",
+    "inworld-tts-2",
   );
   const voices = useQuery(api.voice.getUserVoices);
 
