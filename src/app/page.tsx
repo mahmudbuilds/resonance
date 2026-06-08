@@ -106,8 +106,8 @@ export default function LandingPage() {
       >
         
         {/* Navigation */}
-        <nav className="w-full h-24 flex items-center lg:h-auto lg:block lg:pt-8 px-5 lg:px-16 preserve-3d transform translate-z-[50px]">
-          <div className="max-w-7xl mx-auto flex items-center justify-between border-b border-white/10 w-full lg:pb-6">
+        <nav className="w-full h-24 lg:h-auto lg:pt-8 px-5 lg:px-16 preserve-3d transform translate-z-[50px]">
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-full lg:h-auto border-b border-white/10 w-full lg:pb-6">
             <div className="flex items-center gap-2 lg:gap-3 group cursor-pointer">
               <Image
                 src="/logo.png"
