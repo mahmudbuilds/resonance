@@ -492,7 +492,7 @@ export default function VoiceCloningPage() {
                       >
                         <SelectValue placeholder="Select a language" />
                       </SelectTrigger>
-                      <SelectContent className="glass-panel border-white/10 rounded-xl text-white">
+                        <SelectContent className="border-white/10 rounded-xl text-white">
                         {LANG_CODES.map((code) => (
                           <SelectItem
                             key={code}
@@ -606,7 +606,7 @@ export default function VoiceCloningPage() {
                         <SelectTrigger className="glass-card border-white/5 h-12 rounded-xl text-white focus-visible:ring-primary focus-visible:border-primary text-sm">
                           <SelectValue placeholder="Choose a sample" />
                         </SelectTrigger>
-                        <SelectContent className="glass-panel border-white/10 rounded-xl text-white">
+                      <SelectContent className="border-white/10 rounded-xl text-white">
                           {RECORDING_SENTENCES.map((sentence, i) => (
                             <SelectItem
                               key={sentence}
