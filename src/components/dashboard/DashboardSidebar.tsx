@@ -1,7 +1,6 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
-import { clerkAppearance } from "@/lib/clerk-config";
 import Image from "next/image";
 import {
   AudioLines,
@@ -95,18 +94,18 @@ export default function DashboardSidebar() {
                       tooltip={item.title}
                       className={`font-sans text-sm font-medium h-11 rounded-xl transition-all duration-300 ${
                         isActive
-                          ? "bg-primary text-white shadow-md shadow-primary/25 hover:bg-primary/90 hover:text-white"
-                          : "text-zinc-300 hover:text-white hover:bg-white/10"
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/25 hover:bg-primary/90 hover:text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-accent"
                       }`}
                     >
                       {item.url ? (
                         <Link href={item.url} className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}`} />
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"}`} />
                           <span>{item.title}</span>
                         </Link>
                       ) : (
                         <div className="flex items-center gap-3 w-full px-2">
-                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-white" : "text-zinc-400 group-hover:text-white"}`} />
+                          <item.icon className={`w-4 h-4 transition-colors ${isActive ? "text-primary-foreground" : "text-muted-foreground group-hover:text-foreground"}`} />
                           <span>{item.title}</span>
                         </div>
                       )}
@@ -122,9 +121,9 @@ export default function DashboardSidebar() {
   }
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-white/10 bg-background">
+    <Sidebar collapsible="icon" className="border-r border-border bg-background">
       {/* Brand Header */}
-      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-background border-b border-white/10">
+      <SidebarHeader className="flex flex-col gap-4 pt-6 pb-4 bg-background border-b border-border">
         <Link
           href="/"
           className="flex items-center gap-3 px-4 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 transition-opacity"
@@ -134,10 +133,10 @@ export default function DashboardSidebar() {
             alt="Resonance"
             width={64}
             height={64}
-            className="w-14 h-14 shrink-0 object-contain group-data-[collapsible=icon]:w-16 group-data-[collapsible=icon]:h-16"
+            className="w-14 h-14 shrink-0 object-contain group-data-[collapsible=icon]:w-16 group-data-[collapsible=icon]:h-16 dark:invert-0 invert"
           />
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="font-heading font-semibold text-white text-lg tracking-tight">
+            <span className="font-heading font-semibold text-foreground text-lg tracking-tight">
               Resonance
             </span>
           </div>
@@ -147,28 +146,26 @@ export default function DashboardSidebar() {
       {/* Navigation Space */}
       <SidebarContent className="bg-transparent scrollbar-none py-4">
         <NavSection items={mainMenuItems} pathname={pathname} />
-        <div className="my-2 mx-6 h-px bg-white/10" />
+        <div className="my-2 mx-6 h-px bg-accent" />
         <NavSection label="Preferences" items={otherMenuItems} pathname={pathname} />
       </SidebarContent>
       
       <SidebarRail />
 
       {/* Profile/User Menu Footer Container */}
-      <SidebarFooter className="border-t border-white/10 p-4 bg-background">
+      <SidebarFooter className="border-t border-border p-4 bg-background">
         <SidebarMenu>
           <SidebarMenuItem className="flex justify-center group-data-[collapsible=icon]:justify-center">
             <UserButton
               showName={state === "expanded"}
               appearance={{
-                ...clerkAppearance,
                 elements: {
-                  ...clerkAppearance.elements,
-                  userButtonBox: "flex-row-reverse gap-3 font-sans text-sm font-medium text-muted-foreground hover:text-white transition-colors",
-                  avatarBox: "rounded-xl border border-white/10 w-9 h-9 shadow-lg shadow-primary/20",
+                  userButtonBox: "flex-row-reverse gap-3 font-sans text-sm font-medium text-muted-foreground hover:text-foreground transition-colors",
+                  avatarBox: "rounded-xl border border-border w-9 h-9 shadow-lg shadow-primary/20",
                 }
               }}
               fallback={
-                <Skeleton className="w-9 h-9 rounded-xl border border-white/5 bg-white/5" />
+                <Skeleton className="w-9 h-9 rounded-xl border border-border bg-secondary" />
               }
             />
           </SidebarMenuItem>

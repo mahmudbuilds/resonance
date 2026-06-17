@@ -1,5 +1,6 @@
 import React from "react";
 import { Sparkles } from "lucide-react";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function AuthLayout({
   children,
@@ -7,12 +8,14 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen w-full flex-col md:flex-row relative selection:bg-primary/30 selection:text-white font-sans text-white overflow-hidden">
-      {/* Background is handled by RootLayout (aurora-bg) */}
+    <div className="flex min-h-screen w-full flex-col md:flex-row relative selection:bg-primary/30 selection:text-primary-foreground font-sans text-foreground overflow-hidden">
+      <div className="absolute top-6 right-6 z-20">
+        <ModeToggle />
+      </div>
 
       {/* Left side - Visual Showcase */}
       <div className="relative hidden w-0 flex-1 md:flex items-center justify-center p-12 z-10">
-        <div className="glass-panel p-12 rounded-3xl max-w-2xl w-full border border-white/5 shadow-2xl flex flex-col justify-between h-[80%] relative overflow-hidden">
+        <div className="glass-panel p-12 rounded-3xl max-w-2xl w-full border border-border shadow-2xl flex flex-col justify-between h-[80%] relative overflow-hidden">
           {/* subtle gradient orb */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full filter blur-[80px] opacity-50 pointer-events-none" />
 
@@ -22,7 +25,7 @@ export default function AuthLayout({
               Resonance System
             </div>
 
-            <h1 className="text-4xl lg:text-5xl font-heading font-semibold text-white mb-6 leading-tight tracking-tight">
+            <h1 className="text-4xl lg:text-5xl font-heading font-semibold text-foreground mb-6 leading-tight tracking-tight">
               Create hyper-realistic <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
                 vocal synthesis.
@@ -37,8 +40,8 @@ export default function AuthLayout({
           <div className="flex gap-4 relative z-10">
             {/* Visual decoration at bottom */}
             <div className="h-2 w-12 rounded-full bg-primary" />
-            <div className="h-2 w-2 rounded-full bg-white/20" />
-            <div className="h-2 w-2 rounded-full bg-white/20" />
+            <div className="h-2 w-2 rounded-full bg-accent" />
+            <div className="h-2 w-2 rounded-full bg-accent" />
           </div>
         </div>
       </div>

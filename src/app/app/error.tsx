@@ -34,13 +34,13 @@ export default function DashboardError({
   const timestamp = new Date().toISOString();
 
   return (
-    <div className="min-h-screen w-full bg-[#030305] text-white font-sans">
+    <div className="min-h-screen w-full bg-background text-foreground font-sans">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="pt-12 pb-8 border-b border-white/10">
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mb-2">
+        <header className="pt-12 pb-8 border-b border-border">
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground mb-2">
             Something went wrong
           </h1>
-          <p className="text-zinc-400 text-base max-w-2xl">
+          <p className="text-muted-foreground text-base max-w-2xl">
             An unexpected error stopped this page from loading. You can try
             again or head back to your dashboard.
           </p>
@@ -48,32 +48,32 @@ export default function DashboardError({
 
         <div className="grid lg:grid-cols-3 gap-6 mt-10">
           <div className="lg:col-span-2">
-            <div className="grid sm:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-md overflow-hidden mb-6">
-              <div className="bg-[#030305] p-4">
+            <div className="grid sm:grid-cols-3 gap-px bg-accent border border-border rounded-md overflow-hidden mb-6">
+              <div className="bg-background p-4">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-1">
                   Section
                 </div>
-                <div className="text-white font-mono text-sm">Workspace</div>
+                <div className="text-foreground font-mono text-sm">Workspace</div>
               </div>
-              <div className="bg-[#030305] p-4">
+              <div className="bg-background p-4">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-1">
                   When
                 </div>
-                <div className="text-white font-mono text-sm break-all">
+                <div className="text-foreground font-mono text-sm break-all">
                   {timestamp}
                 </div>
               </div>
-              <div className="bg-[#030305] p-4">
+              <div className="bg-background p-4">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-1">
                   Reference
                 </div>
-                <div className="text-white font-mono text-sm break-all">
+                <div className="text-foreground font-mono text-sm break-all">
                   {error.digest || "Not available"}
                 </div>
               </div>
             </div>
 
-            <div className="bg-white/[0.02] border border-white/10 rounded-md p-5 text-zinc-300 font-mono text-sm leading-relaxed whitespace-pre-wrap mb-6">
+            <div className="bg-secondary border border-border rounded-md p-5 text-muted-foreground font-mono text-sm leading-relaxed whitespace-pre-wrap mb-6">
               {error.message ||
                 "Something went wrong while loading this page. Please try again, and let us know if the problem continues."}
             </div>
@@ -82,7 +82,7 @@ export default function DashboardError({
               <Button
                 onClick={reset}
                 size="lg"
-                className="rounded-md h-11 px-5 bg-white text-black hover:bg-zinc-200 font-medium text-sm"
+                className="rounded-md h-11 px-5 bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm"
               >
                 Try again
               </Button>
@@ -91,7 +91,7 @@ export default function DashboardError({
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-md h-11 px-5 bg-transparent border-white/20 hover:border-white hover:bg-white/5 text-white font-medium text-sm w-full"
+                  className="rounded-md h-11 px-5 bg-transparent border-border hover:border-foreground hover:bg-accent text-foreground font-medium text-sm w-full"
                 >
                   Back to dashboard
                 </Button>
@@ -105,7 +105,7 @@ export default function DashboardError({
                 className={`rounded-md h-11 px-5 font-medium text-sm flex items-center gap-2 ${
                   reportSent
                     ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-400"
-                    : "border-white/20 bg-transparent hover:border-white hover:bg-white/5 text-white"
+                    : "border-border bg-transparent hover:border-foreground hover:bg-accent text-foreground"
                 }`}
               >
                 {reportSent ? (
@@ -124,14 +124,14 @@ export default function DashboardError({
           </div>
 
           <div className="lg:col-span-1">
-            <div className="border border-white/10 rounded-md p-5">
-              <h3 className="text-sm font-semibold text-white mb-4">
+            <div className="border border-border rounded-md p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4">
                 What to try next
               </h3>
-              <ul className="space-y-3 text-sm text-zinc-400 leading-relaxed">
+              <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
                 <li>
                   <span className="text-zinc-500 mr-2">1.</span>
-                  Click <span className="text-white">Try again</span> to reload
+                  Click <span className="text-foreground">Try again</span> to reload
                   this page.
                 </li>
                 <li>
