@@ -14,7 +14,7 @@ export default function UserGreeting() {
       ) : (
         <>
           <div className="flex items-center gap-2">
-            <span className="text-white/60 font-light">Welcome back,</span>
+            <span className="text-foreground/60 font-light">Welcome back,</span>
             <span className="text-[#e0a96d] font-normal">
               {userFirstName || "Guest"}
             </span>
