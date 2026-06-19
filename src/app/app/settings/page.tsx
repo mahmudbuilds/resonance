@@ -82,6 +82,16 @@ export default function SettingsPage() {
       .catch(() => setLatency(12)); // fallback
   }, []);
 
+  // Check if any settings have been modified
+  const hasChanges = Boolean(
+    (user && (firstName !== (user.firstName || "") || lastName !== (user.lastName || ""))) ||
+    (currentUser &&
+      (systemUpdates !== (currentUser.systemUpdates ?? true) ||
+        usageAlerts !== (currentUser.usageAlerts ?? true) ||
+        securityLogs !== (currentUser.securityLogs ?? true) ||
+        hapticsEnabled !== (currentUser.useHaptics ?? false)))
+  );
+
   const handleCommitChanges = async () => {
     if (!user) return;
     trigger("nudge");
@@ -269,7 +279,7 @@ export default function SettingsPage() {
                   <div className="mt-8 pt-6 border-t border-white/5 flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating}
+                      disabled={isUpdating || !hasChanges}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
@@ -422,7 +432,7 @@ export default function SettingsPage() {
                   <div className="mt-8 pt-6 border-t border-white/5 flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating}
+                      disabled={isUpdating || !hasChanges}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
