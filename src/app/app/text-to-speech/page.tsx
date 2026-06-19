@@ -53,7 +53,7 @@ export default function TextToSpeechPage() {
   >("selectedVoice", null);
   const [model, setModel, modelMounted] = useLocalStorage<string>(
     "model",
-    "inworld-tts-1.5-mini",
+    "inworld-tts-2",
   );
   const voices = useQuery(api.voice.getUserVoices);
 
@@ -122,13 +122,13 @@ export default function TextToSpeechPage() {
     <div className="min-h-screen relative w-full overflow-hidden text-foreground font-sans pb-20">
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
         {/* Header Section */}
-        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-white/5">
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-border">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2 text-xs font-medium text-primary">
               <AudioLines className="w-3.5 h-3.5" />
               Speech Synthesis
             </div>
-            <h1 className="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-white">
+            <h1 className="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-foreground">
               Text to Speech
             </h1>
           </div>
@@ -142,10 +142,10 @@ export default function TextToSpeechPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start w-full">
           {/* Settings Sidebar */}
           <div className="lg:col-span-4 space-y-6 w-full stagger-1">
-            <div className="glass-panel rounded-3xl p-6 shadow-xl shadow-black/20 border border-white/5">
-              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
+            <div className="glass-panel rounded-3xl p-6 shadow-xl shadow-foreground/10 border border-border">
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
                 <Settings2 className="w-4 h-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-white tracking-wide">
+                <h2 className="text-sm font-semibold text-foreground tracking-wide">
                   Voice Configuration
                 </h2>
               </div>
@@ -161,7 +161,7 @@ export default function TextToSpeechPage() {
                     onValueChange={(value) => setSelectedVoice(value)}
                     disabled={!isReady}
                   >
-                    <SelectTrigger className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all">
+                    <SelectTrigger className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all">
                       <SelectValue
                         placeholder={
                           isReady
@@ -170,7 +170,7 @@ export default function TextToSpeechPage() {
                         }
                       />
                     </SelectTrigger>
-                    <SelectContent className="glass-card border-white/10 rounded-xl text-white p-1">
+                    <SelectContent className="rounded-xl text-foreground p-1">
                       {voices?.map((voice) => {
                         const isNew =
                           Date.now() - voice._creationTime <
@@ -179,7 +179,7 @@ export default function TextToSpeechPage() {
                           <SelectItem
                             key={voice.inworldVoiceId}
                             value={voice.inworldVoiceId!}
-                            className="rounded-lg cursor-pointer w-full focus:bg-white/5 focus:text-white px-3 py-2.5 transition-colors"
+                            className="rounded-lg cursor-pointer w-full focus:bg-secondary focus:text-foreground px-3 py-2.5 transition-colors"
                           >
                             <div className="flex items-center justify-between w-full gap-4">
                               <span className="truncate font-medium">
@@ -192,7 +192,7 @@ export default function TextToSpeechPage() {
                                   </Badge>
                                 )}
                                 {voice.langCode && (
-                                  <span className="text-xs text-muted-foreground font-mono bg-white/5 px-1.5 py-0.5 rounded border border-white/10">
+                                  <span className="text-xs text-muted-foreground font-mono bg-secondary px-1.5 py-0.5 rounded border border-border">
                                     {voice.langCode}
                                   </span>
                                 )}
@@ -222,25 +222,25 @@ export default function TextToSpeechPage() {
                     value={model}
                     onValueChange={(value) => setModel(value)}
                   >
-                    <SelectTrigger className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all">
+                    <SelectTrigger className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all">
                       <SelectValue placeholder="Select model..." />
                     </SelectTrigger>
-                    <SelectContent className="glass-card border-white/10 rounded-xl text-white p-1">
+                    <SelectContent className="rounded-xl text-foreground p-1">
                       <SelectItem
                         value="inworld-tts-2"
-                        className="rounded-lg cursor-pointer focus:bg-white/5 focus:text-white px-3 py-2.5"
+                        className="rounded-lg cursor-pointer focus:bg-secondary focus:text-foreground px-3 py-2.5"
                       >
                         inworld-tts-2
                       </SelectItem>
                       <SelectItem
                         value="inworld-tts-1.5-mini"
-                        className="rounded-lg cursor-pointer focus:bg-white/5 focus:text-white px-3 py-2.5"
+                        className="rounded-lg cursor-pointer focus:bg-secondary focus:text-foreground px-3 py-2.5"
                       >
                         inworld-tts-1.5-mini
                       </SelectItem>
                       <SelectItem
                         value="inworld-tts-1.5-max"
-                        className="rounded-lg cursor-pointer focus:bg-white/5 focus:text-white px-3 py-2.5"
+                        className="rounded-lg cursor-pointer focus:bg-secondary focus:text-foreground px-3 py-2.5"
                       >
                         inworld-tts-1.5-max
                       </SelectItem>
@@ -249,14 +249,14 @@ export default function TextToSpeechPage() {
                 </div>
 
                 {/* Tuning sliders */}
-                <div className="space-y-5 pt-5 border-t border-white/5">
+                <div className="space-y-5 pt-5 border-t border-border">
                   <Label className="text-xs font-semibold text-muted-foreground tracking-wide block">
                     Vocal Parameters
                   </Label>
 
-                  <div className="space-y-3 bg-white/5 border border-white/10 p-4 rounded-xl">
+                  <div className="space-y-3 bg-secondary border border-border p-4 rounded-xl">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-white">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
                         <Gauge className="w-3.5 h-3.5 text-muted-foreground" />
                         Speaking Rate
                       </div>
@@ -274,9 +274,9 @@ export default function TextToSpeechPage() {
                     />
                   </div>
 
-                  <div className="space-y-3 bg-white/5 border border-white/10 p-4 rounded-xl">
+                  <div className="space-y-3 bg-secondary border border-border p-4 rounded-xl">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-white">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
                         <Thermometer className="w-3.5 h-3.5 text-muted-foreground" />
                         Temperature
                       </div>
@@ -300,11 +300,11 @@ export default function TextToSpeechPage() {
 
           {/* Main Input area & Generations */}
           <div className="lg:col-span-8 flex flex-col space-y-6 w-full stagger-2">
-            <div className="flex flex-col border border-white/5 glass-panel min-h-[420px] sm:min-h-[480px] w-full rounded-[2rem] focus-within:border-white/10 shadow-xl shadow-black/20 transition-all overflow-hidden relative">
-              <div className="border-b border-white/5 p-4 flex flex-row items-center justify-between bg-white/[0.02]">
+            <div className="flex flex-col border border-border glass-panel min-h-[420px] sm:min-h-[480px] w-full rounded-[2rem] focus-within:border-border shadow-xl shadow-foreground/10 transition-all overflow-hidden relative">
+              <div className="border-b border-border p-4 flex flex-row items-center justify-between bg-secondary">
                 <div className="flex items-center gap-2">
                   <Type className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-semibold text-white">
+                  <span className="text-sm font-semibold text-foreground">
                     Script Editor
                   </span>
                 </div>
@@ -323,11 +323,11 @@ export default function TextToSpeechPage() {
                       className="data-[state=checked]:bg-primary"
                     />
                   </div>
-                  <div className="w-px h-4 bg-white/10" />
+                  <div className="w-px h-4 bg-accent" />
                   <Button
                     variant="ghost"
                     onClick={() => setText("")}
-                    className="text-xs font-medium text-muted-foreground hover:text-white h-8 px-2.5 rounded-lg hover:bg-white/5"
+                    className="text-xs font-medium text-muted-foreground hover:text-foreground h-8 px-2.5 rounded-lg hover:bg-accent"
                   >
                     Clear text
                   </Button>
@@ -339,7 +339,7 @@ export default function TextToSpeechPage() {
                   {isSsml && (
                     <div
                       ref={lineNumbersRef}
-                      className="flex flex-col items-end pt-5 pb-5 pl-3 pr-2 border-r border-white/5 w-12 sm:w-14 font-mono text-sm text-muted-foreground select-none bg-white/[0.01] text-right overflow-hidden h-full pointer-events-none"
+                      className="flex flex-col items-end pt-5 pb-5 pl-3 pr-2 border-r border-border w-12 sm:w-14 font-mono text-sm text-muted-foreground select-none bg-secondary/50 text-right overflow-hidden h-full pointer-events-none"
                     >
                       {Array.from({
                         length: Math.max(1, text.split("\n").length),
@@ -368,27 +368,47 @@ export default function TextToSpeechPage() {
                       }
                     }}
                     style={isSsml ? { lineHeight: "28px" } : undefined}
-                    className={`w-full h-full min-h-[300px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none focus:outline-none focus-visible:ring-offset-0 bg-transparent text-white placeholder:text-muted-foreground overflow-y-auto ${
+                    className={`w-full h-full min-h-[300px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none focus:outline-none focus-visible:ring-offset-0 bg-transparent text-foreground placeholder:text-muted-foreground overflow-y-auto ${
                       isSsml
                         ? "pt-5 pb-5 px-4 font-mono text-sm text-primary selection:bg-primary/20 overflow-x-auto"
-                        : "p-5 font-sans text-base sm:text-lg selection:bg-white/10 overflow-x-hidden"
+                        : "p-5 font-sans text-base sm:text-lg selection:bg-accent overflow-x-hidden"
                     }`}
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                        e.preventDefault();
+                        handleGenerateSpeech();
+                      }
+                      if (e.key === "Tab") {
+                        e.preventDefault();
+                        const start = e.currentTarget.selectionStart;
+                        const end = e.currentTarget.selectionEnd;
+                        const newValue =
+                          text.substring(0, start) +
+                          "    " +
+                          text.substring(end);
+                        setText(newValue);
+                        requestAnimationFrame(() => {
+                          e.currentTarget.selectionStart = start + 4;
+                          e.currentTarget.selectionEnd = start + 4;
+                        });
+                      }
+                    }}
                     maxLength={5000}
                     spellCheck={!isSsml}
                   />
                 </div>
               </div>
 
-              <div className="border-t border-white/5 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/[0.02]">
+              <div className="border-t border-border p-4 flex flex-col sm:flex-row items-center justify-between gap-4 bg-secondary">
                 <div className="flex items-center gap-5 w-full sm:w-auto justify-between sm:justify-start">
                   <span className="text-xs font-medium text-muted-foreground">
                     <span
                       className={
                         text.length > 4500
                           ? "text-rose-400 font-semibold"
-                          : "text-white font-mono"
+                          : "text-foreground font-mono"
                       }
                     >
                       {text.length.toLocaleString()}
@@ -399,7 +419,7 @@ export default function TextToSpeechPage() {
                   <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
                     <Clock className="w-3.5 h-3.5" />
                     Est. Duration:{" "}
-                    <span className="font-mono text-white">
+                    <span className="font-mono text-foreground">
                       {Math.ceil(text.length / 18)}s
                     </span>
                   </div>
@@ -409,7 +429,7 @@ export default function TextToSpeechPage() {
                   <Button
                     onClick={handleGenerateSpeech}
                     disabled={isGenerating || !text.trim()}
-                    className="shadow-lg shadow-primary/20 rounded-full h-11 w-full sm:w-auto px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
+                    className="shadow-lg shadow-primary/20 rounded-full h-11 w-full sm:w-auto px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-foreground font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                   >
                     {isGenerating ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -423,9 +443,9 @@ export default function TextToSpeechPage() {
             </div>
 
             {/* Recent Generations List / Audio Log */}
-            <div className="border border-white/5 glass-panel rounded-3xl shadow-xl shadow-black/20 overflow-hidden w-full stagger-3">
-              <div className="p-5 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+            <div className="border border-border glass-panel rounded-3xl shadow-xl shadow-foreground/10 overflow-hidden w-full stagger-3">
+              <div className="p-5 border-b border-border bg-secondary flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                   <History className="w-4 h-4 text-primary" /> Generation
                   History
                 </h3>
@@ -434,10 +454,10 @@ export default function TextToSpeechPage() {
               <div className="p-0">
                 {!userGenerations || userGenerations.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-                    <div className="p-4 bg-white/5 rounded-2xl border border-white/10 mb-4">
+                    <div className="p-4 bg-secondary rounded-2xl border border-border mb-4">
                       <Mic2 className="w-6 h-6 text-muted-foreground" />
                     </div>
-                    <p className="text-sm font-medium text-white">
+                    <p className="text-sm font-medium text-foreground">
                       No audio generations yet
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">
@@ -470,7 +490,7 @@ export default function TextToSpeechPage() {
                       return (
                         <div
                           key={generation._id}
-                          className="p-4 flex items-center justify-between hover:bg-white/5 transition-colors gap-4 group"
+                          className="p-4 flex items-center justify-between hover:bg-accent transition-colors gap-4 group"
                         >
                           <div className="flex items-center gap-4 flex-1 min-w-0">
                             <Button
@@ -478,8 +498,8 @@ export default function TextToSpeechPage() {
                               size="icon"
                               className={`h-10 w-10 shrink-0 rounded-xl transition-all border-none shadow-sm ${
                                 playingId === generation._id
-                                  ? "bg-primary text-white hover:bg-primary/90"
-                                  : "bg-white/5 text-white hover:bg-white/10"
+                                  ? "bg-primary text-foreground hover:bg-primary/90"
+                                  : "bg-secondary text-foreground hover:bg-accent"
                               }`}
                               onClick={() => {
                                 const audio = document.getElementById(
@@ -524,11 +544,11 @@ export default function TextToSpeechPage() {
                               }
                             />
                             <div className="flex flex-col min-w-0 flex-1 gap-1">
-                              <p className="text-sm font-medium text-white truncate pr-2">
+                              <p className="text-sm font-medium text-foreground truncate pr-2">
                                 {generation.prompt}
                               </p>
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <Badge className="text-[10px] font-medium bg-white/5 text-muted-foreground hover:bg-white/10 border-none px-2 py-0 rounded-full">
+                                <Badge className="text-[10px] font-medium bg-secondary text-muted-foreground hover:bg-accent border-none px-2 py-0 rounded-full">
                                   {voiceName}
                                 </Badge>
                                 <span className="text-muted-foreground/30">
@@ -545,7 +565,7 @@ export default function TextToSpeechPage() {
                             <Button
                               variant="outline"
                               size="icon"
-                              className="h-9 w-9 rounded-lg bg-white/5 border-none hover:bg-white/10 text-muted-foreground hover:text-white shadow-sm"
+                              className="h-9 w-9 rounded-lg bg-secondary border-none hover:bg-accent text-muted-foreground hover:text-foreground shadow-sm"
                               disabled={
                                 downloadingId === generation._id ||
                                 !generation.audioUrl
@@ -586,14 +606,14 @@ export default function TextToSpeechPage() {
                                 <Button
                                   variant="outline"
                                   size="icon"
-                                  className="h-9 w-9 rounded-lg bg-white/5 border-none hover:bg-white/10 text-muted-foreground hover:text-white shadow-sm"
+                                  className="h-9 w-9 rounded-lg bg-secondary border-none hover:bg-accent text-muted-foreground hover:text-foreground shadow-sm"
                                 >
                                   <MoreVertical className="w-4 h-4" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent
                                 align="end"
-                                className="w-36 rounded-xl border-white/10 glass-card p-1 shadow-lg shadow-black/20"
+                                className="w-36 rounded-xl p-1 shadow-lg shadow-foreground/10"
                               >
                                 <DropdownMenuItem
                                   className="text-rose-400 hover:text-rose-300 focus:bg-rose-400/10 focus:text-rose-400 cursor-pointer rounded-lg text-xs font-medium px-3 py-2"

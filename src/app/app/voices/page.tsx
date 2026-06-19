@@ -112,15 +112,15 @@ export default function VoicesPage() {
   });
 
   return (
-    <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-white pb-20">
+    <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-primary-foreground pb-20">
       <div className="max-w-7xl mx-auto px-6 py-12 animate-fade-up">
         {/* Header Block */}
-        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 border-b border-white/5 pb-8 mb-8">
+        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 border-b border-border pb-8 mb-8">
           <div className="space-y-3 w-full lg:w-auto">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full font-medium text-xs text-primary">
               <Sparkles className="w-3.5 h-3.5" /> Studio Library
             </div>
-            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white font-heading">
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground font-heading">
               Voice Library
             </h1>
           </div>
@@ -132,7 +132,7 @@ export default function VoicesPage() {
             </p>
             <Button
               asChild
-              className="rounded-full bg-white text-black hover:bg-zinc-200 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shrink-0 w-full sm:w-auto shadow-lg"
+              className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shrink-0 w-full sm:w-auto shadow-lg"
             >
               <Link href="/app/voice-cloning">
                 <Plus className="w-4 h-4 mr-2" /> Clone Custom Voice
@@ -147,23 +147,23 @@ export default function VoicesPage() {
           onValueChange={setActiveTab}
           className="w-full space-y-6"
         >
-          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-b border-white/5 pb-4">
-            <TabsList className="glass-card p-1 rounded-xl sm:rounded-full h-12 w-full sm:w-auto flex border-white/5">
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 border-b border-border pb-4">
+            <TabsList className="glass-card p-1 rounded-xl sm:rounded-full h-12 w-full sm:w-auto flex border-border">
               <TabsTrigger
                 value="registry"
-                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-white text-xs font-medium h-full px-6 gap-2 transition-all"
+                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-foreground text-xs font-medium h-full px-6 gap-2 transition-all"
               >
                 <LayoutGrid className="w-4 h-4" />
                 <span>Profiles</span>
               </TabsTrigger>
               <TabsTrigger
                 value="generations"
-                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-white text-xs font-medium h-full px-6 gap-2 transition-all"
+                className="flex-1 rounded-lg sm:rounded-full data-[state=active]:bg-primary data-[state=active]:text-foreground text-xs font-medium h-full px-6 gap-2 transition-all"
               >
                 <History className="w-4 h-4" />
                 <span>History Logs</span>
                 {historyList.length > 0 && (
-                  <span className="text-[10px] bg-white/20 text-white px-2 py-0.5 rounded-full ml-1">
+                  <span className="text-[10px] bg-accent text-foreground px-2 py-0.5 rounded-full ml-1">
                     {historyList.length}
                   </span>
                 )}
@@ -172,12 +172,12 @@ export default function VoicesPage() {
 
             {/* Layout Switchers */}
             <div className="flex items-center justify-between sm:justify-end gap-4">
-              <div className="flex items-center gap-1 border border-white/5 bg-white/5 p-1 rounded-xl">
+              <div className="flex items-center gap-1 border border-border bg-secondary p-1 rounded-xl">
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={() => setViewMode("grid")}
-                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "grid" ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white"}`}
+                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "grid" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <LayoutGrid className="w-4 h-4" />
                 </Button>
@@ -185,7 +185,7 @@ export default function VoicesPage() {
                   size="icon"
                   variant="ghost"
                   onClick={() => setViewMode("list")}
-                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "list" ? "bg-white/10 text-white" : "text-muted-foreground hover:text-white"}`}
+                  className={`h-9 w-9 rounded-lg transition-all ${viewMode === "list" ? "bg-accent text-foreground" : "text-muted-foreground hover:text-foreground"}`}
                 >
                   <List className="w-4 h-4" />
                 </Button>
@@ -199,7 +199,7 @@ export default function VoicesPage() {
                       variant="outline"
                       size="icon"
                       onClick={() => scroll("left")}
-                      className="h-10 w-10 rounded-full bg-white/5 border-white/10 hover:border-primary hover:text-primary transition-all text-white"
+                      className="h-10 w-10 rounded-full bg-secondary border-border hover:border-primary hover:text-primary transition-all text-foreground"
                     >
                       <ChevronLeft className="w-4 h-4" />
                     </Button>
@@ -207,7 +207,7 @@ export default function VoicesPage() {
                       variant="outline"
                       size="icon"
                       onClick={() => scroll("right")}
-                      className="h-10 w-10 rounded-full bg-white/5 border-white/10 hover:border-primary hover:text-primary transition-all text-white"
+                      className="h-10 w-10 rounded-full bg-secondary border-border hover:border-primary hover:text-primary transition-all text-foreground"
                     >
                       <ChevronRight className="w-4 h-4" />
                     </Button>
@@ -218,7 +218,7 @@ export default function VoicesPage() {
 
           {/* Filtering Dropdowns */}
           {activeTab === "registry" && (
-            <div className="glass-panel rounded-2xl p-4 relative z-50 border border-white/5">
+            <div className="glass-panel rounded-2xl p-4 relative z-50 border border-border">
               <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
                 <div className="relative flex-1 w-full">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -226,7 +226,7 @@ export default function VoicesPage() {
                     placeholder="Search profiles..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 glass-card border-white/5 h-11 rounded-xl text-sm placeholder:text-muted-foreground focus-visible:ring-primary/50 transition-all w-full text-white"
+                    className="pl-12 glass-card border-border h-11 rounded-xl text-sm placeholder:text-muted-foreground focus-visible:ring-primary/50 transition-all w-full text-foreground"
                   />
                 </div>
 
@@ -236,7 +236,7 @@ export default function VoicesPage() {
                     value={selectedLocale}
                     onValueChange={setSelectedLocale}
                   >
-                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-white/5 h-11 rounded-xl text-white text-xs px-4 focus:ring-1 focus:ring-primary">
+                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-border h-11 rounded-xl text-foreground text-xs px-4 focus:ring-1 focus:ring-primary">
                       <div className="flex items-center gap-2 truncate">
                         <Globe2 className="w-4 h-4 text-primary shrink-0" />
                         <SelectValue placeholder="Locales" />
@@ -246,59 +246,59 @@ export default function VoicesPage() {
                     <SelectContent
                       position="popper"
                       sideOffset={8}
-                      className="w-[210px] max-h-[240px] overflow-y-auto glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                      className="w-[210px] max-h-[240px] overflow-y-auto border border-border rounded-xl text-foreground text-xs shadow-xl z-[100] p-2 space-y-1"
                     >
                       <SelectItem
                         value="all"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         All Locales
                       </SelectItem>
                       <SelectItem
                         value="en"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         English (EN)
                       </SelectItem>
                       <SelectItem
                         value="fr"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Français (FR)
                       </SelectItem>
                       <SelectItem
                         value="hi"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Hindi (HI)
                       </SelectItem>
                       <SelectItem
                         value="es"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Español (ES)
                       </SelectItem>
                       <SelectItem
                         value="de"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Deutsch (DE)
                       </SelectItem>
                       <SelectItem
                         value="ja"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         日本語 (JA)
                       </SelectItem>
                       <SelectItem
                         value="it"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Italiano (IT)
                       </SelectItem>
                       <SelectItem
                         value="zh"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         中文 (ZH)
                       </SelectItem>
@@ -310,7 +310,7 @@ export default function VoicesPage() {
                     value={selectedClass}
                     onValueChange={setSelectedClass}
                   >
-                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-white/5 h-11 rounded-xl text-white text-xs px-4 focus:ring-1 focus:ring-primary">
+                    <SelectTrigger className="w-full lg:w-[180px] glass-card border-border h-11 rounded-xl text-foreground text-xs px-4 focus:ring-1 focus:ring-primary">
                       <div className="flex items-center gap-2 truncate">
                         <Filter className="w-4 h-4 text-primary shrink-0" />
                         <SelectValue placeholder="Classes" />
@@ -320,23 +320,23 @@ export default function VoicesPage() {
                     <SelectContent
                       position="popper"
                       sideOffset={8}
-                      className="w-[210px] glass-panel border border-white/10 rounded-xl text-white text-xs shadow-xl z-[100] p-2 space-y-1"
+                      className="w-[210px] border border-border rounded-xl text-foreground text-xs shadow-xl z-[100] p-2 space-y-1"
                     >
                       <SelectItem
                         value="all"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         All Classes
                       </SelectItem>
                       <SelectItem
                         value="public"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Public Studio
                       </SelectItem>
                       <SelectItem
                         value="cloned"
-                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-white/10 focus:text-white transition-colors outline-none"
+                        className="cursor-pointer rounded-lg px-3 py-2.5 text-left focus:bg-accent focus:text-foreground transition-colors outline-none"
                       >
                         Cloned Voice
                       </SelectItem>
@@ -353,18 +353,18 @@ export default function VoicesPage() {
             className="mt-0 outline-none relative z-10 w-full stagger-1"
           >
             {voices === undefined ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-white/5 glass-panel rounded-3xl">
+              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-border glass-panel rounded-3xl">
                 <Loader2 className="w-6 h-6 text-primary animate-spin" />
                 <span className="text-sm text-muted-foreground font-medium">
                   Syncing library...
                 </span>
               </div>
             ) : voicesList.length === 0 ? (
-              <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+              <div className="text-center py-28 border border-border glass-panel rounded-3xl px-4">
+                <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border">
                   <Music className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <h3 className="text-base font-semibold text-white mb-2">
+                <h3 className="text-base font-semibold text-foreground mb-2">
                   No voice profiles found
                 </h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed mb-6">
@@ -372,7 +372,7 @@ export default function VoicesPage() {
                 </p>
                 <Button
                   asChild
-                  className="rounded-full bg-white text-black hover:bg-zinc-200 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shadow-lg"
+                  className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 font-sans text-xs tracking-wider h-11 px-6 transition-all duration-300 font-medium shadow-lg"
                 >
                   <Link href="/app/voice-cloning">
                     <Plus className="w-4 h-4 mr-2" /> Clone Custom Voice
@@ -380,7 +380,7 @@ export default function VoicesPage() {
                 </Button>
               </div>
             ) : filteredVoices.length === 0 ? (
-              <div className="text-center py-20 border border-white/10 glass-panel rounded-3xl">
+              <div className="text-center py-20 border border-border glass-panel rounded-3xl">
                 <Music className="w-8 h-8 text-muted-foreground mx-auto mb-4" />
                 <p className="text-sm text-muted-foreground">
                   No active parameters match your search filters.
@@ -399,15 +399,15 @@ export default function VoicesPage() {
                     return (
                       <div
                         key={voice._id}
-                        className="glass-card rounded-2xl p-5 space-y-4 border border-white/5 hover:border-white/10 transition-all"
+                        className="glass-card rounded-2xl p-5 space-y-4 border border-border hover:border-border transition-all"
                       >
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-sm font-semibold shrink-0">
+                          <div className="w-12 h-12 rounded-xl bg-accent border border-border flex items-center justify-center text-sm font-semibold shrink-0">
                             {voiceName[0]}
                           </div>
                           <div className="flex-1 min-w-0 space-y-1.5">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-semibold text-white truncate">
+                              <span className="font-semibold text-foreground truncate">
                                 {voiceName}
                               </span>
                               <span
@@ -443,7 +443,7 @@ export default function VoicesPage() {
                           onClick={() =>
                             handleUseVoice(voice.inworldVoiceId ?? voice._id)
                           }
-                          className="w-full rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs h-10 transition-all duration-300 font-medium"
+                          className="w-full rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground text-xs h-10 transition-all duration-300 font-medium"
                         >
                           Select Voice
                         </Button>
@@ -453,11 +453,11 @@ export default function VoicesPage() {
                 </div>
 
                 {/* Tablet + desktop table */}
-                <div className="hidden md:block border border-white/5 glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
+                <div className="hidden md:block border border-border glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
                   <div className="w-full overflow-x-auto lg:overflow-visible">
                     <table className="w-full text-left border-collapse min-w-[800px] lg:min-w-0">
                     <thead>
-                      <tr className="border-b border-white/5 bg-white/5 text-xs font-semibold text-muted-foreground">
+                      <tr className="border-b border-border bg-secondary text-xs font-semibold text-muted-foreground">
                         <th className="pl-8 pr-4 py-5 w-14">Avatar</th>
                         <th className="px-6 py-5 w-44">Name</th>
                         <th className="px-6 py-5 w-28">Locale</th>
@@ -470,7 +470,7 @@ export default function VoicesPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-sm text-white">
+                    <tbody className="divide-y divide-white/5 text-sm text-foreground">
                       {filteredVoices.map((voice) => {
                         const isCloned = !voice.isPublic;
                         const voiceName =
@@ -481,10 +481,10 @@ export default function VoicesPage() {
                         return (
                           <tr
                             key={voice._id}
-                            className="hover:bg-white/5 transition-all group duration-200"
+                            className="hover:bg-accent transition-all group duration-200"
                           >
                             <td className="pl-8 pr-4 py-4">
-                              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-sm font-semibold">
+                              <div className="w-10 h-10 rounded-xl bg-accent border border-border flex items-center justify-center text-sm font-semibold">
                                 {voiceName[0]}
                               </div>
                             </td>
@@ -525,7 +525,7 @@ export default function VoicesPage() {
                                     voice.inworldVoiceId ?? voice._id,
                                   )
                                 }
-                                className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white text-xs px-6 h-9 transition-all duration-300 border-none font-medium"
+                                className="rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground text-xs px-6 h-9 transition-all duration-300 border-none font-medium"
                               >
                                 Select
                               </Button>
@@ -553,7 +553,7 @@ export default function VoicesPage() {
                   return (
                     <div
                       key={voice._id}
-                      className="snap-start shrink-0 w-full sm:w-[310px] rounded-[24px] border border-white/5 glass-card hover:bg-white/10 transition-all duration-300 hover:border-primary/30 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
+                      className="snap-start shrink-0 w-full sm:w-[310px] rounded-[24px] border border-border glass-card hover:bg-accent transition-all duration-300 hover:border-primary/30 flex flex-col justify-between shadow-2xl relative overflow-hidden group"
                     >
                       <div className="pt-6 px-6 pb-2 flex items-center justify-between">
                         <span
@@ -566,7 +566,7 @@ export default function VoicesPage() {
 
                       <div className="px-6 pt-3 pb-6 flex flex-col gap-4 flex-1">
                         <div className="flex justify-between items-center">
-                          <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center font-heading font-semibold text-lg text-white">
+                          <div className="w-12 h-12 rounded-2xl bg-accent border border-border flex items-center justify-center font-heading font-semibold text-lg text-foreground">
                             {voiceName[0]}
                           </div>
                           <Button
@@ -574,7 +574,7 @@ export default function VoicesPage() {
                             onClick={() =>
                               handleUseVoice(voice.inworldVoiceId ?? voice._id)
                             }
-                            className="h-10 w-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 border-none group-hover:scale-105"
+                            className="h-10 w-10 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 border-none group-hover:scale-105"
                           >
                             <Play
                               className="w-4 h-4 ml-0.5"
@@ -584,7 +584,7 @@ export default function VoicesPage() {
                         </div>
 
                         <div className="space-y-1.5">
-                          <h3 className="text-xl font-heading font-semibold text-white truncate">
+                          <h3 className="text-xl font-heading font-semibold text-foreground truncate">
                             {voiceName}
                           </h3>
                           <div className="flex gap-1.5">
@@ -595,17 +595,17 @@ export default function VoicesPage() {
                         </div>
 
                         {description ? (
-                          <p className="text-sm text-muted-foreground leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                          <p className="text-sm text-muted-foreground leading-relaxed pt-3 border-t border-border min-h-[72px] line-clamp-3">
                             {description}
                           </p>
                         ) : (
-                          <p className="text-sm italic text-muted-foreground/70 leading-relaxed pt-3 border-t border-white/5 min-h-[72px] line-clamp-3">
+                          <p className="text-sm italic text-muted-foreground/70 leading-relaxed pt-3 border-t border-border min-h-[72px] line-clamp-3">
                             {NO_DESCRIPTION}
                           </p>
                         )}
                       </div>
 
-                      <div className="px-6 py-4 border-t border-white/5 bg-white/5 flex items-center justify-between text-xs text-muted-foreground font-medium">
+                      <div className="px-6 py-4 border-t border-border bg-secondary flex items-center justify-between text-xs text-muted-foreground font-medium">
                         <span className="uppercase">{mood}</span>
                         <span className="flex items-center gap-1.5">
                           <Activity className="w-3.5 h-3.5 text-primary" />{" "}
@@ -625,18 +625,18 @@ export default function VoicesPage() {
             className="mt-0 outline-none relative z-10 w-full"
           >
             {generations === undefined ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-white/5 glass-panel rounded-3xl">
+              <div className="flex flex-col items-center justify-center py-20 gap-4 border border-border glass-panel rounded-3xl">
                 <Loader2 className="w-6 h-6 text-primary animate-spin" />
                 <span className="text-sm font-medium text-muted-foreground">
                   Fetching history...
                 </span>
               </div>
             ) : historyList.length === 0 ? (
-              <div className="text-center py-28 border border-white/10 glass-panel rounded-3xl px-4">
-                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+              <div className="text-center py-28 border border-border glass-panel rounded-3xl px-4">
+                <div className="w-14 h-14 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 border border-border">
                   <History className="w-6 h-6 text-muted-foreground" />
                 </div>
-                <h3 className="text-base font-semibold text-white mb-2">
+                <h3 className="text-base font-semibold text-foreground mb-2">
                   No History Logs
                 </h3>
                 <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
@@ -655,18 +655,18 @@ export default function VoicesPage() {
                     return (
                       <div
                         key={g._id}
-                        className="border border-white/5 glass-card rounded-2xl p-4 space-y-4 hover:border-white/10 transition-all"
+                        className="border border-border glass-card rounded-2xl p-4 space-y-4 hover:border-border transition-all"
                       >
                         <WaveformPlayer url={g.audioUrl} />
-                        <p className="text-sm text-white leading-relaxed line-clamp-4">
+                        <p className="text-sm text-foreground leading-relaxed line-clamp-4">
                           {g.prompt}
                         </p>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground pt-3 border-t border-white/5">
-                          <span className="font-semibold text-white flex items-center gap-1.5 min-w-0">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-muted-foreground pt-3 border-t border-border">
+                          <span className="font-semibold text-foreground flex items-center gap-1.5 min-w-0">
                             <Music className="w-3.5 h-3.5 text-primary shrink-0" />
                             <span className="truncate">{voiceName}</span>
                           </span>
-                          <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+                          <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
                             {g.format}
                           </span>
                           <span className="font-mono text-[10px] ml-auto">
@@ -679,11 +679,11 @@ export default function VoicesPage() {
                 </div>
 
                 {/* Tablet + desktop table layout */}
-                <div className="hidden md:block border border-white/5 glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
+                <div className="hidden md:block border border-border glass-panel rounded-[24px] overflow-hidden shadow-2xl w-full">
                   <div className="w-full overflow-x-auto lg:overflow-visible">
                     <table className="w-full text-left border-collapse min-w-[800px] lg:min-w-0">
                     <thead>
-                      <tr className="border-b border-white/5 bg-white/5 text-xs font-semibold text-muted-foreground">
+                      <tr className="border-b border-border bg-secondary text-xs font-semibold text-muted-foreground">
                         <th className="pl-8 pr-4 py-5 w-72">Preview</th>
                         <th className="px-6 py-5">Prompt</th>
                         <th className="px-6 py-5 w-56">Voice</th>
@@ -693,7 +693,7 @@ export default function VoicesPage() {
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-white/5 text-sm text-white">
+                    <tbody className="divide-y divide-white/5 text-sm text-foreground">
                       {historyList.map((g) => {
                         const voiceName =
                           voiceNameByInworldId.get(g.inworldVoiceId ?? "") ??
@@ -701,7 +701,7 @@ export default function VoicesPage() {
                         return (
                           <tr
                             key={g._id}
-                            className="hover:bg-white/5 transition-all duration-200"
+                            className="hover:bg-accent transition-all duration-200"
                           >
                             <td className="pl-8 pr-4 py-4">
                               <WaveformPlayer url={g.audioUrl} />
@@ -712,12 +712,12 @@ export default function VoicesPage() {
                               </span>
                             </td>
                             <td className="px-6 py-4">
-                              <span className="text-sm text-white font-medium truncate block max-w-[14rem]">
+                              <span className="text-sm text-foreground font-medium truncate block max-w-[14rem]">
                                 {voiceName}
                               </span>
                             </td>
                             <td className="px-6 py-4 text-xs">
-                              <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+                              <span className="text-[10px] tracking-wider uppercase font-semibold px-2 py-0.5 rounded-full bg-secondary text-muted-foreground">
                                 {g.format}
                               </span>
                             </td>

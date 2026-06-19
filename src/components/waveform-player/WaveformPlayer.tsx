@@ -169,7 +169,7 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
         onClick={handlePlayPause}
         disabled={!isReady}
         aria-label={isPlaying ? "Pause" : "Play"}
-        className="size-8 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 border border-primary/20"
+        className="size-8 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 border border-primary/20"
       >
         {!isReady ? (
           <Loader2 className="size-3.5 animate-spin" />

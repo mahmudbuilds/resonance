@@ -160,7 +160,7 @@ export default function SettingsPage() {
 
   if (!isClerkLoaded || currentUser === undefined) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center text-white">
+      <div className="min-h-screen bg-transparent flex items-center justify-center text-foreground">
         <div className="flex flex-col items-center gap-4 animate-fade-up">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <span className="text-sm font-medium text-muted-foreground">
@@ -175,13 +175,13 @@ export default function SettingsPage() {
     <div className="min-h-screen relative w-full overflow-hidden text-foreground font-sans pb-20">
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
         {/* Header Section */}
-        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-white/5">
+        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-border">
           <div className="space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2 text-xs font-medium text-primary">
               <Settings2 className="w-3.5 h-3.5" />
               Account
             </div>
-            <h1 className="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-white">
+            <h1 className="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-foreground">
               Account Settings
             </h1>
           </div>
@@ -196,14 +196,14 @@ export default function SettingsPage() {
           <TabsList className="glass-panel rounded-full h-12 inline-flex p-1 mb-10 w-full sm:w-auto">
             <TabsTrigger
               value="profile"
-              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
+              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-accent data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
             >
               <User className="w-4 h-4 shrink-0" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
+              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-accent data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
             >
               <Settings2 className="w-4 h-4 shrink-0" />
               Preferences
@@ -217,10 +217,10 @@ export default function SettingsPage() {
                 value="profile"
                 className="m-0 space-y-8 outline-none"
               >
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
+                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border relative overflow-hidden">
+                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-border">
                     <User className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                    <h2 className="text-sm font-semibold text-foreground tracking-wide">
                       Personal Information
                     </h2>
                   </div>
@@ -238,7 +238,7 @@ export default function SettingsPage() {
                           id="firstName"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all bg-white/[0.02]"
+                          className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all bg-secondary"
                         />
                       </div>
                       <div className="space-y-2">
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                           id="lastName"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          className="w-full glass-card border-white/10 h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-white text-sm px-3.5 transition-all bg-white/[0.02]"
+                          className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all bg-secondary"
                         />
                       </div>
                     </div>
@@ -270,16 +270,16 @@ export default function SettingsPage() {
                           type="email"
                           disabled
                           value={user?.primaryEmailAddress?.emailAddress || ""}
-                          className="w-full pl-10 glass-card border-white/5 h-11 rounded-xl text-muted-foreground text-sm px-3.5 bg-white/[0.01] cursor-not-allowed"
+                          className="w-full pl-10 glass-card border-border h-11 rounded-xl text-muted-foreground text-sm px-3.5 bg-secondary/50 cursor-not-allowed"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-white/5 flex justify-end">
+                  <div className="mt-8 pt-6 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating || !hasChanges}
+                      disabled={isUpdating}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
@@ -295,10 +295,10 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Decommission Account Section */}
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-rose-500/20 relative overflow-hidden bg-rose-500/[0.02]">
+                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-rose-500/20 relative overflow-hidden bg-rose-500/[0.02]">
                   <div className="flex items-center gap-2 mb-6 text-rose-400">
                     <Shield className="w-5 h-5" />
-                    <h3 className="text-lg font-semibold tracking-tight text-white">
+                    <h3 className="text-lg font-semibold tracking-tight text-foreground">
                       Delete Account
                     </h3>
                   </div>
@@ -314,14 +314,14 @@ export default function SettingsPage() {
                       <Button
                         variant="destructive"
                         disabled={isDecommissioning}
-                        className="rounded-full h-11 px-8 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border-none transition-all disabled:opacity-50 font-medium"
+                        className="rounded-full h-11 px-8 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-foreground border-none transition-all disabled:opacity-50 font-medium"
                       >
                         {isDecommissioning
                           ? "Deleting Data..."
                           : "Delete Account"}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="glass-panel border-white/10 text-white rounded-3xl p-6 sm:p-8 shadow-2xl">
+                    <AlertDialogContent className="glass-panel border-border text-foreground rounded-3xl p-6 sm:p-8 shadow-2xl">
                       <AlertDialogHeader className="space-y-3">
                         <AlertDialogTitle className="text-xl font-semibold text-rose-400 flex items-center gap-2">
                           <Shield className="w-5 h-5 shrink-0" />
@@ -334,12 +334,12 @@ export default function SettingsPage() {
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter className="mt-8 gap-3 sm:gap-0">
-                        <AlertDialogCancel className="rounded-full h-11 border-white/10 bg-white/5 hover:bg-white/10 text-white font-medium transition-colors">
+                        <AlertDialogCancel className="rounded-full h-11 border-border bg-secondary hover:bg-accent text-foreground font-medium transition-colors">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleDecommission}
-                          className="rounded-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-medium border-none shadow-lg shadow-rose-500/20"
+                          className="rounded-full h-11 bg-rose-500 hover:bg-rose-600 text-foreground font-medium border-none shadow-lg shadow-rose-500/20"
                         >
                           Confirm Deletion
                         </AlertDialogAction>
@@ -354,18 +354,18 @@ export default function SettingsPage() {
                 value="appearance"
                 className="m-0 space-y-8 outline-none"
               >
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-white/5">
+                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border relative overflow-hidden">
+                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-border">
                     <Settings2 className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-white tracking-wide">
+                    <h2 className="text-sm font-semibold text-foreground tracking-wide">
                       {"Notifications & Haptic Feedback"}{" "}
                     </h2>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
                       <div className="space-y-1 min-w-0 pr-4">
-                        <Label className="text-sm font-medium text-white block">
+                        <Label className="text-sm font-medium text-foreground block">
                           System Updates
                         </Label>
                         <p className="text-xs text-muted-foreground">
@@ -379,9 +379,9 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
                       <div className="space-y-1 min-w-0 pr-4">
-                        <Label className="text-sm font-medium text-white block">
+                        <Label className="text-sm font-medium text-foreground block">
                           Usage Alerts
                         </Label>
                         <p className="text-xs text-muted-foreground">
@@ -395,9 +395,9 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
                       <div className="space-y-1 min-w-0 pr-4">
-                        <Label className="text-sm font-medium text-white block">
+                        <Label className="text-sm font-medium text-foreground block">
                           Security Logs
                         </Label>
                         <p className="text-xs text-muted-foreground">
@@ -412,9 +412,9 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
                       <div className="space-y-1 min-w-0 pr-4">
-                        <Label className="text-sm font-medium text-white block">
+                        <Label className="text-sm font-medium text-foreground block">
                           Haptic Feedback
                         </Label>
                         <p className="text-xs text-muted-foreground">
@@ -429,10 +429,10 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-white/5 flex justify-end">
+                  <div className="mt-8 pt-6 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating || !hasChanges}
+                      disabled={isUpdating}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
@@ -451,8 +451,8 @@ export default function SettingsPage() {
 
             {/* Sidebar Support */}
             <div className="lg:col-span-4 space-y-6 stagger-2">
-              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5">
-                <h3 className="text-sm font-semibold text-white mb-6 flex items-center gap-2 border-b border-white/5 pb-4">
+              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border">
+                <h3 className="text-sm font-semibold text-foreground mb-6 flex items-center gap-2 border-b border-border pb-4">
                   <AlertTriangle className="w-4 h-4 text-primary" /> Need Help?
                 </h3>
                 <p className="text-xs text-muted-foreground leading-relaxed mb-6">
@@ -462,25 +462,25 @@ export default function SettingsPage() {
                 <Button
                   variant="outline"
                   onClick={() => router.push("/app/support")}
-                  className="w-full h-11 rounded-xl bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all text-sm font-medium text-white shadow-sm"
+                  className="w-full h-11 rounded-xl bg-secondary border-border hover:bg-accent hover:text-foreground transition-all text-sm font-medium text-foreground shadow-sm"
                 >
                   <Mail className="w-4 h-4 mr-2 shrink-0" />
                   Contact Support
                 </Button>
               </div>
 
-              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-black/20 border border-white/5 bg-white/[0.01]">
+              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border bg-secondary/50">
                 <h3 className="text-xs font-semibold text-muted-foreground mb-4 flex items-center gap-2 uppercase tracking-wider">
                   <Activity className="w-3.5 h-3.5" /> System Status
                 </h3>
                 <div className="space-y-3 text-xs font-medium">
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Uptime</span>
-                    <span className="text-white">99.98%</span>
+                    <span className="text-foreground">99.98%</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Latency</span>
-                    <span className="text-white">
+                    <span className="text-foreground">
                       {latency !== null ? `${latency}ms` : "Checking..."}
                     </span>
                   </div>

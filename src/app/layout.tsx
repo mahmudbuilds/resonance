@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
+import ClerkThemeProvider from "@/components/ClerkThemeProvider";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import UserSync from "@/components/UserSync";
@@ -28,8 +28,6 @@ export const metadata: Metadata = {
   description: "Advanced AI Voice Generator and Voice Cloning Platform",
 };
 
-import { clerkAppearance } from "@/lib/clerk-config";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,18 +46,15 @@ export default function RootLayout({
         "font-sans"
       )}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-white">
-        <ClerkProvider 
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          appearance={clerkAppearance}
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
         >
-          <ConvexClientProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="dark"
-              enableSystem={false}
-              disableTransitionOnChange
-            >
+          <ClerkThemeProvider>
+            <ConvexClientProvider>
               {/* Aurora Glass Background Wrapper */}
               <div className="aurora-bg">
                 <div className="aurora-orb-1"></div>
@@ -69,9 +64,9 @@ export default function RootLayout({
               <UserSync />
               {children}
               <Toaster />
-            </ThemeProvider>
-          </ConvexClientProvider>
-        </ClerkProvider>
+            </ConvexClientProvider>
+          </ClerkThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
