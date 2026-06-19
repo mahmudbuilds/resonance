@@ -279,7 +279,7 @@ export default function SettingsPage() {
                   <div className="mt-8 pt-6 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating}
+                      disabled={isUpdating || !hasChanges}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
@@ -432,7 +432,7 @@ export default function SettingsPage() {
                   <div className="mt-8 pt-6 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
-                      disabled={isUpdating}
+                      disabled={isUpdating || !hasChanges}
                       className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
                     >
                       {isUpdating ? (
