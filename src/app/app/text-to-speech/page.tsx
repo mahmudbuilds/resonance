@@ -78,6 +78,7 @@ export default function TextToSpeechPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
 
+  const currentUser = useQuery(api.users.getCurrentUser);
   const userGenerations = useQuery(api.inworld.listUserGenerations);
   const generateSpeech = useAction(api.inworldGenerateSpeech.generateSpeech);
   const deleteGeneration = useMutation(api.inworld.deleteUserGeneration);
@@ -85,6 +86,13 @@ export default function TextToSpeechPage() {
   const handleGenerateSpeech = async () => {
     if (!text.trim()) {
       toast.error("Please enter some text first");
+      return;
+    }
+
+    if (currentUser && text.length > currentUser.credits) {
+      toast.error(
+        `Insufficient credits: this script needs ${text.length} characters, but your balance is ${currentUser.credits}.`
+      );
       return;
     }
 
@@ -423,6 +431,15 @@ export default function TextToSpeechPage() {
                       {Math.ceil(text.length / 18)}s
                     </span>
                   </div>
+                  {currentUser && (
+                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                      Credits:{" "}
+                      <span className="font-mono text-foreground font-semibold">
+                        {currentUser.credits.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-3 w-full sm:w-auto">

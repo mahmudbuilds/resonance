@@ -8,17 +8,13 @@ export default function UserSync() {
     const storeUser = useMutation(api.users.storeUser);
     const { isAuthenticated } = useConvexAuth();
 
-    useEffect(() => {
-        if (isAuthenticated) {
-            try {
-                storeUser();
-            }
-
-            catch (error) {
-                console.error("Failed to sync user:", error)
-            }
-        }
-    }, [storeUser, isAuthenticated]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      storeUser().catch((error) => {
+        console.error("Failed to sync user:", error);
+      });
+    }
+  }, [storeUser, isAuthenticated]);
 
     return null;
 }

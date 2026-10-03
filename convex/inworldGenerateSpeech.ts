@@ -73,10 +73,17 @@ export const generateSpeech = action({
 
     if (!identity) throw new Error("User not authenticated");
 
-    const user = await ctx.runMutation(api.inworld.getCurrentUser, {
+    const user = await ctx.runQuery(internal.users.getUserByToken, {
       tokenIdentifier: identity.tokenIdentifier,
     });
     if (!user) throw new Error("User not found");
+
+    const requiredCredits = text.length;
+    if (user.credits < requiredCredits) {
+      throw new Error(
+        `Insufficient credits. This generation requires ${requiredCredits} characters, but your balance is ${user.credits}.`
+      );
+    }
 
     const keys = [
       process.env.INWORLD_API_KEY,
@@ -167,6 +174,13 @@ export const generateSpeech = action({
           storageId: storedAudioBlobUrl,
           audioUrl: audioUrl!,
         });
+
+        // Deduct used credits
+        await ctx.runMutation(internal.users.deductCredits, {
+          userId: user._id,
+          amount: requiredCredits,
+        });
+
         return [storedAudioBlobUrl, audioUrl];
       } catch (error: any) {
         const errorMessage = error?.message?.toLowerCase() || "";
@@ -185,31 +199,50 @@ export const generateSpeech = action({
 
 
 export const generatePreviewSpeeches = action({
-  args: {voiceIds: v.array(v.string())}, 
-  handler: async(ctx, {voiceIds}) => {
+  args: { voiceIds: v.array(v.string()) },
+  handler: async (ctx, { voiceIds }) => {
+    const keys = [
+      process.env.INWORLD_API_KEY,
+      process.env.INWORLD_API_KEY2,
+      process.env.INWORLD_API_KEY3,
+    ].filter((key): key is string => typeof key === "string" && key.trim() !== "");
 
-  const tts = InworldTTS();
-  const audioUrls = voiceIds.map(async(voiceId) => {
-    const audio = await tts.generate({
-      text: "Hi everyone! I am so excited to give you an exclusive first look at what we've been working on. This is just a quick preview to set the stage for what’s coming next, so let's get right into it!",
-      voice: voiceId,
-      model: "inworld-tts-2",
-      speakingRate: 1,
-      temperature: 0.7,
-      encoding: "MP3",
-    });
-    const audioBlob = new Blob([audio as unknown as Uint8Array<ArrayBuffer>], {
-      type: "audio/mpeg",
-    });
-    const storedAudioBlobUrl = await ctx.storage.store(audioBlob);
-    const audioUrl = await ctx.storage.getUrl(storedAudioBlobUrl);
-    await ctx.runMutation(api.inworld.saveAudio, {
-      inworldVoiceId: voiceId,
-      prompt: "Hi everyone! I am so excited to give you an exclusive first look at what we've been working on. This is just a quick preview to set the stage for what’s coming next, so let's get right into it!",
-      storageId: storedAudioBlobUrl,
-      audioUrl: audioUrl!,
-    });
-  })
- 
+    if (keys.length === 0) {
+      throw new Error("No Inworld API keys configured.");
+    }
 
-  }})
+    const tts = InworldTTS({ apiKey: keys[0] });
+    const previewPrompt =
+      "Hi everyone! I am so excited to give you an exclusive first look at what we've been working on. This is just a quick preview to set the stage for what’s coming next, so let's get right into it!";
+
+    const results = await Promise.allSettled(
+      voiceIds.map(async (voiceId) => {
+        const audio = await tts.generate({
+          text: previewPrompt,
+          voice: voiceId,
+          model: "inworld-tts-2",
+          speakingRate: 1,
+          temperature: 0.7,
+          encoding: "MP3",
+        });
+        const audioBlob = new Blob([audio as unknown as Uint8Array<ArrayBuffer>], {
+          type: "audio/mpeg",
+        });
+        const storedAudioBlobUrl = await ctx.storage.store(audioBlob);
+        const audioUrl = await ctx.storage.getUrl(storedAudioBlobUrl);
+        if (audioUrl) {
+          await ctx.runMutation(api.inworld.saveAudio, {
+            inworldVoiceId: voiceId,
+            prompt: previewPrompt,
+            storageId: storedAudioBlobUrl,
+            audioUrl,
+            isPreview: true,
+          });
+        }
+        return { voiceId, audioUrl };
+      })
+    );
+
+    return results;
+  },
+});

@@ -1,7 +1,8 @@
-import { mutation, query } from "./_generated/server";
+import { internalQuery, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
-export const getCurrentUser = mutation({
+
+export const getCurrentUser = internalQuery({
   args: {
     tokenIdentifier: v.string(),
   },
@@ -14,6 +15,7 @@ export const getCurrentUser = mutation({
     return user;
   },
 });
+
 export const saveAudio = mutation({
   args: {
     userId: v.optional(v.id("users")),
@@ -21,15 +23,21 @@ export const saveAudio = mutation({
     prompt: v.string(),
     storageId: v.id("_storage"),
     audioUrl: v.string(),
-    isPreview: v.optional(v.boolean())
+    isPreview: v.optional(v.boolean()),
   },
-  handler: async (ctx, { userId, inworldVoiceId, prompt, storageId, audioUrl, isPreview }) => {
-    const voice = await ctx.db.query("voices").withIndex("by_voiceID", (q) => q.eq("inworldVoiceId", inworldVoiceId)).first();
+  handler: async (
+    ctx,
+    { userId, inworldVoiceId, prompt, storageId, audioUrl, isPreview },
+  ) => {
+    const voice = await ctx.db
+      .query("voices")
+      .withIndex("by_voiceID", (q) => q.eq("inworldVoiceId", inworldVoiceId))
+      .first();
     if (!voice) throw new Error("Voice not found");
     await ctx.db.patch(voice._id, { playCount: (voice.playCount || 0) + 1 });
 
-    if (!isPreview) {isPreview == false}
-    
+    const isPreviewVal = isPreview ?? false;
+
     return await ctx.db.insert("generations", {
       userId,
       inworldVoiceId,
@@ -37,7 +45,7 @@ export const saveAudio = mutation({
       storageId,
       format: "mp3",
       audioUrl,
-      isPreview
+      isPreview: isPreviewVal,
     });
   },
 });
@@ -48,12 +56,17 @@ export const listUserGenerations = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("User not found");
     const tokenIdentifier = identity.tokenIdentifier;
-    const currentUser = await ctx.db.query("users").withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier)).unique();
+    const currentUser = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
     if (!currentUser) throw new Error("User not found");
-    return await ctx.db.query("generations").withIndex("by_user", (q) => q.eq("userId", currentUser._id)).collect();
+    return await ctx.db
+      .query("generations")
+      .withIndex("by_user", (q) => q.eq("userId", currentUser._id))
+      .collect();
   },
 });
-
 
 export const deleteUserGeneration = mutation({
   args: {
@@ -63,11 +76,18 @@ export const deleteUserGeneration = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("User not found");
     const tokenIdentifier = identity.tokenIdentifier;
-    const user = await ctx.db.query("users").withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier)).unique();
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
     if (!user) throw new Error("User not found");
     const generation = await ctx.db.get(generationId);
     if (!generation) throw new Error("Generation not found");
     if (generation.userId !== user._id) throw new Error("User not authorized");
+
+    if (generation.storageId) {
+      await ctx.storage.delete(generation.storageId);
+    }
     await ctx.db.delete(generationId);
   },
 });

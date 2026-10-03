@@ -27,17 +27,16 @@ export const isVoicePresent = internalQuery({
   },
   handler: async (ctx, { inworldVoiceId }) => {
     try {
-    const user = ctx.db
-      .query("voices")
-      .withIndex("by_voiceID", (q) => 
-        q.eq("inworldVoiceId", inworldVoiceId)
-      )
-      .unique();
-      return user;
+      const voice = await ctx.db
+        .query("voices")
+        .withIndex("by_voiceID", (q) => 
+          q.eq("inworldVoiceId", inworldVoiceId)
+        )
+        .unique();
+      return voice;
     } catch (err) {
-        return false
+      return null;
     }
-      
   },
 });
 
@@ -237,5 +236,18 @@ export const getTopVoices = query({args: {}, handler: async(ctx) => {
   return [...top3PublicVoices, ...topUserVoice];
 }})
 
-export const getVoicePreview = action({args: {voiceId: v.id("voices")}, handler: async(ctx, {voiceId}) => {
-}})
+export const getVoicePreview = query({
+  args: { inworldVoiceId: v.string() },
+  handler: async (ctx, { inworldVoiceId }) => {
+    const preview = await ctx.db
+      .query("generations")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("inworldVoiceId"), inworldVoiceId),
+          q.eq(q.field("isPreview"), true),
+        ),
+      )
+      .first();
+    return preview?.audioUrl ?? null;
+  },
+});

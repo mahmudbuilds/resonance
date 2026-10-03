@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, internalQuery, mutation, query } from "./_generated/server";
 
 export const storeUser = mutation({
   args: {},
@@ -23,10 +23,37 @@ export const storeUser = mutation({
       name: identity.name!,
       email: identity.email!,
       tokenIdentifier: identity.tokenIdentifier,
-      credits: identity.name?.toLowerCase().includes("mahmud")
-        ? 10000000000000000
-        : 100, // Give them 100 free characters to start
+      credits: 100, // Give them 100 free characters to start
     });
+  },
+});
+
+export const getUserByToken = internalQuery({
+  args: { tokenIdentifier: v.string() },
+  handler: async (ctx, { tokenIdentifier }) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", tokenIdentifier))
+      .unique();
+  },
+});
+
+export const deductCredits = internalMutation({
+  args: {
+    userId: v.id("users"),
+    amount: v.number(),
+  },
+  handler: async (ctx, { userId, amount }) => {
+    const user = await ctx.db.get(userId);
+    if (!user) throw new Error("User not found");
+    if (user.credits < amount) {
+      throw new Error(
+        `Insufficient credits. You need ${amount} characters of credit, but only have ${user.credits}.`
+      );
+    }
+    const remaining = user.credits - amount;
+    await ctx.db.patch(userId, { credits: remaining });
+    return remaining;
   },
 });
 

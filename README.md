@@ -12,23 +12,25 @@
 
 ## Features
 
-- **Text to Speech** — Type any script and generate studio-quality voiceovers with natural pacing and emotion.
+- **Text to Speech** — Type any script and generate studio-quality voiceovers with natural pacing, temperature control, and emotion.
 - **Voice Library** — Browse a curated collection of high-fidelity AI voices spanning 9+ languages and regions.
-- **Voice Cloning** — Create a perfect digital replica of your own voice using just 60 seconds of audio.
+- **Voice Cloning** — Create a digital replica of your own voice using sample audio recordings or file uploads.
+- **Credit Balancing** — Character-level credit tracking with automatic deduction and validation.
+- **Key Rotation & Auto-Cloning** — Automatic failover across multiple Inworld API keys with auto-cloning from cached audio samples.
 - **Multi-Language Support** — EN-US, ES-ES, JA-JP, ZH-CN, KO-KR, AR-SA, HI-IN, HE-IL, PL-PL, and more.
-- **Real-Time Dashboard** — Track generations, saved voices, and studio activity at a glance.
+- **Real-Time Dashboard** — Real-time telemetry, generation histories, and waveform audio previews.
 
 ---
 
 ## Tech Stack
 
-- **Framework:** [Next.js](https://nextjs.org) (App Router)
-- **Backend:** [Convex](https://convex.dev) — real-time database and serverless functions
+- **Framework:** [Next.js](https://nextjs.org) (App Router, Next.js 16 with `proxy.ts`)
+- **Backend & Database:** [Convex](https://convex.dev) — real-time database, serverless actions & file storage
+- **AI Audio:** [Inworld TTS](https://inworld.ai) (`@inworld/tts`) — neural vocal synthesis and voice cloning
 - **Auth:** [Clerk](https://clerk.com) — user authentication and session management
+- **Audio Visualizer:** [Wavesurfer.js](https://wavesurfer.xyz) — waveform audio players and live microphone recording
 - **Styling:** Tailwind CSS v4 + shadcn/ui
-- **Animations:** Custom CSS keyframes, 3D perspective transforms
-- **Icons:** Lucide React + Remix Icons
-- **Charts:** Recharts
+- **Haptics:** Web Haptics API integration for tactile feedback
 
 ---
 
@@ -62,6 +64,11 @@ CLERK_SECRET_KEY=your_clerk_secret_key
 # Convex
 CONVEX_DEPLOY_KEY=your_convex_deploy_key
 NEXT_PUBLIC_CONVEX_URL=your_convex_url
+
+# Inworld TTS
+INWORLD_API_KEY=your_inworld_api_key
+INWORLD_API_KEY2=your_inworld_fallback_api_key_2   # Optional key rotation
+INWORLD_API_KEY3=your_inworld_fallback_api_key_3   # Optional key rotation
 ```
 
 ### Development
@@ -83,21 +90,27 @@ Open [http://localhost:3000](http://localhost:3000) to view the app.
 
 ```
 resonance/
-├── convex/              # Convex backend — schemas, queries, mutations
-├── public/              # Static assets (logo, images)
+├── convex/              # Convex backend — schemas, queries, mutations, actions
+│   ├── schema.ts        # Database table definitions & indexes
+│   ├── users.ts         # User profiles, credits, and account decommissioning
+│   ├── voice.ts         # Voice library queries, default voices, rankings
+│   ├── cloneVoice.ts    # Voice cloning action with Inworld & fallback keys
+│   └── inworldGenerateSpeech.ts # Neural speech generation & preview actions
+├── public/              # Static assets (logo, icons)
 ├── src/
+│   ├── proxy.ts         # Next.js 16 route protection with Clerk
 │   ├── app/             # Next.js App Router
-│   │   ├── page.tsx     # Landing page
-│   │   ├── app/         # Authenticated dashboard
-│   │   │   ├── page.tsx
-│   │   │   ├── voices/
-│   │   │   ├── text-to-speech/
-│   │   │   ├── voice-cloning/
-│   │   │   ├── settings/
-│   │   │   └── support/
-│   │   ├── (auth)/      # Auth routes (sign-in, sign-up)
-│   │   └── layout.tsx
-│   └── components/      # React components & UI primitives
+│   │   ├── page.tsx     # 3D interactive landing page
+│   │   ├── app/         # Authenticated studio dashboard
+│   │   │   ├── page.tsx           # Dashboard home & quick stats
+│   │   │   ├── voices/            # Voice library & generation history
+│   │   │   ├── text-to-speech/    # Script editor & vocal synthesizer
+│   │   │   ├── voice-cloning/     # Microphone recorder & voice clone creator
+│   │   │   ├── settings/          # Profile, notifications & account purge
+│   │   │   └── support/           # Knowledge base & FAQs
+│   │   ├── (auth)/      # Sign-in & Sign-up routes
+│   │   └── layout.tsx   # Root layout, theme & Convex providers
+│   └── components/      # UI components, WaveformPlayer, Sidebar, Navbar
 ├── package.json
 └── next.config.ts
 ```
@@ -111,7 +124,8 @@ resonance/
 | `bun run dev` | Start Next.js + Convex concurrently |
 | `bun run dev:web` | Start Next.js dev server only |
 | `bun run dev:backend` | Start Convex dev server only |
-| `bun run build` | Production build |
+| `bun run build` | Production Next.js build |
+| `bun run typecheck` | Standalone TypeScript verification (`tsc --noEmit`) |
 | `bun run lint` | Check code with Biome |
 | `bun run format` | Format code with Biome |
 
@@ -123,19 +137,10 @@ This project is optimized for [Vercel](https://vercel.com/).
 
 1. Connect your GitHub repository to Vercel.
 2. Add your environment variables in **Project Settings > Environment Variables**.
-3. Push to `main` — Vercel will build and deploy automatically.
+3. Push to `main` or `master` — Vercel will build and deploy automatically.
 
 ---
 
 ## License
 
 © 2026 Resonance Inc. All rights reserved.
-
----
-
-<p align="center">
-  <a href="https://tryresonance.vercel.app">Live Demo</a> &middot;
-  <a href="https://nextjs.org/docs">Next.js Docs</a> &middot;
-  <a href="https://docs.convex.dev">Convex Docs</a> &middot;
-  <a href="https://clerk.com/docs">Clerk Docs</a>
-</p>
