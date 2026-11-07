@@ -7,8 +7,6 @@ import {
   ArrowUpRight, 
   AudioLines,
   Mic2,
-  Sparkles,
-  Waves,
   Play,
   Zap,
   Disc
@@ -115,16 +113,11 @@ export default function LandingPage() {
           
           {/* Typography Matrix */}
           <div className="lg:col-span-7 space-y-10 lg:space-y-8 text-left preserve-3d z-20">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 lg:bg-secondary lg:from-transparent lg:to-transparent rounded-full px-4 py-2 border border-pink-500/30 lg:border-border">
-              <Sparkles className="w-4 h-4 text-pink-400 animate-pulse" />
-              <span className="text-sm font-medium text-foreground lg:text-muted-foreground">Next-Generation AI Voice Generator</span>
-            </div>
-
-            <h1 className="text-5xl sm:text-7xl lg:text-[6rem] font-bold tracking-tight leading-[1.15] lg:leading-[1] preserve-3d">
-              <span className="block transform translate-z-[60px] text-foreground pb-3 lg:pb-2">
+            <h1 className="text-5xl sm:text-7xl lg:text-[6.25rem] font-bold tracking-[-0.03em] leading-[1.08] lg:leading-[0.98] preserve-3d">
+              <span className="block transform translate-z-[60px] text-foreground pb-2">
                 Voices that
               </span>
-              <span className="block transform translate-z-[110px] text-transparent bg-clip-text bg-gradient-to-r from-primary via-purple-400 to-pink-500">
+              <span className="block transform translate-z-[110px] text-primary">
                 sound human.
               </span>
             </h1>
@@ -140,7 +133,7 @@ export default function LandingPage() {
                 {[...Array(14)].map((_, i) => (
                   <div 
                     key={i} 
-                    className="w-full bg-gradient-to-t from-primary via-purple-500 to-pink-500 rounded-full"
+                    className="w-full bg-primary/70 rounded-full"
                     style={{
                       height: '100%',
                       animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
@@ -149,19 +142,19 @@ export default function LandingPage() {
                   />
                 ))}
               </div>
-              <span className="text-xs font-semibold text-pink-400 bg-pink-500/15 px-2.5 py-1 rounded-full shrink-0">98%</span>
+              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full shrink-0">98% match</span>
             </div>
 
             <div className="pt-2 lg:pt-6 flex flex-col sm:flex-row gap-3 lg:gap-4 transform translate-z-[80px]">
               <Link href="/app/voice-cloning" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto rounded-full h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base transition-all duration-300 shadow-2xl flex items-center justify-center gap-2">
+                <Button size="lg" className="w-full sm:w-auto rounded-full h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
                   Clone Your Voice
                   <ArrowUpRight className="w-5 h-5" />
                 </Button>
               </Link>
               <Link href="/app/text-to-speech" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full h-14 px-8 bg-secondary lg:bg-transparent border-border hover:border-primary/30 hover:bg-accent text-foreground font-semibold text-base transition-all duration-300">
-                  <Play className="w-5 h-5 mr-2 fill-current text-pink-500" /> Try Text to Speech
+                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full h-14 px-8 bg-secondary lg:bg-transparent border-border hover:border-primary/40 hover:bg-accent text-foreground font-semibold text-base transition-all duration-300">
+                  <Play className="w-5 h-5 mr-2 fill-current text-primary" /> Try Text to Speech
                 </Button>
               </Link>
             </div>
@@ -172,35 +165,42 @@ export default function LandingPage() {
             <div className="absolute inset-0 border border-border bg-secondary/80 dark:bg-black/40 backdrop-blur-3xl p-8 flex flex-col justify-between preserve-3d rounded-3xl shadow-2xl dark:shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
               
               <div className="flex justify-between items-center border-b border-border pb-4 transform translate-z-[30px]">
-                <div className="flex items-center gap-2">
-                  <Disc className="w-4 h-4 text-primary animate-[spin_4s_linear_infinite]" />
-                  <span className="font-medium text-sm text-muted-foreground">Generating Voice...</span>
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="font-medium text-sm text-foreground">Studio Engine Active</span>
                 </div>
-                <span className="text-xs font-semibold text-pink-500 bg-pink-500/10 px-3 py-1 rounded-full">High Quality</span>
+                <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">24-bit • 48kHz</span>
               </div>
 
               {/* Kinetic Sound Grid Visualizer */}
-              <div className="py-12 flex justify-between items-center gap-1.5 h-48 preserve-3d">
-                {[...Array(18)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="w-full bg-gradient-to-t from-primary/40 via-purple-500 to-pink-500 rounded-full"
-                    style={{
-                      height: '100%',
-                      animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
-                      animationDelay: `${i * 0.08}s`
-                    }}
-                  />
-                ))}
+              <div className="py-8 flex flex-col justify-center gap-6 preserve-3d">
+                <div className="flex justify-between items-end gap-1.5 h-36 preserve-3d px-2">
+                  {[...Array(18)].map((_, i) => (
+                    <div 
+                      key={i} 
+                      className="w-full bg-primary/80 hover:bg-primary transition-colors rounded-full"
+                      style={{
+                        height: '100%',
+                        animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.08}s`
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground px-2 font-mono">
+                  <span>00:04.2</span>
+                  <span className="text-foreground font-sans font-medium">Sarah — Documentary Timbre</span>
+                  <span>00:15.0</span>
+                </div>
               </div>
 
               <div className="border-t border-border pt-5 space-y-3 transform translate-z-[50px]">
-                <div className="flex justify-between text-sm font-medium text-muted-foreground">
-                  <span>Realism Score</span>
-                  <span className="text-foreground">98.43% match</span>
+                <div className="flex justify-between text-sm font-medium">
+                  <span className="text-muted-foreground">Neural Fidelity Score</span>
+                  <span className="text-foreground font-semibold">98.4% match</span>
                 </div>
                 <div className="w-full h-1.5 bg-secondary relative overflow-hidden rounded-full">
-                  <div className="absolute top-0 left-0 h-full w-4/5 bg-gradient-to-r from-primary to-pink-500 rounded-full" />
+                  <div className="absolute top-0 left-0 h-full w-[98.4%] bg-primary rounded-full" />
                 </div>
               </div>
 
@@ -211,66 +211,74 @@ export default function LandingPage() {
         {/* Features Section */}
         <main className="max-w-7xl mx-auto w-full px-5 lg:px-16 pt-20 lg:pt-32 pb-24 preserve-3d">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end mb-12 lg:mb-16 border-t border-border pt-12">
-            <div className="lg:col-span-5">
-              <h2 className="text-sm font-semibold text-pink-400 lg:text-pink-500 mb-3 uppercase tracking-wider lg:tracking-normal lg:normal-case">Explore Features</h2>
-              <p className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
-                Powerful AI Audio Tools
-              </p>
+            <div className="lg:col-span-6">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
+                Studio-grade acoustic architecture
+              </h2>
             </div>
-            <div className="lg:col-span-7">
-              <p className="text-base text-muted-foreground lg:text-muted-foreground max-w-lg leading-relaxed">
-                Everything you need to generate, clone, and manage AI voices with stunning realism and emotion. Designed to be as simple as typing.
+            <div className="lg:col-span-6">
+              <p className="text-base text-muted-foreground max-w-lg leading-relaxed">
+                Everything you need to generate, clone, and orchestrate AI voices with natural timbre, zero robotic cadence, and multi-language inflection.
               </p>
             </div>
           </div>
 
           {/* Interactive Stacked Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 items-start preserve-3d">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch preserve-3d">
             
             {/* App Action 1: Voices */}
             <Link href="/app/voices" className="group preserve-3d block">
-              <div className="border border-primary/30 lg:border-border bg-gradient-to-br from-primary/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-primary/40 group-hover:bg-primary/[0.02] relative transform group-hover:translate-z-[30px] rounded-3xl">
-                <div className="flex items-start justify-between">
-                  <div className="w-12 h-12 rounded-full bg-primary/20 lg:bg-secondary flex items-center justify-center text-primary border border-primary/40 lg:border-border group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                     <AudioLines className="w-5 h-5" />
                   </div>
-                  <div className="text-stroke-custom text-5xl font-extrabold select-none">01</div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Voice Library</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Browse curated voices spanning 9+ international languages with natural emotive inflections.</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-foreground">Voice Library</h3>
-                  <p className="text-sm text-muted-foreground lg:text-muted-foreground leading-relaxed">Browse our collection of highly realistic AI voices ready for your next project.</p>
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">9+ Languages</span>
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Neural Timbre</span>
                 </div>
               </div>
             </Link>
 
             {/* App Action 2: Text to Speech */}
             <Link href="/app/text-to-speech" className="group preserve-3d block">
-              <div className="border border-purple-500/30 lg:border-border bg-gradient-to-br from-purple-500/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-purple-500/40 group-hover:bg-purple-500/[0.02] relative transform group-hover:translate-z-[50px] md:-translate-y-4 rounded-3xl">
-                <div className="flex items-start justify-between">
-                  <div className="w-12 h-12 rounded-full bg-purple-500/20 lg:bg-secondary flex items-center justify-center text-purple-600 dark:text-purple-400 border border-purple-500/40 lg:border-border group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
+              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                     <Zap className="w-5 h-5" />
                   </div>
-                  <div className="text-stroke-custom text-5xl font-extrabold select-none">02</div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Text to Speech</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Type your script and generate studio-quality voiceovers with micro-pacing and temperature controls.</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-foreground">Text to Speech</h3>
-                  <p className="text-sm text-muted-foreground lg:text-muted-foreground leading-relaxed">Type your script and generate studio-quality voiceovers with natural pacing and emotion.</p>
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Micro-Pacing</span>
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Real-time Preview</span>
                 </div>
               </div>
             </Link>
 
             {/* App Action 3: Voice Cloning */}
             <Link href="/app/voice-cloning" className="group preserve-3d block">
-              <div className="border border-pink-500/30 lg:border-border bg-gradient-to-br from-pink-500/10 via-white/[0.02] to-transparent lg:from-white/[0.02] lg:via-white/[0.02] p-6 lg:p-8 h-auto lg:h-[340px] flex flex-col justify-between gap-6 transition-all duration-500 group-hover:border-pink-500/40 group-hover:bg-pink-500/[0.02] relative transform group-hover:translate-z-[30px] md:translate-y-4 rounded-3xl">
-                <div className="flex items-start justify-between">
-                  <div className="w-12 h-12 rounded-full bg-pink-500/20 lg:bg-secondary flex items-center justify-center text-pink-600 dark:text-pink-400 border border-pink-500/40 lg:border-border group-hover:bg-pink-500 group-hover:text-white transition-all duration-500">
+              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                     <Mic2 className="w-5 h-5" />
                   </div>
-                  <div className="text-stroke-custom text-5xl font-extrabold select-none">03</div>
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Voice Cloning</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Create a high-fidelity digital replica from sample recordings with automatic acoustic isolation.</p>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-foreground">Voice Cloning</h3>
-                  <p className="text-sm text-muted-foreground lg:text-muted-foreground leading-relaxed">Create a perfect digital replica of your own voice using just 60 seconds of audio.</p>
+                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">60s Audio Input</span>
+                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Zero-shot Match</span>
                 </div>
               </div>
             </Link>

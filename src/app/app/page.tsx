@@ -12,7 +12,6 @@ import {
   Mic2,
   Music,
   Play,
-  Radio,
   Sparkles,
   Volume2,
 } from "lucide-react";
@@ -120,11 +119,7 @@ export default function Home() {
     <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-primary-foreground pb-20">
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 animate-fade-up">
         {/* Clean Editorial Greeting Header */}
-        <header className="mb-14 pt-12 pb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-6 text-xs font-medium text-primary">
-            <Radio className="w-3.5 h-3.5 animate-pulse" />
-            Studio Connected
-          </div>
+        <header className="mb-14 pt-12 pb-6">
           <h1 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">
             <UserGreeting />
           </h1>
@@ -264,26 +259,24 @@ export default function Home() {
                 {stats.map((stat) => (
                   <div
                     key={stat.label}
-                    className="border border-border rounded-2xl p-5 bg-secondary relative overflow-hidden group min-h-[100px] flex flex-col justify-center transition-all duration-300 hover:border-primary/30 hover:bg-accent/50"
+                    className="border border-border rounded-2xl p-5 bg-card/60 backdrop-blur-sm relative overflow-hidden group min-h-[100px] flex flex-col justify-center transition-all duration-300 hover:border-primary/40 hover:bg-card/90"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent group-hover:bg-primary transition-colors" />
-
                     {stat.loading ? (
                       <div className="flex items-center justify-between font-sans text-xs text-muted-foreground">
                         <span>{stat.label}</span>
                         <Loader2 className="w-4 h-4 text-primary animate-spin" />
                       </div>
                     ) : (
-                      <div className="flex justify-between items-end pl-2">
+                      <div className="flex justify-between items-end">
                         <div>
-                          <div className="font-sans text-[11px] font-semibold text-muted-foreground uppercase mb-1">
+                          <div className="font-sans text-[11px] font-semibold text-muted-foreground tracking-wide uppercase mb-1">
                             {stat.label}
                           </div>
-                          <div className="font-heading text-3xl font-bold text-foreground group-hover:text-primary transition-colors">
+                          <div className="font-heading text-3xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
                             {stat.value}
                           </div>
                         </div>
-                        <div className="text-xs text-primary bg-primary/10 px-3 py-1 rounded-lg border border-primary/20 font-sans font-medium">
+                        <div className="text-xs text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 font-sans font-medium">
                           {stat.status}
                         </div>
                       </div>

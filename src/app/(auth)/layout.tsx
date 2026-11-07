@@ -1,5 +1,4 @@
 import React from "react";
-import { Sparkles } from "lucide-react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function AuthLayout({
@@ -20,14 +19,9 @@ export default function AuthLayout({
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full filter blur-[80px] opacity-50 pointer-events-none" />
 
           <div className="relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-8 text-xs font-medium text-primary">
-              <Sparkles className="w-3.5 h-3.5" />
-              Resonance System
-            </div>
-
             <h1 className="text-4xl lg:text-5xl font-heading font-semibold text-foreground mb-6 leading-tight tracking-tight">
               Create hyper-realistic <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+              <span className="text-primary">
                 vocal synthesis.
               </span>
             </h1>
