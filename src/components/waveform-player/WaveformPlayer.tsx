@@ -1,8 +1,7 @@
 "use client";
 
-import { Loader2, Pause, Play } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import WaveSurfer from "wavesurfer.js";
+import { Pause, Play } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { register } from "./registry";
@@ -12,6 +11,8 @@ interface WaveformPlayerProps {
   className?: string;
 }
 
+const BAR_COUNT = 32;
+
 function formatTime(seconds: number): string {
   if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
   const total = Math.floor(seconds);
@@ -20,172 +21,205 @@ function formatTime(seconds: number): string {
   return `${m}:${s.toString().padStart(2, "0")}`;
 }
 
+function buildBars(seed: string): { id: string; height: number }[] {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i++) {
+    hash ^= seed.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  const bars: { id: string; height: number }[] = [];
+  for (let i = 0; i < BAR_COUNT; i++) {
+    hash ^= i * 2654435761;
+    hash = Math.imul(hash, 1597334677);
+    const normalized = ((hash >>> 0) % 72) / 100 + 0.24;
+    bars.push({ id: `bar-${i}`, height: normalized });
+  }
+  return bars;
+}
+
 export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wsRef = useRef<WaveSurfer | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const unregisterRef = useRef<(() => void) | null>(null);
 
-  const [isReady, setIsReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  const bars = useMemo(() => buildBars(url), [url]);
+
+  const stopRegistration = useCallback(() => {
+    if (unregisterRef.current) {
+      unregisterRef.current();
+      unregisterRef.current = null;
+    }
+  }, []);
+
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    return () => {
+      stopRegistration();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [stopRegistration]);
 
-    let ws: WaveSurfer | null = null;
-    let isDestroyed = false;
+  const ensureAudio = useCallback(() => {
+    if (audioRef.current) return audioRef.current;
 
-    try {
-      ws = WaveSurfer.create({
-        container,
-        waveColor: "rgba(255, 255, 255, 0.25)",
-        progressColor: "rgba(99, 102, 241, 1)",
-        cursorColor: "transparent",
-        cursorWidth: 0,
-        barWidth: 2,
-        barGap: 2,
-        barRadius: 2,
-        height: 28,
-        normalize: true,
-        interact: true,
-      });
-    } catch (err) {
-      console.error("WaveSurfer init error:", err);
-      return;
-    }
-
-    if (isDestroyed) {
-      ws.destroy();
-      return;
-    }
-
-    wsRef.current = ws;
-
-    const subs: Array<() => void> = [];
-
-    subs.push(
-      ws.on("ready", (dur: number) => {
-        if (isDestroyed) return;
-        setIsReady(true);
-        setDuration(dur);
-      }),
-    );
-    subs.push(
-      ws.on("play", () => {
-        if (isDestroyed) return;
-        setIsPlaying(true);
-      }),
-    );
-    subs.push(
-      ws.on("pause", () => {
-        if (isDestroyed) return;
-        setIsPlaying(false);
-      }),
-    );
-    subs.push(
-      ws.on("finish", () => {
-        if (isDestroyed) return;
-        setIsPlaying(false);
-      }),
-    );
-    subs.push(
-      ws.on("timeupdate", (time: number) => {
-        if (isDestroyed) return;
-        setCurrentTime(time);
-      }),
-    );
-
-    ws.load(url).catch((err) => {
-      if (isDestroyed) return;
-      console.error("WaveSurfer load error:", err);
+    const audio = new Audio(url);
+    audio.preload = "metadata";
+    audio.addEventListener("loadedmetadata", () => {
+      if (Number.isFinite(audio.duration)) {
+        setDuration(audio.duration);
+      }
+    });
+    audio.addEventListener("timeupdate", () => {
+      setCurrentTime(audio.currentTime);
+    });
+    audio.addEventListener("play", () => {
+      setIsPlaying(true);
+    });
+    audio.addEventListener("pause", () => {
+      setIsPlaying(false);
+    });
+    audio.addEventListener("ended", () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
     });
 
-    return () => {
-      isDestroyed = true;
-      for (const off of subs) {
-        try {
-          off();
-        } catch {
-          // Ignore listener teardown errors.
-        }
-      }
-      if (unregisterRef.current) {
-        unregisterRef.current();
-        unregisterRef.current = null;
-      }
-      if (ws) {
-        try {
-          ws.destroy();
-        } catch {
-          // Ignore destroy errors during teardown.
-        }
-      }
-      wsRef.current = null;
-    };
+    audioRef.current = audio;
+    return audio;
   }, [url]);
 
-  const handlePlayPause = useCallback(() => {
-    const ws = wsRef.current;
-    if (!ws || !isReady) return;
-    ws.playPause();
-  }, [isReady]);
-
   useEffect(() => {
-    if (!isPlaying) return;
-    const pauser = () => {
-      const ws = wsRef.current;
-      if (!ws) return;
-      try {
-        ws.pause();
-      } catch {
-        // Ignore: instance may have been destroyed.
-      }
-    };
-    unregisterRef.current = register(pauser);
-    return () => {
-      if (unregisterRef.current) {
-        unregisterRef.current();
-        unregisterRef.current = null;
-      }
-    };
-  }, [isPlaying]);
+    if (!isPlaying) {
+      stopRegistration();
+      return;
+    }
+    unregisterRef.current = register(() => {
+      audioRef.current?.pause();
+    });
+    return stopRegistration;
+  }, [isPlaying, stopRegistration]);
 
-  const timeLabel = isReady
-    ? `${formatTime(currentTime)} / ${formatTime(duration)}`
-    : "—:— / —:—";
+  const handleTogglePlay = useCallback(() => {
+    const audio = ensureAudio();
+    if (audio.paused) {
+      void audio.play().catch((err) => {
+        console.error("Audio playback error:", err);
+      });
+    } else {
+      audio.pause();
+    }
+  }, [ensureAudio]);
+
+  const seekToRatio = useCallback(
+    (ratio: number) => {
+      const clamped = Math.max(0, Math.min(1, ratio));
+      const audio = ensureAudio();
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        audio.currentTime = clamped * audio.duration;
+        setCurrentTime(audio.currentTime);
+      } else {
+        void audio.play().catch(() => {});
+      }
+    },
+    [ensureAudio],
+  );
+
+  const handleSliderClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      if (rect.width <= 0) return;
+      seekToRatio((event.clientX - rect.left) / rect.width);
+    },
+    [seekToRatio],
+  );
+
+  const handleSliderKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      const audio = audioRef.current;
+      const total =
+        audio && Number.isFinite(audio.duration) ? audio.duration : 0;
+      const currentRatio = total > 0 ? currentTime / total : 0;
+      if (event.key === "ArrowRight" || event.key === "ArrowUp") {
+        event.preventDefault();
+        seekToRatio(currentRatio + 0.05);
+      } else if (event.key === "ArrowLeft" || event.key === "ArrowDown") {
+        event.preventDefault();
+        seekToRatio(currentRatio - 0.05);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        seekToRatio(0);
+      } else if (event.key === "End") {
+        event.preventDefault();
+        seekToRatio(1);
+      }
+    },
+    [currentTime, seekToRatio],
+  );
+
+  const progress = duration > 0 ? currentTime / duration : 0;
+  const timeLabel =
+    duration > 0
+      ? `${formatTime(currentTime)} / ${formatTime(duration)}`
+      : isPlaying
+        ? `${formatTime(currentTime)}`
+        : "0:00";
 
   return (
     <div
       className={cn(
-        "flex items-center gap-2.5 min-w-[260px] max-w-[320px]",
+        "flex items-center gap-2.5 min-w-[240px] max-w-[320px]",
         className,
       )}
     >
       <Button
+        type="button"
         size="icon"
         variant="ghost"
-        onClick={handlePlayPause}
-        disabled={!isReady}
-        aria-label={isPlaying ? "Pause" : "Play"}
-        className="size-8 rounded-full bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 border border-primary/20"
+        onClick={handleTogglePlay}
+        aria-label={isPlaying ? "Pause audio" : "Play audio"}
+        className="size-8 rounded-full bg-primary/10 accent-ink hover:bg-primary hover:text-primary-foreground transition-colors shrink-0 border border-primary/20"
       >
-        {!isReady ? (
-          <Loader2 className="size-3.5 animate-spin" />
-        ) : isPlaying ? (
-          <Pause className="size-3.5" fill="currentColor" />
+        {isPlaying ? (
+          <Pause className="size-3.5 fill-current" />
         ) : (
-          <Play className="size-3.5 ml-0.5" fill="currentColor" />
+          <Play className="size-3.5 ml-0.5 fill-current" />
         )}
       </Button>
 
       <div
-        ref={containerRef}
-        className="flex-1 h-7 min-w-0 cursor-pointer"
-      />
+        role="slider"
+        tabIndex={0}
+        aria-label="Audio playback position"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(progress * 100)}
+        onClick={handleSliderClick}
+        onKeyDown={handleSliderKeyDown}
+        className="flex-1 flex items-center gap-[2px] h-7 min-w-0 cursor-pointer group rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
+      >
+        {bars.map((bar, i) => {
+          const filled = i / BAR_COUNT < progress;
+          return (
+            <span
+              key={bar.id}
+              aria-hidden="true"
+              className={cn(
+                "flex-1 rounded-full transition-colors",
+                filled
+                  ? "bg-primary"
+                  : "bg-foreground/20 group-hover:bg-foreground/35",
+              )}
+              style={{ height: `${Math.round(bar.height * 100)}%` }}
+            />
+          );
+        })}
+      </div>
 
-      <span className="font-mono text-[10px] tabular-nums text-muted-foreground min-w-[64px] text-right shrink-0">
+      <span className="font-mono text-[11px] tabular-nums text-muted-foreground min-w-[54px] text-right shrink-0">
         {timeLabel}
       </span>
     </div>

@@ -3,16 +3,11 @@
 import { useQuery } from "convex/react";
 import {
   Activity,
-  ArrowRight,
+  ArrowUpRight,
   AudioLines,
-  ChevronRight,
-  Cpu,
   Globe,
-  Loader2,
   Mic2,
-  Music,
   Play,
-  Sparkles,
   Volume2,
 } from "lucide-react";
 import Link from "next/link";
@@ -20,320 +15,285 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import UserGreeting from "@/components/dashboard/UserGreeting";
 import { useHaptics } from "@/components/haptics/HapticsProvider";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "../../../convex/_generated/api";
 import type { Doc } from "../../../convex/_generated/dataModel";
 
-export default function Home() {
+const WORKSPACE_LINKS = [
+  {
+    title: "Text to Speech",
+    description:
+      "Draft scripts or SSML markup and synthesize natural voiceovers with pacing controls.",
+    icon: AudioLines,
+    href: "/app/text-to-speech",
+    cta: "Open Editor",
+  },
+  {
+    title: "Voice Library",
+    description:
+      "Search curated studio speakers and cloned profiles across 16 international locales.",
+    icon: Volume2,
+    href: "/app/voices",
+    cta: "Browse Voices",
+  },
+  {
+    title: "Voice Cloning",
+    description:
+      "Record or upload a 5 to 15 second sample to create a reusable personal voice.",
+    icon: Mic2,
+    href: "/app/voice-cloning",
+    cta: "New Clone",
+  },
+];
+
+const TARGET_LOCALES = [
+  "EN-US",
+  "ES-ES",
+  "FR-FR",
+  "DE-DE",
+  "JA-JP",
+  "KO-KR",
+  "ZH-CN",
+  "HI-IN",
+  "AR-SA",
+  "PT-BR",
+  "IT-IT",
+  "PL-PL",
+];
+
+export default function DashboardOverviewPage() {
   const trigger = useHaptics();
   const router = useRouter();
 
-  // External data requests
   const numberOfUserGenerations = useQuery(api.voice.getNumberOfGenerations);
   const numberOfUserVoices = useQuery(api.voice.getNumberOfUserVoices);
   const topVoices = useQuery(api.voice.getTopVoices);
+  const currentUser = useQuery(api.users.getCurrentUser);
 
   const isRegistryLoading = topVoices === undefined;
-
-  const features = [
-    {
-      title: "Text to Speech",
-      description:
-        "Generate stunning, fluid voiceovers and narrative tracks with premium vocal textures.",
-      icon: AudioLines,
-      colorClass: "text-primary",
-      bgClass: "bg-primary/10",
-      borderClass: "border-primary/20",
-      hoverBgClass: "group-hover:bg-primary/20",
-      hoverBorderClass: "group-hover:border-primary/30",
-      href: "/app/text-to-speech",
-    },
-    {
-      title: "Voice Library",
-      description:
-        "Access a beautifully curated collection of high-fidelity voices spanning multiple languages.",
-      icon: Volume2,
-      colorClass: "text-sky-600 dark:text-sky-400",
-      bgClass: "bg-sky-500/10",
-      borderClass: "border-sky-500/20",
-      hoverBgClass: "group-hover:bg-sky-500/20",
-      hoverBorderClass: "group-hover:border-sky-500/30",
-      href: "/app/voices",
-    },
-    {
-      title: "Voice Cloning",
-      description:
-        "Create a tailored dynamic replica of a specific voice using minimal sample audio.",
-      icon: Mic2,
-      colorClass: "text-pink-600 dark:text-pink-400",
-      bgClass: "bg-pink-500/10",
-      borderClass: "border-pink-500/20",
-      hoverBgClass: "group-hover:bg-pink-500/20",
-      hoverBorderClass: "group-hover:border-pink-500/30",
-      href: "/app/voice-cloning",
-    },
-  ];
+  const showcaseVoices: Doc<"voices">[] = (topVoices as Doc<"voices">[]) || [];
 
   const handleUseVoice = (inworldVoiceId: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedVoice", JSON.stringify(inworldVoiceId));
       trigger("success");
-      toast.success("Voice loaded successfully!");
+      toast.success("Voice loaded into Text to Speech");
       router.push("/app/text-to-speech");
     }
   };
 
-  const showcaseVoices: Doc<"voices">[] = (topVoices as Doc<"voices">[]) || [];
-
-  const stats = [
-    {
-      label: "TOTAL GENERATIONS",
-      value:
-        numberOfUserGenerations !== undefined
-          ? String(numberOfUserGenerations)
-          : "0",
-      status: "Active",
-      loading: numberOfUserGenerations === undefined,
-    },
-    {
-      label: "CUSTOM SAVED VOICES",
-      value:
-        numberOfUserVoices !== undefined ? String(numberOfUserVoices) : "0",
-      status: "Ready",
-      loading: numberOfUserVoices === undefined,
-    },
-  ];
-
-  const targetLocales = [
-    "AR-SA",
-    "EN-US",
-    "ES-ES",
-    "HE-IL",
-    "HI-IN",
-    "JA-JP",
-    "KO-KR",
-    "PL-PL",
-    "ZH-CN",
-  ];
-
   return (
-    <div className="min-h-screen text-foreground font-sans relative selection:bg-primary/20 selection:text-primary-foreground pb-20">
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 animate-fade-up">
-        {/* Clean Editorial Greeting Header */}
-        <header className="mb-14 pt-12 pb-6">
-          <h1 className="font-heading text-4xl sm:text-5xl font-semibold tracking-tight text-foreground mb-4">
-            <UserGreeting />
-          </h1>
-          <p className="text-base text-muted-foreground max-w-2xl font-normal leading-relaxed">
-            Welcome to your creative dashboard. Your digital narration space is
-            active, fully prepared, and waiting for your next text input.
-          </p>
+    <div className="min-h-full bg-background text-foreground pb-16">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-10 animate-editorial-enter">
+        {/* Editorial Studio Header */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
+          <div className="space-y-2">
+            <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
+              <UserGreeting />
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
+              Choose a workspace below to synthesize new narration, audition
+              voices, or clone a custom speaker.
+            </p>
+          </div>
+
+          {currentUser && (
+            <div className="studio-panel rounded-lg px-4 py-2.5 flex items-center gap-3 w-fit shrink-0">
+              <span className="text-xs text-muted-foreground font-medium">
+                Character Credits
+              </span>
+              <span className="font-mono text-sm font-semibold tabular-nums text-foreground">
+                {currentUser.credits.toLocaleString()}
+              </span>
+            </div>
+          )}
         </header>
 
-        {/* Studio Features Section */}
-        <section className="mb-16 stagger-1">
-          <div className="flex items-center justify-between mb-8 pb-2">
-            <h2 className="font-heading text-xl font-semibold text-foreground flex items-center gap-3">
-              <Cpu className="w-5 h-5 text-primary" />
-              Creative Workspaces
-            </h2>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {features.map((feature) => (
-              <Link
-                key={feature.title}
-                href={feature.href}
-                className="group block"
-              >
-                <div className="glass-card rounded-[2rem] p-8 h-full flex flex-col justify-between min-h-[260px]">
-                  <div className="space-y-6">
-                    <div
-                      className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${feature.bgClass} ${feature.borderClass} border ${feature.hoverBgClass} ${feature.hoverBorderClass}`}
-                    >
-                      <feature.icon
-                        className={`w-6 h-6 transition-colors ${feature.colorClass}`}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <h3 className="font-heading text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-                        {feature.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 flex items-center gap-2 font-sans text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                    Open Workspace{" "}
-                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
+        {/* Quick Workspace Row */}
+        <section
+          aria-label="Workspaces"
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          {WORKSPACE_LINKS.map((item) => (
+            <Link
+              key={item.title}
+              href={item.href}
+              className="studio-card rounded-xl p-6 flex flex-col justify-between gap-6 group"
+            >
+              <div className="space-y-4">
+                <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors">
+                  <item.icon className="size-4" />
                 </div>
-              </Link>
-            ))}
-          </div>
+                <div className="space-y-1.5">
+                  <h2 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-border text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                <span>{item.cta}</span>
+                <ArrowUpRight className="size-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              </div>
+            </Link>
+          ))}
         </section>
 
-        {/* Voice Discovery and Activity Trackers */}
-        <div className="grid lg:grid-cols-12 gap-8 mb-16 stagger-2">
-          {/* Curated Voice Profiles Portfolio */}
-          <section className="lg:col-span-8 glass-panel rounded-[2.5rem] overflow-hidden flex flex-col">
-            <div className="p-6 border-b border-border flex items-center justify-between bg-secondary">
-              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                <Music className="w-4 h-4 text-primary" />
+        {/* Featured Voices & Activity Rail */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Featured Voice Styles */}
+          <section className="lg:col-span-8 studio-panel rounded-xl overflow-hidden">
+            <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-secondary/40">
+              <h2 className="text-sm font-semibold text-foreground">
                 Featured Voice Styles
               </h2>
               <Link
                 href="/app/voices"
-                className="text-xs font-medium text-primary hover:text-foreground transition-colors"
+                className="text-xs font-medium accent-ink hover:underline"
               >
-                Browse Full Library
+                View full library
               </Link>
             </div>
 
-            <div className="divide-y divide-border flex-1 flex flex-col justify-center">
-              {isRegistryLoading ? (
-                <div className="p-16 flex flex-col items-center justify-center gap-3 text-muted-foreground font-sans text-sm">
-                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                  <span>Loading profiles...</span>
-                </div>
-              ) : showcaseVoices.length === 0 ? (
-                <div className="p-16 text-center text-muted-foreground font-sans text-sm">
-                  No voice profiles are available at this moment.
-                </div>
-              ) : (
-                showcaseVoices.map((voice, i) => (
+            {isRegistryLoading ? (
+              <div className="divide-y divide-border">
+                {[0, 1, 2, 3].map((idx) => (
                   <div
-                    key={i}
+                    key={idx}
+                    className="p-4 sm:px-5 flex items-center gap-4"
+                  >
+                    <Skeleton className="size-10 rounded-lg shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-36" />
+                      <Skeleton className="h-3 w-20" />
+                    </div>
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                ))}
+              </div>
+            ) : showcaseVoices.length === 0 ? (
+              <div className="p-12 text-center text-sm text-muted-foreground">
+                No voice profiles are available right now.
+              </div>
+            ) : (
+              <div className="divide-y divide-border">
+                {showcaseVoices.map((voice) => (
+                  <button
+                    key={voice._id}
+                    type="button"
                     onClick={() =>
                       voice.inworldVoiceId &&
                       handleUseVoice(voice.inworldVoiceId)
                     }
-                    className="p-5 hover:bg-accent/50 transition-all duration-300 flex items-center gap-5 group cursor-pointer"
+                    className="w-full text-left px-5 py-4 hover:bg-secondary/60 transition-colors flex items-center gap-4 group cursor-pointer"
                   >
-                    {/* Activation Icon Button Container */}
-                    <div className="w-12 h-12 rounded-2xl border border-border bg-secondary flex items-center justify-center group-hover:border-primary/40 group-hover:bg-primary transition-all shrink-0 relative overflow-hidden shadow-sm">
-                      <Sparkles className="w-4 h-4 text-muted-foreground group-hover:opacity-0 transition-opacity absolute" />
-                      <Play className="w-5 h-5 text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity absolute fill-primary-foreground ml-1" />
+                    <div className="size-10 rounded-lg border border-border bg-secondary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:border-primary group-hover:text-primary-foreground transition-colors">
+                      <Play className="size-4 ml-0.5 fill-current" />
                     </div>
 
-                    <div className="flex-1 grid grid-cols-2 sm:grid-cols-3 gap-4 items-center">
+                    <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 items-center">
                       <div className="min-w-0">
-                        <div className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors truncate">
+                        <div className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                           {voice.displayName}
                         </div>
-                        <div className="font-mono text-[10px] text-muted-foreground mt-1">
-                          {voice.langCode}
+                        <div className="font-mono text-[11px] text-muted-foreground">
+                          {voice.langCode || "EN-US"}
                         </div>
                       </div>
 
-                      <div className="hidden sm:block font-sans text-sm text-muted-foreground truncate">
-                        <span className="text-foreground/80">
-                          {voice.tags?.join(", ")}
-                        </span>
+                      <div className="hidden sm:block text-xs text-muted-foreground truncate">
+                        {voice.tags?.length
+                          ? voice.tags.join(", ")
+                          : "General narration"}
                       </div>
 
-                      <div className="flex justify-end sm:justify-start items-center gap-2 font-sans text-sm font-medium">
-                        <Activity className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                        <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                          {voice.playCount || 0} plays
+                      <div className="flex sm:justify-end items-center gap-1.5 text-xs text-muted-foreground font-mono tabular-nums">
+                        <Activity className="size-3.5" />
+                        <span>
+                          {(voice.playCount || 0).toLocaleString()} plays
                         </span>
                       </div>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </section>
 
-          {/* Simple Studio Activity Stats */}
-          <section className="lg:col-span-4 flex flex-col gap-6">
-            <div className="glass-panel rounded-[2.5rem] p-6 h-full flex flex-col justify-between">
-              <h2 className="text-sm font-semibold text-foreground mb-6 border-b border-border pb-4 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-primary" />
+          {/* Studio Activity & Supported Regions */}
+          <aside className="lg:col-span-4 space-y-6">
+            <section className="studio-panel rounded-xl p-5 space-y-4">
+              <h2 className="text-sm font-semibold text-foreground pb-3 border-b border-border">
                 Studio Activity
               </h2>
 
-              <div className="flex-1 flex flex-col justify-center gap-5">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="border border-border rounded-2xl p-5 bg-card/60 backdrop-blur-sm relative overflow-hidden group min-h-[100px] flex flex-col justify-center transition-all duration-300 hover:border-primary/40 hover:bg-card/90"
-                  >
-                    {stat.loading ? (
-                      <div className="flex items-center justify-between font-sans text-xs text-muted-foreground">
-                        <span>{stat.label}</span>
-                        <Loader2 className="w-4 h-4 text-primary animate-spin" />
-                      </div>
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-3">
+                <div className="rounded-lg border border-border bg-secondary/40 p-4 flex items-baseline justify-between">
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">
+                      Total Generations
+                    </div>
+                    {numberOfUserGenerations === undefined ? (
+                      <Skeleton className="h-8 w-14" />
                     ) : (
-                      <div className="flex justify-between items-end">
-                        <div>
-                          <div className="font-sans text-[11px] font-semibold text-muted-foreground tracking-wide uppercase mb-1">
-                            {stat.label}
-                          </div>
-                          <div className="font-heading text-3xl font-bold tabular-nums text-foreground group-hover:text-primary transition-colors">
-                            {stat.value}
-                          </div>
-                        </div>
-                        <div className="text-xs text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20 font-sans font-medium">
-                          {stat.status}
-                        </div>
+                      <div className="text-2xl font-semibold tabular-nums text-foreground">
+                        {numberOfUserGenerations.toLocaleString()}
                       </div>
                     )}
                   </div>
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    Audio clips
+                  </span>
+                </div>
+
+                <div className="rounded-lg border border-border bg-secondary/40 p-4 flex items-baseline justify-between">
+                  <div>
+                    <div className="text-xs font-medium text-muted-foreground mb-1">
+                      Saved Voices
+                    </div>
+                    {numberOfUserVoices === undefined ? (
+                      <Skeleton className="h-8 w-14" />
+                    ) : (
+                      <div className="text-2xl font-semibold tabular-nums text-foreground">
+                        {numberOfUserVoices.toLocaleString()}
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-[11px] font-medium text-muted-foreground">
+                    Profiles
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <section className="studio-panel rounded-xl p-5 space-y-3">
+              <div className="flex items-center justify-between pb-3 border-b border-border">
+                <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Globe className="size-4 text-muted-foreground" />
+                  Supported Locales
+                </h2>
+                <span className="font-mono text-[11px] text-muted-foreground">
+                  {TARGET_LOCALES.length}+
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {TARGET_LOCALES.map((lang) => (
+                  <span
+                    key={lang}
+                    className="font-mono text-[11px] font-medium px-2.5 py-1 rounded-md border border-border bg-secondary/50 text-muted-foreground"
+                  >
+                    {lang}
+                  </span>
                 ))}
               </div>
-            </div>
-          </section>
+            </section>
+          </aside>
         </div>
-
-        {/* Global Languages Ribbon Strip */}
-        <section className="glass-panel rounded-[2rem] w-full overflow-hidden stagger-3">
-          <div className="border-b border-border p-4 bg-secondary flex items-center gap-2">
-            <Globe className="w-4 h-4 text-primary" />
-            <h2 className="text-sm font-semibold text-foreground">
-              Supported Regions
-            </h2>
-          </div>
-
-          <div className="relative py-6 flex items-center">
-            {/* Visual gradient mask overlays */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
-            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
-
-            <div className="flex shrink-0 animate-[marquee_40s_linear_infinite] gap-6 px-4">
-              {targetLocales.map((lang, idx) => (
-                <div
-                  key={idx}
-                  className="font-mono text-sm font-semibold border border-border bg-secondary px-6 py-3 rounded-xl text-muted-foreground hover:text-primary hover:border-primary/30 transition-all cursor-default whitespace-nowrap"
-                >
-                  {lang}
-                </div>
-              ))}
-              {targetLocales.map((lang, idx) => (
-                <div
-                  key={`dup-${idx}`}
-                  className="font-mono text-sm font-semibold border border-border bg-secondary px-6 py-3 rounded-xl text-muted-foreground hover:text-primary hover:border-primary/30 transition-all cursor-default whitespace-nowrap"
-                >
-                  {lang}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
       </div>
-
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-      `,
-        }}
-      />
     </div>
   );
 }

@@ -1,4 +1,6 @@
-import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import type React from "react";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function AuthLayout({
@@ -7,45 +9,73 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen w-full flex-col md:flex-row relative selection:bg-primary/30 selection:text-primary-foreground font-sans text-foreground overflow-hidden">
-      <div className="absolute top-6 right-6 z-20">
-        <ModeToggle />
+    <div className="min-h-[100dvh] w-full grid grid-cols-1 lg:grid-cols-12 bg-background text-foreground">
+      <div className="fixed top-5 right-5 z-20">
+        <ModeToggle className="rounded-full size-9 border-border bg-card hover:bg-accent" />
       </div>
 
-      {/* Left side - Visual Showcase */}
-      <div className="relative hidden w-0 flex-1 md:flex items-center justify-center p-12 z-10">
-        <div className="glass-panel p-12 rounded-3xl max-w-2xl w-full border border-border shadow-2xl flex flex-col justify-between h-[80%] relative overflow-hidden">
-          {/* subtle gradient orb */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full filter blur-[80px] opacity-50 pointer-events-none" />
+      {/* Left Editorial Studio Column */}
+      <aside className="hidden lg:flex lg:col-span-6 flex-col justify-between border-r border-border bg-secondary/40 p-10 xl:p-14">
+        <Link href="/" className="flex items-center gap-2.5 w-fit">
+          <Image
+            src="/logo.png"
+            alt="Resonance"
+            width={32}
+            height={32}
+            className="size-8 object-contain dark:invert-0 invert"
+          />
+          <span className="text-base font-semibold tracking-tight text-foreground">
+            Resonance
+          </span>
+        </Link>
 
-          <div className="relative z-10">
-            <h1 className="text-4xl lg:text-5xl font-heading font-semibold text-foreground mb-6 leading-tight tracking-tight">
-              Create hyper-realistic <br />
-              <span className="text-primary">
-                vocal synthesis.
-              </span>
+        <div className="space-y-6 max-w-lg my-auto py-8">
+          <div className="overflow-hidden rounded-xl border border-border bg-card">
+            <Image
+              src="/images/studio-hero.webp"
+              alt="Architectural vocal recording room with condenser microphone"
+              width={1200}
+              height={896}
+              priority
+              className="w-full aspect-[4/3] object-cover"
+            />
+          </div>
+
+          <div className="space-y-2.5">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-tight">
+              Your vocal studio, ready when your script is.
             </h1>
-            
-            <p className="text-lg text-muted-foreground leading-relaxed max-w-md">
-              Access the most advanced neural text-to-speech and voice cloning engine. Identify yourself to continue.
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[44ch]">
+              Sign in to access your custom voice profiles, SSML script editor,
+              and recorded audio history.
             </p>
           </div>
-
-          <div className="flex gap-4 relative z-10">
-            {/* Visual decoration at bottom */}
-            <div className="h-2 w-12 rounded-full bg-primary" />
-            <div className="h-2 w-2 rounded-full bg-accent" />
-            <div className="h-2 w-2 rounded-full bg-accent" />
-          </div>
         </div>
-      </div>
 
-      {/* Right side - Auth Component */}
-      <div className="flex w-full md:w-1/2 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24 items-center z-10 backdrop-blur-sm">
-        <div className="mx-auto w-full max-w-md lg:w-[400px]">
-          {children}
+        <p className="text-xs text-muted-foreground">© 2026 Resonance Inc.</p>
+      </aside>
+
+      {/* Right Auth Column */}
+      <main className="lg:col-span-6 flex flex-col justify-center items-center px-5 py-14 sm:px-8">
+        <div className="w-full max-w-md space-y-6">
+          <Link
+            href="/"
+            className="flex lg:hidden items-center justify-center gap-2.5 mb-2"
+          >
+            <Image
+              src="/logo.png"
+              alt="Resonance"
+              width={32}
+              height={32}
+              className="size-8 object-contain dark:invert-0 invert"
+            />
+            <span className="text-base font-semibold tracking-tight text-foreground">
+              Resonance
+            </span>
+          </Link>
+          <div className="flex justify-center">{children}</div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

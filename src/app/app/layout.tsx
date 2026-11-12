@@ -10,23 +10,21 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const cookiesStore = await cookies();
-  const sidebarOpen = cookiesStore.get("sidebar_state")?.value === "true";
+  const sidebarCookie = cookiesStore.get("sidebar_state")?.value;
+  const sidebarOpen = sidebarCookie !== "false";
+
   return (
-    <div>
-      <main>
-        <SidebarProvider
-          defaultOpen={sidebarOpen}
-          style={{ "--sidebar-width-icon": "4.5rem" } as React.CSSProperties}
-        >
-          <DashboardSidebar />
-          <SidebarInset className="min-h-0 min-w-0">
-            <main className="flex flex-col min-h-0 flex-1">
-              <Navbar />
-              <HapticsProvider>{children}</HapticsProvider>
-            </main>
-          </SidebarInset>
-        </SidebarProvider>
-      </main>
-    </div>
+    <SidebarProvider
+      defaultOpen={sidebarOpen}
+      style={{ "--sidebar-width-icon": "4.25rem" } as React.CSSProperties}
+    >
+      <DashboardSidebar />
+      <SidebarInset className="min-h-[100dvh] min-w-0 bg-background">
+        <Navbar />
+        <main className="flex flex-col min-h-0 flex-1">
+          <HapticsProvider>{children}</HapticsProvider>
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -1,31 +1,31 @@
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Geist_Mono, Schibsted_Grotesk } from "next/font/google";
 import "./globals.css";
-import ConvexClientProvider from "@/components/ConvexClientProvider";
 import ClerkThemeProvider from "@/components/ClerkThemeProvider";
-import { cn } from "@/lib/utils";
+import ConvexClientProvider from "@/components/ConvexClientProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import UserSync from "@/components/UserSync";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
 
-const jetbrainsMono = JetBrains_Mono({
+const schibstedGrotesk = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-mono",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-schibsted",
+  display: "swap",
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-heading",
+  weight: ["400", "500", "600"],
+  variable: "--font-geist-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Resonance | Vocal Synthesis",
-  description: "Advanced AI Voice Generator and Voice Cloning Platform",
+  title: "Resonance | Vocal Synthesis Studio",
+  description:
+    "Write a script, audition natural voices, and clone custom speech profiles in seconds.",
 };
 
 export default function RootLayout({
@@ -38,29 +38,21 @@ export default function RootLayout({
       suppressHydrationWarning
       lang="en"
       className={cn(
-        "h-full",
-        "antialiased",
-        plusJakarta.variable,
-        outfit.variable,
-        jetbrainsMono.variable,
-        "font-sans"
+        "h-full antialiased",
+        schibstedGrotesk.variable,
+        geistMono.variable,
+        "font-sans",
       )}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-foreground">
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
+          defaultTheme="system"
+          enableSystem={true}
           disableTransitionOnChange
         >
           <ClerkThemeProvider>
             <ConvexClientProvider>
-              {/* Aurora Glass Background Wrapper */}
-              <div className="aurora-bg">
-                <div className="aurora-orb-1"></div>
-                <div className="aurora-orb-2"></div>
-                <div className="aurora-orb-3"></div>
-              </div>
               <UserSync />
               {children}
               <Toaster />

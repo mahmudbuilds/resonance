@@ -1,305 +1,340 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { 
-  ArrowUpRight, 
+import {
+  ArrowUpRight,
   AudioLines,
   Mic2,
-  Play,
-  Zap,
-  Disc
+  SlidersHorizontal,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { HeroAudioAudition } from "@/components/home/HeroAudioAudition";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 
-const kineticStyles = `
-  @keyframes wave-dna {
-    0%, 100% { transform: scaleY(0.15) translateZ(10px); }
-    50% { transform: scaleY(1.1) translateZ(60px); }
-  }
-`;
+const WORKSPACE_ROWS = [
+  {
+    title: "Voice Library",
+    description:
+      "Browse curated voices across 16 locale codes with clear descriptions, tags, and instant handoff into the editor.",
+    meta: "16 Locales",
+    href: "/app/voices",
+    icon: AudioLines,
+  },
+  {
+    title: "Text to Speech",
+    description:
+      "Draft narration or structured SSML scripts with speaking rate and temperature controls, plus downloadable history.",
+    meta: "SSML + Tuning",
+    href: "/app/text-to-speech",
+    icon: SlidersHorizontal,
+  },
+  {
+    title: "Voice Cloning",
+    description:
+      "Upload an audio file or record a guided 5 to 15 second sample directly in the browser to create a reusable voice.",
+    meta: "5-15s Sample",
+    href: "/app/voice-cloning",
+    icon: Mic2,
+  },
+];
+
+const SUPPORTED_LOCALES = [
+  "EN-US",
+  "ES-ES",
+  "FR-FR",
+  "DE-DE",
+  "JA-JP",
+  "KO-KR",
+  "ZH-CN",
+  "HI-IN",
+  "AR-SA",
+  "PT-BR",
+  "IT-IT",
+  "PL-PL",
+  "NL-NL",
+  "RU-RU",
+  "HE-IL",
+  "AUTO",
+];
 
 export default function LandingPage() {
-  const [mouseCoord, setMouseCoord] = useState({ x: 0, y: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const { width, height, left, top } = containerRef.current.getBoundingClientRect();
-      // Normalize values between -0.5 and 0.5
-      const x = (e.clientX - left) / width - 0.5;
-      const y = (e.clientY - top) / height - 0.5;
-      setMouseCoord({ x, y });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   return (
-    <div className="min-h-screen text-foreground bg-background overflow-hidden selection:bg-primary/30 relative font-sans">
-      <style dangerouslySetInnerHTML={{ __html: kineticStyles }} />
-      
-      {/* Structural Atmospheric Canvas */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 sonic-grid-bg opacity-70" />
-        
-        {/* Kinetic Light Orbs */}
-        <div 
-          className="absolute top-[-10%] left-[20%] w-[400px] h-[400px] lg:w-[600px] lg:h-[600px] bg-primary/25 lg:bg-primary/10 rounded-full dark:mix-blend-screen"
-          style={{
-            animation: "fluid-pulse 12s ease-in-out infinite",
-            transform: `translate(${mouseCoord.x * -50}px, ${mouseCoord.y * -50}px)`
-          }}
-        />
-        <div 
-          className="absolute bottom-[10%] right-[15%] w-[350px] h-[350px] lg:w-[500px] lg:h-[500px] bg-pink-600/25 lg:bg-pink-600/10 rounded-full dark:mix-blend-screen"
-          style={{
-            animation: "fluid-pulse 16s ease-in-out infinite",
-            transform: `translate(${mouseCoord.x * 70}px, ${mouseCoord.y * 70}px)`
-          }}
-        />
-      </div>
+    <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
+      {/* Single-line navigation (64px) */}
+      <header className="sticky top-0 z-30 h-16 border-b border-border bg-background/95">
+        <div className="max-w-7xl mx-auto h-full px-5 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+            <Image
+              src="/logo.png"
+              alt="Resonance"
+              width={32}
+              height={32}
+              className="size-8 object-contain dark:invert-0 invert"
+            />
+            <span className="text-base font-semibold tracking-tight text-foreground">
+              Resonance
+            </span>
+          </Link>
 
-      {/* Main 3D Kinetic Field */}
-      <div 
-        ref={containerRef}
-        className="relative z-10 w-full min-h-screen preserve-3d perspective-2500 flex flex-col justify-between"
-        style={{
-          transform: `rotateX(${mouseCoord.y * -12}deg) rotateY(${mouseCoord.x * 12}deg)`,
-          transition: "transform 0.1s ease-out"
-        }}
-      >
-        
-        {/* Navigation */}
-        <nav className="w-full h-24 lg:h-auto lg:pt-8 px-5 lg:px-16 preserve-3d transform translate-z-[50px]">
-          <div className="max-w-7xl mx-auto flex items-center justify-between h-full lg:h-auto border-b border-border w-full lg:pb-6">
-            <div className="flex items-center gap-2 lg:gap-3 group cursor-pointer">
-              <Image
-                src="/logo.png"
-                alt="Resonance"
-                width={56}
-                height={56}
-                className="w-10 h-10 lg:w-14 lg:h-14 group-hover:scale-110 transition-transform duration-500 object-contain dark:invert-0 invert"
-              />
-              <span className="text-lg lg:text-xl font-bold tracking-tight text-foreground">
-                Resonance
-              </span>
-            </div>
-            
-            {/* Context Paths Nested Inside /app */}
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-              <Link href="/app/voices" className="hover:text-foreground transition-colors">Voices</Link>
-              <Link href="/app/text-to-speech" className="hover:text-foreground transition-colors">Text to Speech</Link>
-              <Link href="/app/voice-cloning" className="hover:text-foreground transition-colors">Voice Cloning</Link>
-            </div>
+          <nav
+            aria-label="Primary"
+            className="hidden md:flex items-center gap-7 text-sm font-medium text-muted-foreground"
+          >
+            <Link
+              href="/app/voices"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Voices
+            </Link>
+            <Link
+              href="/app/text-to-speech"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Text to Speech
+            </Link>
+            <Link
+              href="/app/voice-cloning"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Voice Cloning
+            </Link>
+          </nav>
 
-            <div className="flex items-center gap-3">
-              <ModeToggle />
-              <Link href="/app">
-                <Button className="rounded-full border border-border bg-secondary lg:bg-transparent text-foreground hover:bg-accent hover:text-foreground font-medium text-sm h-9 lg:h-10 px-5 lg:px-6 transition-all duration-300">
-                  Dashboard
+          <div className="flex items-center gap-2.5 shrink-0">
+            <ModeToggle className="rounded-full size-9 border-border bg-card hover:bg-accent" />
+            <Button
+              asChild
+              className="rounded-full h-9 px-5 bg-foreground text-background hover:bg-foreground/90 font-medium text-xs sm:text-sm whitespace-nowrap"
+            >
+              <Link href="/app">Open Studio</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1">
+        {/* Hero: Asymmetric editorial opening */}
+        <section className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 lg:pt-16 pb-16 lg:pb-24">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <div className="lg:col-span-7 space-y-6">
+              <h1 className="text-4xl sm:text-6xl lg:text-[4.25rem] font-semibold tracking-[-0.03em] leading-[1.04] text-foreground max-w-xl">
+                Voices that sound human.
+              </h1>
+
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-[46ch]">
+                Write a script, audition natural speakers, and export studio
+                narration in seconds without robotic cadence.
+              </p>
+
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full h-12 px-7 bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm whitespace-nowrap"
+                >
+                  <Link href="/app/voice-cloning">
+                    Clone a Voice
+                    <ArrowUpRight className="size-4 ml-1.5" />
+                  </Link>
                 </Button>
-              </Link>
+
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full h-12 px-7 border-border bg-card hover:bg-accent text-foreground font-medium text-sm whitespace-nowrap"
+                >
+                  <Link href="/app/text-to-speech">Try Text to Speech</Link>
+                </Button>
+              </div>
+            </div>
+
+            <div className="lg:col-span-5 space-y-4">
+              <div className="overflow-hidden rounded-xl border border-border bg-card">
+                <Image
+                  src="/images/studio-hero.webp"
+                  alt="Minimalist architectural recording room with a brushed aluminum condenser microphone in soft daylight"
+                  width={1200}
+                  height={896}
+                  priority
+                  className="w-full aspect-[4/3] object-cover"
+                />
+              </div>
+
+              <HeroAudioAudition />
             </div>
           </div>
-        </nav>
+        </section>
 
-        {/* Hero Area */}
-        <header className="max-w-7xl mx-auto w-full px-5 lg:px-16 pt-12 lg:pt-24 pb-12 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start preserve-3d">
-          
-          {/* Typography Matrix */}
-          <div className="lg:col-span-7 space-y-10 lg:space-y-8 text-left preserve-3d z-20">
-            <h1 className="text-5xl sm:text-7xl lg:text-[6.25rem] font-bold tracking-[-0.03em] leading-[1.08] lg:leading-[0.98] preserve-3d">
-              <span className="block transform translate-z-[60px] text-foreground pb-2">
-                Voices that
-              </span>
-              <span className="block transform translate-z-[110px] text-primary">
-                sound human.
-              </span>
-            </h1>
-
-            <p className="text-base sm:text-xl text-muted-foreground max-w-xl leading-relaxed transform translate-z-[40px]">
-              Create incredibly realistic, human-sounding voiceovers in seconds. Perfect for creators, developers, and businesses looking to bring their words to life.
-            </p>
-
-            {/* Mobile-only mini visualizer for visual interest */}
-            <div className="lg:hidden flex items-center gap-3 p-4 rounded-2xl border border-border bg-secondary/80 backdrop-blur-xl">
-              <Disc className="w-5 h-5 text-primary animate-[spin_4s_linear_infinite] shrink-0" />
-              <div className="flex-1 flex items-center gap-1 h-10">
-                {[...Array(14)].map((_, i) => (
-                  <div 
-                    key={i} 
-                    className="w-full bg-primary/70 rounded-full"
-                    style={{
-                      height: '100%',
-                      animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
-                      animationDelay: `${i * 0.08}s`
-                    }}
-                  />
-                ))}
-              </div>
-              <span className="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-full shrink-0">98% match</span>
-            </div>
-
-            <div className="pt-2 lg:pt-6 flex flex-col sm:flex-row gap-3 lg:gap-4 transform translate-z-[80px]">
-              <Link href="/app/voice-cloning" className="w-full sm:w-auto">
-                <Button size="lg" className="w-full sm:w-auto rounded-full h-14 px-8 bg-primary text-primary-foreground hover:bg-primary/90 font-semibold text-base transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
-                  Clone Your Voice
-                  <ArrowUpRight className="w-5 h-5" />
-                </Button>
-              </Link>
-              <Link href="/app/text-to-speech" className="w-full sm:w-auto">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full h-14 px-8 bg-secondary lg:bg-transparent border-border hover:border-primary/40 hover:bg-accent text-foreground font-semibold text-base transition-all duration-300">
-                  <Play className="w-5 h-5 mr-2 fill-current text-primary" /> Try Text to Speech
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Visual Element */}
-          <div className="lg:col-span-5 w-full h-[520px] relative preserve-3d hidden lg:block z-10 transform translate-z-[40px] translate-y-6">
-            <div className="absolute inset-0 border border-border bg-secondary/80 dark:bg-black/40 backdrop-blur-3xl p-8 flex flex-col justify-between preserve-3d rounded-3xl shadow-2xl dark:shadow-[0_40px_100px_rgba(0,0,0,0.7)]">
-              
-              <div className="flex justify-between items-center border-b border-border pb-4 transform translate-z-[30px]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="font-medium text-sm text-foreground">Studio Engine Active</span>
-                </div>
-                <span className="text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">24-bit • 48kHz</span>
-              </div>
-
-              {/* Kinetic Sound Grid Visualizer */}
-              <div className="py-8 flex flex-col justify-center gap-6 preserve-3d">
-                <div className="flex justify-between items-end gap-1.5 h-36 preserve-3d px-2">
-                  {[...Array(18)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="w-full bg-primary/80 hover:bg-primary transition-colors rounded-full"
-                      style={{
-                        height: '100%',
-                        animation: `wave-dna ${1.2 + (i * 0.05)}s ease-in-out infinite`,
-                        animationDelay: `${i * 0.08}s`
-                      }}
-                    />
-                  ))}
-                </div>
-                <div className="flex items-center justify-between text-xs text-muted-foreground px-2 font-mono">
-                  <span>00:04.2</span>
-                  <span className="text-foreground font-sans font-medium">Sarah — Documentary Timbre</span>
-                  <span>00:15.0</span>
-                </div>
-              </div>
-
-              <div className="border-t border-border pt-5 space-y-3 transform translate-z-[50px]">
-                <div className="flex justify-between text-sm font-medium">
-                  <span className="text-muted-foreground">Neural Fidelity Score</span>
-                  <span className="text-foreground font-semibold">98.4% match</span>
-                </div>
-                <div className="w-full h-1.5 bg-secondary relative overflow-hidden rounded-full">
-                  <div className="absolute top-0 left-0 h-full w-[98.4%] bg-primary rounded-full" />
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </header>
-
-        {/* Features Section */}
-        <main className="max-w-7xl mx-auto w-full px-5 lg:px-16 pt-20 lg:pt-32 pb-24 preserve-3d">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-end mb-12 lg:mb-16 border-t border-border pt-12">
-            <div className="lg:col-span-6">
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight">
-                Studio-grade acoustic architecture
+        {/* Core Workspaces: Asymmetric 4+8 Ruled Index */}
+        <section className="border-t border-border">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+            <div className="lg:col-span-4 space-y-3">
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground leading-tight">
+                Built for spoken clarity
               </h2>
-            </div>
-            <div className="lg:col-span-6">
-              <p className="text-base text-muted-foreground max-w-lg leading-relaxed">
-                Everything you need to generate, clone, and orchestrate AI voices with natural timbre, zero robotic cadence, and multi-language inflection.
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-[36ch]">
+                Three focused workspaces take you from voice discovery to final
+                audio export with zero clutter.
               </p>
             </div>
-          </div>
 
-          {/* Interactive Stacked Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch preserve-3d">
-            
-            {/* App Action 1: Voices */}
-            <Link href="/app/voices" className="group preserve-3d block">
-              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
-                <div className="space-y-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                    <AudioLines className="w-5 h-5" />
+            <div className="lg:col-span-8 border-t border-b border-border divide-y divide-border">
+              {WORKSPACE_ROWS.map((item) => (
+                <Link
+                  key={item.title}
+                  href={item.href}
+                  className="group py-6 sm:py-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-secondary/60 transition-colors px-2 sm:px-4 -mx-2 sm:-mx-4 rounded-lg"
+                >
+                  <div className="flex items-start gap-4 max-w-xl">
+                    <div className="size-10 rounded-lg border border-border bg-card flex items-center justify-center text-foreground group-hover:border-primary/40 group-hover:text-primary transition-colors shrink-0 mt-0.5">
+                      <item.icon className="size-4" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Voice Library</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Browse curated voices spanning 9+ international languages with natural emotive inflections.</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">9+ Languages</span>
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Neural Timbre</span>
-                </div>
-              </div>
-            </Link>
 
-            {/* App Action 2: Text to Speech */}
-            <Link href="/app/text-to-speech" className="group preserve-3d block">
-              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
-                <div className="space-y-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                    <Zap className="w-5 h-5" />
+                  <div className="flex items-center gap-4 sm:shrink-0 pl-14 sm:pl-0">
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {item.meta}
+                    </span>
+                    <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Text to Speech</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Type your script and generate studio-quality voiceovers with micro-pacing and temperature controls.</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Micro-Pacing</span>
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Real-time Preview</span>
-                </div>
-              </div>
-            </Link>
-
-            {/* App Action 3: Voice Cloning */}
-            <Link href="/app/voice-cloning" className="group preserve-3d block">
-              <div className="border border-border bg-card/60 backdrop-blur-md p-6 lg:p-8 h-full flex flex-col justify-between gap-6 transition-all duration-300 hover:border-primary/40 hover:bg-card/90 relative transform group-hover:-translate-y-1 rounded-3xl shadow-sm">
-                <div className="space-y-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                    <Mic2 className="w-5 h-5" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">Voice Cloning</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">Create a high-fidelity digital replica from sample recordings with automatic acoustic isolation.</p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-1.5 pt-2 border-t border-border/60">
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">60s Audio Input</span>
-                  <span className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-secondary text-muted-foreground">Zero-shot Match</span>
-                </div>
-              </div>
-            </Link>
-
-          </div>
-        </main>
-
-        {/* Footer */}
-        <footer className="w-full border-t border-border bg-background/80 backdrop-blur-xl py-8 px-6 lg:px-16 preserve-3d transform translate-z-[40px]">
-          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-zinc-500">
-              © 2026 Resonance Inc. All rights reserved.
-            </p>
-            <div className="flex items-center gap-3 text-sm font-medium text-muted-foreground">
-              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-              <span>All systems operational</span>
+                </Link>
+              ))}
             </div>
           </div>
-        </footer>
+        </section>
 
-      </div>
+        {/* Studio Craft Showcase: Editorial 2-column split */}
+        <section className="border-t border-border bg-secondary/40">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <div className="lg:col-span-6">
+              <div className="overflow-hidden rounded-xl border border-border bg-card">
+                <Image
+                  src="/images/studio-acoustic-detail.webp"
+                  alt="Matte dark anodized studio audio interface next to an acoustic foam baffle on stone"
+                  width={1200}
+                  height={670}
+                  className="w-full aspect-video object-cover"
+                />
+              </div>
+            </div>
+
+            <div className="lg:col-span-6 space-y-5">
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground leading-tight max-w-md">
+                From one clean take to a reusable voice
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-[54ch]">
+                Record directly in the studio with guided calibration sentences
+                or drop in an existing MP3 or WAV recording. Resonance stores
+                your profile in your private library so you can narrate new
+                scripts anytime.
+              </p>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-[54ch]">
+                Switch seamlessly between plain prose and SSML markup when a
+                documentary or product tour needs exact pauses and pacing.
+              </p>
+              <div className="pt-2">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="rounded-full h-11 px-6 border-border bg-card hover:bg-accent text-foreground font-medium text-sm whitespace-nowrap"
+                >
+                  <Link href="/app/voices">
+                    Explore Voice Library
+                    <ArrowUpRight className="size-4 ml-1.5" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Supported Locales & Close */}
+        <section className="border-t border-border">
+          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 space-y-12">
+            <div className="max-w-xl space-y-3">
+              <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+                Sixteen locales, natural inflection
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                Synthesize scripts across international languages with
+                consistent timbre and clean pronunciation.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+              {SUPPORTED_LOCALES.map((code) => (
+                <div
+                  key={code}
+                  className="studio-panel rounded-lg py-3 px-3 text-center font-mono text-xs font-medium text-foreground"
+                >
+                  {code}
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-8 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="space-y-1">
+                <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                  Ready when your script is.
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Enter the studio workspace to browse voices or generate your
+                  first track.
+                </p>
+              </div>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full h-12 px-7 bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm whitespace-nowrap shrink-0"
+              >
+                <Link href="/app">Enter Resonance</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-border bg-background">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs text-muted-foreground">
+            © 2026 Resonance Inc. All rights reserved.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-muted-foreground">
+            <Link
+              href="/app/voices"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Voice Library
+            </Link>
+            <Link
+              href="/app/text-to-speech"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Text to Speech
+            </Link>
+            <Link
+              href="/app/voice-cloning"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Voice Cloning
+            </Link>
+            <Link
+              href="/app/support"
+              className="hover:text-foreground transition-colors whitespace-nowrap"
+            >
+              Support
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

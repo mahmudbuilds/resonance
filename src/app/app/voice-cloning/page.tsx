@@ -41,6 +41,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "../../../../convex/_generated/api";
@@ -86,9 +87,9 @@ const LANG_LABELS: Record<string, string> = {
 
 const RECORDING_SENTENCES = [
   "Custom (read your own text)",
-  "Are you ready to save big? Get set for the sale of the century! Deals and discounts like never before! You won’t want to miss this.",
-  "Every challenge we face is an opportunity in disguise. Wouldn’t you agree? So cheer up! It’ll all be okay.",
-  "How have you been? It’s been way too long since we last caught up. By the way, I heard about your recent promotion. Congratulations! I’m so excited for you!",
+  "Are you ready to save big? Get set for the sale of the century! Deals and discounts like never before! You won't want to miss this.",
+  "Every challenge we face is an opportunity in disguise. Wouldn't you agree? So cheer up! It'll all be okay.",
+  "How have you been? It's been way too long since we last caught up. By the way, I heard about your recent promotion. Congratulations! I'm so excited for you!",
   "The quick brown fox jumps over the lazy dog, a classic sentence that contains every letter of the English alphabet.",
   "We are thrilled to announce our latest product update, which brings a host of new features designed to make your workflow faster and more efficient.",
 ];
@@ -155,12 +156,10 @@ export default function VoiceCloningPage() {
     const toastId = toast.loading(`Deleting "${name}"...`);
     try {
       await deleteClonedVoice({ voiceId });
-      toast.success(`"${name}" deleted`, {
-        id: toastId,
-      });
+      toast.success(`"${name}" deleted`, { id: toastId });
     } catch (error) {
       console.error(error);
-      toast.error(`Could not delete voice`, { id: toastId });
+      toast.error("Could not delete voice", { id: toastId });
     }
   };
 
@@ -225,12 +224,12 @@ export default function VoiceCloningPage() {
       try {
         ws = WaveSurfer.create({
           container,
-          waveColor: "rgba(167, 139, 250, 0.4)", // Primary color low opacity
-          progressColor: "rgba(167, 139, 250, 1)", // Primary color
-          cursorColor: "rgba(167, 139, 250, 1)",
+          waveColor: "rgba(209, 67, 32, 0.32)",
+          progressColor: "rgba(209, 67, 32, 1)",
+          cursorColor: "rgba(209, 67, 32, 1)",
           barWidth: 3,
           barGap: 3,
-          height: 80,
+          height: 76,
           normalize: true,
         });
 
@@ -248,7 +247,6 @@ export default function VoiceCloningPage() {
         wavesurferRef.current = ws;
         recordPluginRef.current = record;
 
-        // --- Listeners ---
         ws.on("play", () => setIsPlaying(true));
         ws.on("pause", () => setIsPlaying(false));
         ws.on("finish", () => setIsPlaying(false));
@@ -283,7 +281,7 @@ export default function VoiceCloningPage() {
       if (ws) {
         try {
           ws.destroy();
-        } catch (e) {}
+        } catch {}
       }
       wavesurferRef.current = null;
       recordPluginRef.current = null;
@@ -322,8 +320,10 @@ export default function VoiceCloningPage() {
     if (recordPluginRef.current) {
       if (isPaused) {
         recordPluginRef.current.resumeRecording();
+        setIsPaused(false);
       } else {
         recordPluginRef.current.pauseRecording();
+        setIsPaused(true);
       }
       trigger("nudge");
     }
@@ -377,7 +377,6 @@ export default function VoiceCloningPage() {
 
     const toastId = toast.loading("Cloning your voice...");
 
-    //Getting values from the UI inputs
     const voiceName = voiceNameRef.current?.value;
     if (!voiceName) {
       toast.error("Please enter a name for your voice", { id: toastId });
@@ -388,7 +387,7 @@ export default function VoiceCloningPage() {
     const description = descriptionRef.current?.value;
 
     const tags = tagStrings
-      ? tagStrings?.split(",").map((tag) => tag.trim())
+      ? tagStrings.split(",").map((tag) => tag.trim())
       : [];
 
     try {
@@ -416,49 +415,46 @@ export default function VoiceCloningPage() {
   };
 
   return (
-    <div className="min-h-screen relative w-full overflow-x-hidden text-foreground pb-20">
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12 animate-fade-up">
-        {/* Header Section */}
-        <header className="mb-6 sm:mb-8 lg:mb-12 border-b border-border pb-6 sm:pb-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 sm:gap-6">
-          <div className="w-full md:w-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 mb-3 sm:mb-4 rounded-full text-xs font-medium text-primary">
-              <Sparkles className="w-3.5 h-3.5" />
+    <div className="min-h-full bg-background text-foreground pb-16">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8 animate-editorial-enter">
+        {/* Header */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
+          <div className="space-y-1.5">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
               Voice Cloning
-            </div>
-            <h1 className="font-heading text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground">
-              Clone a Voice
             </h1>
+            <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
+              Record or upload a clean 5 to 15 second speech sample to build a
+              custom voice profile.
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground w-full md:w-auto max-w-md leading-relaxed md:text-right">
-            Record or upload a clear audio sample, and we&apos;ll create a
-            custom voice you can use to generate speech.
-          </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 w-full">
-          {/* Main Workspace */}
-          <div className="lg:col-span-8 flex flex-col gap-8 stagger-1">
-            <div className="glass-panel border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative">
-              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
-                <User className="w-4 h-4 text-muted-foreground" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Main Cloning Workspace */}
+          <div className="lg:col-span-8 space-y-6">
+            {/* Voice Metadata */}
+            <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-border">
+                <User className="size-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-foreground">
                   Voice Details
                 </h2>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-5">
                 <div className="space-y-2">
                   <Label
                     htmlFor="voiceName"
                     className="text-xs font-medium text-muted-foreground"
                   >
-                    Voice Name <span className="text-primary">*</span>
+                    Voice Name <span className="accent-ink">*</span>
                   </Label>
                   <Input
                     id="voiceName"
                     ref={voiceNameRef}
-                    placeholder="e.g. My narrator voice"
-                    className="glass-card border-border h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-foreground placeholder:text-muted-foreground/50 text-sm"
+                    placeholder="e.g. Documentary Narrator"
+                    className="bg-background border-input h-10 rounded-lg text-sm"
                   />
                 </div>
 
@@ -472,12 +468,12 @@ export default function VoiceCloningPage() {
                   <Textarea
                     id="desc"
                     ref={descriptionRef}
-                    placeholder="Describe this voice (e.g. warm, deep, energetic)"
-                    className="resize-none glass-card border-border h-24 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-foreground placeholder:text-muted-foreground/50 w-full text-sm"
+                    placeholder="Describe this voice (e.g. warm, measured, conversational)"
+                    className="resize-none bg-background border-input h-24 rounded-lg text-sm"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label
                       htmlFor="langCode"
@@ -488,16 +484,16 @@ export default function VoiceCloningPage() {
                     <Select value={langCode} onValueChange={setLangCode}>
                       <SelectTrigger
                         id="langCode"
-                        className="glass-card border-border h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-foreground text-sm"
+                        className="w-full bg-background border-input h-10 rounded-lg text-sm"
                       >
                         <SelectValue placeholder="Select a language" />
                       </SelectTrigger>
-                        <SelectContent className="border-border rounded-xl text-foreground">
+                      <SelectContent className="rounded-lg">
                         {LANG_CODES.map((code) => (
                           <SelectItem
                             key={code}
                             value={code}
-                            className="focus:bg-accent focus:text-foreground rounded-lg cursor-pointer"
+                            className="rounded-md cursor-pointer"
                           >
                             {LANG_LABELS[code] ?? code}
                           </SelectItem>
@@ -516,339 +512,308 @@ export default function VoiceCloningPage() {
                     <Input
                       id="tags"
                       ref={tagsRef}
-                      placeholder="narration, calm, deep"
-                      className="glass-card border-border h-12 rounded-xl focus-visible:ring-primary focus-visible:border-primary text-foreground placeholder:text-muted-foreground/50 text-sm"
+                      placeholder="narration, calm, clear"
+                      className="bg-background border-input h-10 rounded-lg text-sm"
                     />
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Audio Input Module */}
-            <div className="glass-panel border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 relative stagger-2">
-              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-border">
-                <Mic className="w-4 h-4 text-muted-foreground" />
+            {/* Audio Sample Input */}
+            <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-5">
+              <div className="flex items-center gap-2 pb-3 border-b border-border">
+                <Mic className="size-4 text-muted-foreground" />
                 <h2 className="text-sm font-semibold text-foreground">
                   Audio Sample
                 </h2>
               </div>
 
-              <div className="mt-4">
-                <Tabs
-                  value={activeTab}
-                  onValueChange={(val) => {
-                    setActiveTab(val);
-                    clearAudio();
-                  }}
-                  className="w-full"
-                >
-                  <TabsList className="glass-card p-1 rounded-xl h-12 w-full flex border-border mb-6">
-                    <TabsTrigger
-                      value="upload"
-                      className="flex-1 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-foreground font-medium text-xs sm:text-sm h-full gap-2 px-2 sm:px-3 transition-all"
-                    >
-                      <UploadCloud className="w-4 h-4 shrink-0" />{" "}
-                      <span className="truncate">Upload file</span>
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="record"
-                      className="flex-1 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-foreground font-medium text-xs sm:text-sm h-full gap-2 px-2 sm:px-3 transition-all"
-                    >
-                      <Mic className="w-4 h-4 shrink-0" />{" "}
-                      <span className="truncate">Record</span>
-                    </TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="upload" className="mt-0 outline-none">
-                    {!audioUrl ? (
-                      <>
-                        <button
-                          type="button"
-                          onDrop={handleDrop}
-                          onDragOver={handleDragOver}
-                          onClick={() => fileInputRef.current?.click()}
-                          className="border border-dashed border-border hover:border-primary/50 bg-secondary hover:bg-accent rounded-2xl p-6 sm:p-8 lg:p-12 transition-all flex flex-col items-center justify-center text-center cursor-pointer group/dropzone min-h-[200px] sm:min-h-[250px] w-full"
-                        >
-                          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-secondary border border-border rounded-full flex items-center justify-center mb-4 group-hover/dropzone:scale-110 transition-transform">
-                            <UploadCloud className="w-6 h-6 text-muted-foreground group-hover/dropzone:text-primary transition-colors" />
-                          </div>
-                          <p className="font-medium text-sm text-foreground mb-2">
-                            Upload an audio file
-                          </p>
-                          <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                            MP3 or WAV, up to 10MB. Drag and drop or click to
-                            browse.
-                          </p>
-                        </button>
-                        <input
-                          type="file"
-                          className="hidden"
-                          accept="audio/*"
-                          ref={fileInputRef}
-                          onChange={handleFileUpload}
-                        />
-                      </>
-                    ) : null}
-                  </TabsContent>
-
-                  <TabsContent
-                    value="record"
-                    className="mt-0 outline-none space-y-6"
+              <Tabs
+                value={activeTab}
+                onValueChange={(val) => {
+                  setActiveTab(val);
+                  clearAudio();
+                }}
+                className="w-full"
+              >
+                <TabsList className="bg-secondary border border-border p-1 rounded-lg h-10 w-full flex mb-5">
+                  <TabsTrigger
+                    value="upload"
+                    className="flex-1 rounded-md data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs font-medium text-xs h-full gap-2"
                   >
-                    <div className="space-y-2">
-                      <Label className="text-xs font-medium text-muted-foreground">
-                        Sample text
-                      </Label>
-                      <Select
-                        value={selectedSentence}
-                        onValueChange={setSelectedSentence}
+                    <UploadCloud className="size-3.5 shrink-0" />
+                    <span>Upload file</span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="record"
+                    className="flex-1 rounded-md data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs font-medium text-xs h-full gap-2"
+                  >
+                    <Mic className="size-3.5 shrink-0" />
+                    <span>Record sample</span>
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="upload" className="mt-0 outline-none">
+                  {!audioUrl && (
+                    <>
+                      <button
+                        type="button"
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="border border-dashed border-border hover:border-primary/60 bg-secondary/40 hover:bg-secondary/80 rounded-xl p-8 transition-colors flex flex-col items-center justify-center text-center cursor-pointer min-h-[200px] w-full"
                       >
-                        <SelectTrigger className="glass-card border-border h-12 rounded-xl text-foreground focus-visible:ring-primary focus-visible:border-primary text-sm">
-                          <SelectValue placeholder="Choose a sample" />
-                        </SelectTrigger>
-                      <SelectContent className="border-border rounded-xl text-foreground">
-                          {RECORDING_SENTENCES.map((sentence, i) => (
-                            <SelectItem
-                              key={sentence}
-                              value={sentence}
-                              className="focus:bg-accent focus:text-foreground rounded-lg cursor-pointer text-sm py-2"
-                            >
-                              {i === 0
-                                ? sentence
-                                : sentence.length > 30
-                                  ? `${sentence.substring(0, 30)}...`
-                                  : sentence}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      {selectedSentence !== "Custom (read your own text)" && (
-                        <div className="p-4 bg-secondary rounded-xl border border-border text-sm sm:text-base text-foreground leading-relaxed mt-4">
-                          {selectedSentence}
+                        <div className="size-12 bg-card border border-border rounded-full flex items-center justify-center mb-3">
+                          <UploadCloud className="size-5 text-muted-foreground" />
                         </div>
-                      )}
-                    </div>
+                        <p className="font-medium text-sm text-foreground mb-1">
+                          Upload an audio file
+                        </p>
+                        <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+                          MP3 or WAV up to 10MB. Drag and drop or click to
+                          browse.
+                        </p>
+                      </button>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="audio/*"
+                        ref={fileInputRef}
+                        onChange={handleFileUpload}
+                      />
+                    </>
+                  )}
+                </TabsContent>
 
-                    {!audioUrl && !isRecording && (
-                      <div className="border border-border bg-secondary rounded-2xl p-6 sm:p-8 lg:p-12 flex flex-col items-center justify-center text-center min-h-[200px] sm:min-h-[250px] w-full">
-                        <Button
-                          onClick={startRecording}
-                          className="w-20 h-20 rounded-full bg-primary hover:bg-primary/90 text-foreground transition-all hover:scale-105 mb-6 flex items-center justify-center shadow-lg shadow-primary/20"
-                        >
-                          <Mic className="w-8 h-8" />
-                        </Button>
-                        <p className="font-medium text-sm text-foreground mb-2">
-                          Start recording
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          Click the microphone to begin
-                        </p>
+                <TabsContent
+                  value="record"
+                  className="mt-0 outline-none space-y-5"
+                >
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-muted-foreground">
+                      Sample calibration text
+                    </Label>
+                    <Select
+                      value={selectedSentence}
+                      onValueChange={setSelectedSentence}
+                    >
+                      <SelectTrigger className="w-full bg-background border-input h-10 rounded-lg text-sm">
+                        <SelectValue placeholder="Choose a sample" />
+                      </SelectTrigger>
+                      <SelectContent className="rounded-lg">
+                        {RECORDING_SENTENCES.map((sentence, i) => (
+                          <SelectItem
+                            key={sentence}
+                            value={sentence}
+                            className="rounded-md cursor-pointer text-sm py-2"
+                          >
+                            {i === 0
+                              ? sentence
+                              : sentence.length > 36
+                                ? `${sentence.substring(0, 36)}...`
+                                : sentence}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    {selectedSentence !== "Custom (read your own text)" && (
+                      <div className="p-4 bg-secondary/50 rounded-lg border border-border text-sm text-foreground leading-relaxed mt-3">
+                        {selectedSentence}
                       </div>
                     )}
-                  </TabsContent>
-                </Tabs>
-
-                {/* Audio Waveform Visualization */}
-                <div
-                  className={`mt-6 border border-border glass-card rounded-2xl p-6 relative ${audioUrl || isRecording ? "block" : "hidden"}`}
-                >
-                  {isRecording && (
-                    <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-                      <div
-                        className={`w-2.5 h-2.5 bg-red-400 rounded-full ${!isPaused ? "animate-pulse" : ""}`}
-                      />
-                      <span className="text-xs text-red-400 font-medium">
-                        {isPaused ? "Paused" : "Recording"}
-                      </span>
-                      <span className="text-xs text-muted-foreground font-medium tabular-nums">
-                        {formatTime(recordTime)}
-                      </span>
-                    </div>
-                  )}
-
-                  {!isRecording && audioUrl && (
-                    <div className="absolute top-4 right-4 z-10">
-                      <span className="text-xs text-primary bg-primary/10 border border-primary/20 px-2 py-1 rounded-full tabular-nums">
-                        {formatTime(currentTime)} / {formatTime(duration)}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* WaveSurfer Container */}
-                  <div
-                    ref={containerRef}
-                    className="w-full mt-10 mb-6 h-[80px]"
-                  />
-
-                  {/* Controls */}
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
-                    {isRecording ? (
-                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                        <Button
-                          onClick={pauseRecording}
-                          variant="outline"
-                          className="flex-1 sm:flex-none justify-center rounded-xl border-border bg-secondary hover:bg-accent text-foreground font-medium text-xs sm:text-sm h-10 px-4 sm:px-5"
-                        >
-                          {isPaused ? (
-                            <Play className="w-4 h-4 mr-2 shrink-0" />
-                          ) : (
-                            <Pause className="w-4 h-4 mr-2 shrink-0" />
-                          )}
-                          {isPaused ? "Resume" : "Pause"}
-                        </Button>
-                        <Button
-                          onClick={stopRecording}
-                          className="flex-1 sm:flex-none justify-center rounded-xl bg-red-500/10 hover:bg-red-500 hover:text-foreground text-red-400 font-medium text-xs sm:text-sm h-10 px-4 sm:px-5 transition-colors border-none"
-                        >
-                          <Square className="w-4 h-4 mr-2 shrink-0" /> Stop
-                        </Button>
-                      </div>
-                    ) : audioUrl ? (
-                      <div className="flex items-center justify-between w-full">
-                        <Button
-                          onClick={togglePlayback}
-                          className="rounded-full bg-primary text-foreground hover:bg-primary/90 h-10 w-16 flex items-center justify-center transition-colors shadow-md shadow-primary/20"
-                        >
-                          {isPlaying ? (
-                            <Pause className="w-4 h-4" />
-                          ) : (
-                            <Play className="w-4 h-4" />
-                          )}
-                        </Button>
-                        <Button
-                          onClick={clearAudio}
-                          variant="ghost"
-                          className="rounded-xl hover:bg-red-400/10 text-muted-foreground hover:text-red-400 font-medium text-xs sm:text-sm transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Remove
-                        </Button>
-                      </div>
-                    ) : null}
                   </div>
+
+                  {!audioUrl && !isRecording && (
+                    <div className="border border-border bg-secondary/40 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[200px] w-full">
+                      <Button
+                        type="button"
+                        onClick={startRecording}
+                        aria-label="Start recording"
+                        className="size-16 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors mb-4 flex items-center justify-center"
+                      >
+                        <Mic className="size-6" />
+                      </Button>
+                      <p className="font-medium text-sm text-foreground mb-1">
+                        Start recording
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Click the microphone to begin
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
+
+              {/* Waveform Container */}
+              <div
+                className={`mt-4 border border-border bg-secondary/30 rounded-xl p-5 relative ${
+                  audioUrl || isRecording ? "block" : "hidden"
+                }`}
+              >
+                {isRecording && (
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs text-destructive font-medium">
+                      {isPaused ? "Recording paused" : "Recording live"}
+                    </span>
+                    <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                      {formatTime(recordTime)}
+                    </span>
+                  </div>
+                )}
+
+                {!isRecording && audioUrl && (
+                  <div className="flex justify-end mb-2">
+                    <span className="font-mono text-xs accent-ink bg-primary/10 px-2.5 py-0.5 rounded-full tabular-nums">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                  </div>
+                )}
+
+                <div ref={containerRef} className="w-full mb-4 h-[76px]" />
+
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
+                  {isRecording ? (
+                    <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                      <Button
+                        type="button"
+                        onClick={pauseRecording}
+                        variant="outline"
+                        className="rounded-lg border-border bg-card hover:bg-accent text-foreground font-medium text-xs h-9 px-4"
+                      >
+                        {isPaused ? (
+                          <Play className="size-3.5 mr-1.5" />
+                        ) : (
+                          <Pause className="size-3.5 mr-1.5" />
+                        )}
+                        {isPaused ? "Resume" : "Pause"}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={stopRecording}
+                        variant="destructive"
+                        className="rounded-lg font-medium text-xs h-9 px-4"
+                      >
+                        <Square className="size-3.5 mr-1.5" />
+                        Stop
+                      </Button>
+                    </div>
+                  ) : audioUrl ? (
+                    <div className="flex items-center justify-between w-full">
+                      <Button
+                        type="button"
+                        onClick={togglePlayback}
+                        className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-5"
+                      >
+                        {isPlaying ? (
+                          <Pause className="size-3.5" />
+                        ) : (
+                          <Play className="size-3.5 ml-0.5" />
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={clearAudio}
+                        variant="ghost"
+                        className="rounded-lg text-muted-foreground hover:text-destructive font-medium text-xs h-9 px-3"
+                      >
+                        <Trash2 className="size-3.5 mr-1.5" />
+                        Remove
+                      </Button>
+                    </div>
+                  ) : null}
                 </div>
               </div>
-            </div>
+            </section>
 
             <Button
               disabled={!audioUrl || isRecording || isProcessing}
               onClick={handleCreateVoice}
-              className="w-full h-14 rounded-full bg-primary hover:bg-primary/90 hover:scale-[1.02] text-foreground font-medium text-sm sm:text-base transition-all border-none shadow-lg shadow-primary/20 disabled:opacity-50 disabled:hover:scale-100 whitespace-nowrap stagger-3"
+              className="w-full h-11 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition-colors whitespace-nowrap"
             >
               {isProcessing ? (
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <Loader2 className="size-4 mr-2 animate-spin" />
               ) : (
-                <Sparkles className="w-5 h-5 mr-2" />
+                <Sparkles className="size-4 mr-2" />
               )}
-              {isProcessing ? "Creating your voice..." : "Create voice"}
+              {isProcessing ? "Creating your voice..." : "Create Voice"}
             </Button>
           </div>
 
-          {/* Sidebar Guidelines */}
-          <div className="lg:col-span-4 flex flex-col gap-6 sm:gap-8 stagger-2">
-            <div className="glass-panel border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-              <h3 className="font-heading text-base font-semibold text-foreground mb-6 flex items-center gap-2 border-b border-border pb-4">
-                <Lightbulb className="w-4 h-4 text-primary" /> Tips for best
-                results
-              </h3>
+          {/* Right Guidelines & Cloned Voices */}
+          <aside className="lg:col-span-4 space-y-6">
+            <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-5">
+              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2 pb-3 border-b border-border">
+                <Lightbulb className="size-4 text-muted-foreground" />
+                Recording Guidelines
+              </h2>
 
-              <div className="space-y-8">
-                <div>
-                  <h4 className="text-xs font-semibold text-foreground mb-4">
-                    How to record
-                  </h4>
-                  <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>
-                        Speak naturally with expression. Flat, monotone audio
-                        produces flat, monotone results.
-                      </span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>
-                        Record in a quiet space with no background noise or
-                        echo.
-                      </span>
-                    </li>
-                  </ul>
+              <div className="space-y-4 text-xs text-muted-foreground leading-relaxed">
+                <div className="space-y-2">
+                  <h3 className="font-semibold text-foreground">Delivery</h3>
+                  <p>
+                    Speak naturally with expression. Flat, monotone audio
+                    produces flat results. Record in a quiet room free of echo.
+                  </p>
                 </div>
-
-                <div>
-                  <h4 className="text-xs font-semibold text-foreground mb-4">
-                    Audio quality
-                  </h4>
-                  <ul className="space-y-3 text-sm text-muted-foreground leading-relaxed">
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>Best length: 5 to 15 seconds of clear speech.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>Minimum quality: 22kHz sample rate, 16-bit.</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 shrink-0 opacity-80" />
-                      <span>
-                        Avoid loud peaks that cause distortion or clipping.
-                      </span>
-                    </li>
-                  </ul>
+                <div className="space-y-2 pt-3 border-t border-border">
+                  <h3 className="font-semibold text-foreground">
+                    Audio Quality
+                  </h3>
+                  <p>
+                    Aim for 5 to 15 seconds of clear speech at 22kHz or higher,
+                    avoiding microphone clipping or loud peaks.
+                  </p>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Active Cloned Voices Database */}
-            <div className="glass-panel border border-border rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8">
-              <h3 className="font-heading text-sm font-semibold text-foreground mb-6 flex items-center justify-between border-b border-border pb-4">
-                <span className="flex items-center gap-2">
-                  <Waves className="w-4 h-4 text-primary" /> Your voices
-                </span>
+            <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-border">
+                <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <Waves className="size-4 text-muted-foreground" />
+                  Your Voices
+                </h2>
                 {clonedVoices && (
-                  <span className="text-primary text-xs font-medium bg-primary/10 px-2 py-0.5 rounded-full">
+                  <span className="font-mono text-xs text-muted-foreground tabular-nums">
                     {clonedVoices.length}
                   </span>
                 )}
-              </h3>
+              </div>
 
               {clonedVoices === undefined ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center gap-3">
-                  <Loader2 className="w-5 h-5 text-primary animate-spin" />
-                  <span className="text-xs text-muted-foreground font-medium">
-                    Loading your voices...
-                  </span>
+                <div className="space-y-3">
+                  <Skeleton className="h-24 w-full rounded-lg" />
+                  <Skeleton className="h-24 w-full rounded-lg" />
                 </div>
               ) : clonedVoices.length === 0 ? (
-                <div className="text-center py-10 bg-secondary border border-border rounded-2xl">
-                  <div className="w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Mic className="w-5 h-5 text-muted-foreground" />
-                  </div>
+                <div className="text-center py-8 bg-secondary/40 border border-border rounded-lg px-4">
+                  <Mic className="size-5 text-muted-foreground mx-auto mb-2.5" />
                   <p className="text-sm font-medium text-foreground mb-1">
                     No voices yet
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed max-w-[220px] mx-auto px-4">
-                    You haven&apos;t created any voices yet. Add an audio sample
-                    above to create your first one.
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Add an audio sample on the left to clone your first voice.
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
                   {clonedVoices.map((voice) => (
                     <div
                       key={voice._id}
-                      className="glass-card border border-border hover:bg-accent hover:border-border transition-colors p-4 rounded-2xl flex flex-col gap-3 group mt-1"
+                      className="rounded-lg border border-border bg-secondary/30 p-4 space-y-3"
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <h4 className="font-heading text-sm font-semibold text-foreground truncate">
+                          <h3 className="text-sm font-semibold text-foreground truncate">
                             {voice.displayName}
-                          </h4>
-                          <span className="text-[11px] text-muted-foreground/70 block mt-1 truncate">
+                          </h3>
+                          <span className="font-mono text-[11px] text-muted-foreground block truncate mt-0.5">
                             {voice.inworldVoiceId}
                           </span>
                         </div>
-                        <span className="text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
+                        <span className="font-mono text-[10px] accent-ink bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
                           {LANG_LABELS[voice.langCode ?? "EN_US"] ??
                             voice.langCode ??
                             "English (US)"}
@@ -856,21 +821,21 @@ export default function VoiceCloningPage() {
                       </div>
 
                       {voice.description ? (
-                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 mt-1">
+                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
                           {voice.description}
                         </p>
                       ) : (
-                        <p className="text-xs text-muted-foreground/50 italic mt-1">
+                        <p className="text-xs text-muted-foreground italic">
                           No description
                         </p>
                       )}
 
                       {voice.tags && voice.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-1">
+                        <div className="flex flex-wrap gap-1.5">
                           {voice.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-md"
+                              className="text-[11px] text-muted-foreground bg-secondary px-2 py-0.5 rounded"
                             >
                               #{tag}
                             </span>
@@ -878,31 +843,33 @@ export default function VoiceCloningPage() {
                         </div>
                       )}
 
-                      <div className="flex items-center justify-between gap-2 pt-3 mt-1 border-t border-border">
+                      <div className="flex items-center gap-2 pt-3 border-t border-border">
                         <Button
                           asChild
                           variant="ghost"
                           onClick={() => handleUseVoice(voice.inworldVoiceId!)}
-                          className="flex-1 rounded-xl bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-medium text-xs h-8 transition-colors"
+                          className="flex-1 rounded-full bg-primary/10 accent-ink hover:bg-primary hover:text-primary-foreground font-medium text-xs h-8 transition-colors"
                         >
                           <Link href="/app/text-to-speech">Use Voice</Link>
                         </Button>
                         <Button
+                          type="button"
                           onClick={() =>
                             handleDeleteVoice(voice._id, voice.displayName)
                           }
                           variant="ghost"
-                          className="rounded-xl hover:bg-red-400/10 text-muted-foreground hover:text-red-400 h-8 px-3 transition-colors"
+                          aria-label={`Delete ${voice.displayName}`}
+                          className="rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive h-8 px-2.5 transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="size-3.5" />
                         </Button>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
-            </div>
-          </div>
+            </section>
+          </aside>
         </div>
       </div>
 
@@ -910,29 +877,30 @@ export default function VoiceCloningPage() {
         open={voiceToDelete !== null}
         onOpenChange={(open) => !open && setVoiceToDelete(null)}
       >
-        <AlertDialogContent className="glass-panel border-border rounded-2xl w-[calc(100%-2rem)] sm:w-full sm:max-w-md mx-auto">
-          <AlertDialogHeader className="text-left">
-            <AlertDialogTitle className="text-base font-semibold text-red-400 flex items-center gap-2 border-b border-border pb-4">
-              <AlertTriangle className="w-4 h-4" /> Delete voice
+        <AlertDialogContent className="bg-card border-border rounded-xl max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-base font-semibold text-destructive flex items-center gap-2">
+              <AlertTriangle className="size-4" />
+              Delete voice
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-4">
-              Are you sure you want to delete
-              <span className="block my-3 text-foreground font-medium bg-secondary border border-border p-3 rounded-xl truncate">
+            <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-2">
+              Are you sure you want to delete{" "}
+              <span className="font-medium text-foreground">
                 &ldquo;{voiceToDelete?.name}&rdquo;
               </span>
-              This action cannot be undone.
+              ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3 border-t border-border pt-4">
-            <AlertDialogCancel className="rounded-xl border-border bg-secondary hover:bg-accent text-foreground font-medium text-sm h-10 px-5 mt-0">
+          <AlertDialogFooter className="mt-4">
+            <AlertDialogCancel className="rounded-full h-9 px-4 text-xs">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 trigger("error");
-                handleConfirmDelete();
+                void handleConfirmDelete();
               }}
-              className="rounded-xl bg-red-500 hover:bg-red-600 text-foreground font-medium text-sm h-10 px-5 border-none shadow-lg shadow-red-500/20"
+              className="rounded-full bg-destructive hover:bg-destructive/90 text-destructive-foreground h-9 px-4 text-xs"
             >
               Delete
             </AlertDialogAction>

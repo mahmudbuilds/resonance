@@ -2,15 +2,7 @@
 
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
-import {
-  Activity,
-  AlertTriangle,
-  Loader2,
-  Mail,
-  Settings2,
-  Shield,
-  User,
-} from "lucide-react";
+import { Activity, Loader2, Mail, Settings2, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -29,6 +21,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "../../../../convex/_generated/api";
@@ -40,24 +33,20 @@ export default function SettingsPage() {
   const { user, isLoaded: isClerkLoaded } = useUser();
   const currentUser = useQuery(api.users.getCurrentUser);
 
-  // Mutations
   const updateUserSettings = useMutation(api.users.updateUser);
   const purgeAccountData = useMutation(api.users.decommissionAccount);
 
-  // Local Form States
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDecommissioning, setIsDecommissioning] = useState(false);
   const [latency, setLatency] = useState<number | null>(null);
 
-  // Settings states initialized from Convex database
   const [systemUpdates, setSystemUpdates] = useState(true);
   const [usageAlerts, setUsageAlerts] = useState(true);
   const [securityLogs, setSecurityLogs] = useState(true);
   const [hapticsEnabled, setHapticsEnabled] = useState(false);
 
-  // Load initial values from Clerk / Convex
   useEffect(() => {
     if (user) {
       setFirstName(user.firstName || "");
@@ -74,22 +63,22 @@ export default function SettingsPage() {
     }
   }, [currentUser]);
 
-  // Ping mechanism to show real-time telemetry latency
   useEffect(() => {
     const start = Date.now();
     fetch("/favicon.ico", { method: "HEAD" })
       .then(() => setLatency(Date.now() - start))
-      .catch(() => setLatency(12)); // fallback
+      .catch(() => setLatency(12));
   }, []);
 
-  // Check if any settings have been modified
   const hasChanges = Boolean(
-    (user && (firstName !== (user.firstName || "") || lastName !== (user.lastName || ""))) ||
-    (currentUser &&
-      (systemUpdates !== (currentUser.systemUpdates ?? true) ||
-        usageAlerts !== (currentUser.usageAlerts ?? true) ||
-        securityLogs !== (currentUser.securityLogs ?? true) ||
-        hapticsEnabled !== (currentUser.useHaptics ?? false)))
+    (user &&
+      (firstName !== (user.firstName || "") ||
+        lastName !== (user.lastName || ""))) ||
+      (currentUser &&
+        (systemUpdates !== (currentUser.systemUpdates ?? true) ||
+          usageAlerts !== (currentUser.usageAlerts ?? true) ||
+          securityLogs !== (currentUser.securityLogs ?? true) ||
+          hapticsEnabled !== (currentUser.useHaptics ?? false))),
   );
 
   const handleCommitChanges = async () => {
@@ -113,15 +102,15 @@ export default function SettingsPage() {
 
       trigger("success");
       toast.success("Settings saved", {
-        description: "Your preferences have been saved successfully.",
+        description: "Your preferences have been updated.",
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       trigger("error");
       console.error(error);
+      const message =
+        error instanceof Error ? error.message : "Could not save settings.";
       toast.error("Update failed", {
-        description:
-          error.message ||
-          "Something went wrong while saving your settings. Please try again.",
+        description: message,
       });
     } finally {
       setIsUpdating(false);
@@ -133,7 +122,6 @@ export default function SettingsPage() {
     setIsDecommissioning(true);
     try {
       toast.loading("Deleting your account...");
-
       await purgeAccountData();
 
       if (user) {
@@ -141,17 +129,19 @@ export default function SettingsPage() {
       }
 
       toast.success("Account deleted", {
-        description: "Your account and data have been deleted.",
+        description: "Your account and audio data have been removed.",
       });
 
       await signOut();
       router.push("/");
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Session expired. Please sign in again and retry.";
       toast.error("Deletion failed", {
-        description:
-          error.message ||
-          "Session expired or you don't have permission to do this. Please try signing in again.",
+        description: message,
       });
     } finally {
       setIsDecommissioning(false);
@@ -160,73 +150,68 @@ export default function SettingsPage() {
 
   if (!isClerkLoaded || currentUser === undefined) {
     return (
-      <div className="min-h-screen bg-transparent flex items-center justify-center text-foreground">
-        <div className="flex flex-col items-center gap-4 animate-fade-up">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <span className="text-sm font-medium text-muted-foreground">
-            Loading settings...
-          </span>
+      <div className="min-h-full bg-background text-foreground pb-16">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8">
+          <div className="space-y-2 pb-6 border-b border-border">
+            <Skeleton className="h-9 w-52" />
+            <Skeleton className="h-4 w-80" />
+          </div>
+          <div className="grid lg:grid-cols-12 gap-6">
+            <Skeleton className="lg:col-span-8 h-80 rounded-xl" />
+            <Skeleton className="lg:col-span-4 h-60 rounded-xl" />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen relative w-full overflow-hidden text-foreground font-sans pb-20">
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-12 animate-fade-up">
-        {/* Header Section */}
-        <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-border">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-2 text-xs font-medium text-primary">
-              <Settings2 className="w-3.5 h-3.5" />
-              Account
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-heading font-semibold tracking-tight text-foreground">
-              Account Settings
-            </h1>
-          </div>
-          <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            Manage your profile, notifications, and account settings all in one
-            place.
+    <div className="min-h-full bg-background text-foreground pb-16">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8 animate-editorial-enter">
+        <header className="pb-6 border-b border-border space-y-1.5">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+            Account Settings
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
+            Manage your profile details, studio notifications, and account
+            lifecycle.
           </p>
         </header>
 
-        {/* Main Layout */}
-        <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="glass-panel rounded-full h-12 inline-flex p-1 mb-10 w-full sm:w-auto">
+        <Tabs defaultValue="profile" className="w-full space-y-6">
+          <TabsList className="bg-secondary border border-border p-1 rounded-lg h-10 w-full sm:w-auto">
             <TabsTrigger
               value="profile"
-              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-accent data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
+              className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
             >
-              <User className="w-4 h-4 shrink-0" />
+              <User className="size-3.5" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="rounded-full px-6 text-sm font-medium data-[state=active]:bg-accent data-[state=active]:text-foreground data-[state=active]:shadow-sm transition-all h-full gap-2 text-muted-foreground"
+              className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
             >
-              <Settings2 className="w-4 h-4 shrink-0" />
+              <Settings2 className="size-3.5" />
               Preferences
             </TabsTrigger>
           </TabsList>
 
-          <div className="grid lg:grid-cols-12 gap-8 items-start w-full">
-            <div className="lg:col-span-8 space-y-8 stagger-1">
-              {/* Profile Tab */}
+          <div className="grid lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-8 space-y-6">
               <TabsContent
                 value="profile"
-                className="m-0 space-y-8 outline-none"
+                className="m-0 space-y-6 outline-none"
               >
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-border">
-                    <User className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-foreground tracking-wide">
+                <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-6">
+                  <div className="flex items-center gap-2 pb-3 border-b border-border">
+                    <User className="size-4 text-muted-foreground" />
+                    <h2 className="text-sm font-semibold text-foreground">
                       Personal Information
                     </h2>
                   </div>
 
-                  <div className="space-y-6">
-                    <div className="grid sm:grid-cols-2 gap-6">
+                  <div className="space-y-5">
+                    <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label
                           htmlFor="firstName"
@@ -238,7 +223,7 @@ export default function SettingsPage() {
                           id="firstName"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all bg-secondary"
+                          className="bg-background border-input h-10 rounded-lg text-sm"
                         />
                       </div>
                       <div className="space-y-2">
@@ -252,39 +237,40 @@ export default function SettingsPage() {
                           id="lastName"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          className="w-full glass-card border-border h-11 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-all bg-secondary"
+                          className="bg-background border-input h-10 rounded-lg text-sm"
                         />
                       </div>
                     </div>
+
                     <div className="space-y-2">
                       <Label
                         htmlFor="email"
                         className="text-xs font-medium text-muted-foreground"
                       >
-                        Email Address (Read-Only)
+                        Email Address
                       </Label>
                       <div className="relative">
-                        <Mail className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Mail className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                         <Input
                           id="email"
                           type="email"
                           disabled
                           value={user?.primaryEmailAddress?.emailAddress || ""}
-                          className="w-full pl-10 glass-card border-border h-11 rounded-xl text-muted-foreground text-sm px-3.5 bg-secondary/50 cursor-not-allowed"
+                          className="bg-secondary/50 border-input h-10 rounded-lg text-muted-foreground text-sm pr-10"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-border flex justify-end">
+                  <div className="pt-4 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
                       disabled={isUpdating || !hasChanges}
-                      className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
+                      className="rounded-full h-10 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm"
                     >
                       {isUpdating ? (
                         <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          <Loader2 className="size-4 mr-2 animate-spin" />
                           Saving...
                         </>
                       ) : (
@@ -292,21 +278,18 @@ export default function SettingsPage() {
                       )}
                     </Button>
                   </div>
-                </div>
+                </section>
 
-                {/* Decommission Account Section */}
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-rose-500/20 relative overflow-hidden bg-rose-500/[0.02]">
-                  <div className="flex items-center gap-2 mb-6 text-rose-400">
-                    <Shield className="w-5 h-5" />
-                    <h3 className="text-lg font-semibold tracking-tight text-foreground">
-                      Delete Account
-                    </h3>
+                <section className="studio-panel rounded-xl p-5 sm:p-6 border-destructive/25 space-y-4">
+                  <div className="flex items-center gap-2 text-destructive">
+                    <Shield className="size-4" />
+                    <h2 className="text-sm font-semibold">Delete Account</h2>
                   </div>
 
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-8 max-w-2xl">
-                    Once you delete your account, all of your data, generated
-                    audio files, and personal settings will be permanently
-                    removed. This action cannot be undone.
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                    Deleting your account permanently removes your voice
+                    profiles, generated audio files, and preferences. This
+                    cannot be undone.
                   </p>
 
                   <AlertDialog>
@@ -314,106 +297,100 @@ export default function SettingsPage() {
                       <Button
                         variant="destructive"
                         disabled={isDecommissioning}
-                        className="rounded-full h-11 px-8 bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-foreground border-none transition-all disabled:opacity-50 font-medium"
+                        className="rounded-full h-10 px-6 font-medium text-sm"
                       >
                         {isDecommissioning
                           ? "Deleting Data..."
                           : "Delete Account"}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="glass-panel border-border text-foreground rounded-3xl p-6 sm:p-8 shadow-2xl">
-                      <AlertDialogHeader className="space-y-3">
-                        <AlertDialogTitle className="text-xl font-semibold text-rose-400 flex items-center gap-2">
-                          <Shield className="w-5 h-5 shrink-0" />
+                    <AlertDialogContent className="bg-card border-border rounded-xl max-w-md">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-lg font-semibold text-destructive flex items-center gap-2">
+                          <Shield className="size-4 shrink-0" />
                           Confirm Deletion
                         </AlertDialogTitle>
-                        <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed">
-                          This action cannot be undone. All your data, generated
-                          audio files, and personal settings will be permanently
-                          removed from our servers.
+                        <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-2">
+                          All your data, generated audio files, and personal
+                          settings will be permanently deleted.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
-                      <AlertDialogFooter className="mt-8 gap-3 sm:gap-0">
-                        <AlertDialogCancel className="rounded-full h-11 border-border bg-secondary hover:bg-accent text-foreground font-medium transition-colors">
+                      <AlertDialogFooter className="mt-4">
+                        <AlertDialogCancel className="rounded-full h-9 px-4 text-xs">
                           Cancel
                         </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleDecommission}
-                          className="rounded-full h-11 bg-rose-500 hover:bg-rose-600 text-foreground font-medium border-none shadow-lg shadow-rose-500/20"
+                          className="rounded-full h-9 px-4 text-xs bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                         >
                           Confirm Deletion
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                </div>
+                </section>
               </TabsContent>
 
-              {/* Preferences Tab */}
               <TabsContent
                 value="appearance"
-                className="m-0 space-y-8 outline-none"
+                className="m-0 space-y-6 outline-none"
               >
-                <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border relative overflow-hidden">
-                  <div className="flex items-center gap-2 mb-8 pb-4 border-b border-border">
-                    <Settings2 className="w-4 h-4 text-primary" />
-                    <h2 className="text-sm font-semibold text-foreground tracking-wide">
-                      {"Notifications & Haptic Feedback"}{" "}
+                <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-6">
+                  <div className="flex items-center gap-2 pb-3 border-b border-border">
+                    <Settings2 className="size-4 text-muted-foreground" />
+                    <h2 className="text-sm font-semibold text-foreground">
+                      Notifications &amp; Haptic Feedback
                     </h2>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
-                      <div className="space-y-1 min-w-0 pr-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                      <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           System Updates
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Get notified about new features and product updates.
+                          Receive updates about new models and studio features.
                         </p>
                       </div>
                       <Switch
                         checked={systemUpdates}
                         onCheckedChange={setSystemUpdates}
-                        className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
-                      <div className="space-y-1 min-w-0 pr-4">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                      <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Usage Alerts
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Receive alerts about your usage and account activity.
+                          Receive notices about character credit usage.
                         </p>
                       </div>
                       <Switch
                         checked={usageAlerts}
                         onCheckedChange={setUsageAlerts}
-                        className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
-                      <div className="space-y-1 min-w-0 pr-4">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                      <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Security Logs
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Receive security alerts about unusual account access
-                          and changes.
+                          Receive alerts about unusual sign-ins or changes.
                         </p>
                       </div>
                       <Switch
                         checked={securityLogs}
                         onCheckedChange={setSecurityLogs}
-                        className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-5 glass-card rounded-2xl border border-border bg-secondary">
-                      <div className="space-y-1 min-w-0 pr-4">
+                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                      <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Haptic Feedback
                         </Label>
@@ -424,20 +401,19 @@ export default function SettingsPage() {
                       <Switch
                         checked={hapticsEnabled}
                         onCheckedChange={setHapticsEnabled}
-                        className="data-[state=checked]:bg-primary shrink-0"
                       />
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-border flex justify-end">
+                  <div className="pt-4 border-t border-border flex justify-end">
                     <Button
                       onClick={handleCommitChanges}
                       disabled={isUpdating || !hasChanges}
-                      className="shadow-lg shadow-primary/20 rounded-full h-11 px-8 bg-primary hover:bg-primary/90 hover:scale-105 text-white font-medium text-sm transition-all border-none disabled:opacity-50 disabled:hover:scale-100"
+                      className="rounded-full h-10 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm"
                     >
                       {isUpdating ? (
                         <>
-                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          <Loader2 className="size-4 mr-2 animate-spin" />
                           Saving...
                         </>
                       ) : (
@@ -445,55 +421,57 @@ export default function SettingsPage() {
                       )}
                     </Button>
                   </div>
-                </div>
+                </section>
               </TabsContent>
             </div>
 
-            {/* Sidebar Support */}
-            <div className="lg:col-span-4 space-y-6 stagger-2">
-              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border">
-                <h3 className="text-sm font-semibold text-foreground mb-6 flex items-center gap-2 border-b border-border pb-4">
-                  <AlertTriangle className="w-4 h-4 text-primary" /> Need Help?
-                </h3>
-                <p className="text-xs text-muted-foreground leading-relaxed mb-6">
-                  Our support team is available 24/7. Reach out if you
-                  experience any issues or need assistance with the platform.
+            {/* Right Support & Status Rail */}
+            <aside className="lg:col-span-4 space-y-6">
+              <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-4">
+                <h2 className="text-sm font-semibold text-foreground pb-3 border-b border-border">
+                  Need Help?
+                </h2>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Reach out anytime if you run into synthesis issues or have
+                  questions about your account.
                 </p>
                 <Button
                   variant="outline"
                   onClick={() => router.push("/app/support")}
-                  className="w-full h-11 rounded-xl bg-secondary border-border hover:bg-accent hover:text-foreground transition-all text-sm font-medium text-foreground shadow-sm"
+                  className="w-full h-10 rounded-full bg-card border-border hover:bg-accent text-foreground text-xs font-medium"
                 >
-                  <Mail className="w-4 h-4 mr-2 shrink-0" />
+                  <Mail className="size-3.5 mr-2" />
                   Contact Support
                 </Button>
-              </div>
+              </section>
 
-              <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xl shadow-foreground/10 border border-border bg-secondary/50">
-                <h3 className="text-xs font-semibold text-muted-foreground mb-4 flex items-center gap-2 uppercase tracking-wider">
-                  <Activity className="w-3.5 h-3.5" /> System Status
-                </h3>
-                <div className="space-y-3 text-xs font-medium">
+              <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-4">
+                <h2 className="text-sm font-semibold text-foreground pb-3 border-b border-border flex items-center gap-2">
+                  <Activity className="size-4 text-muted-foreground" />
+                  Client Connection
+                </h2>
+                <div className="space-y-3 text-xs">
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Uptime</span>
-                    <span className="text-foreground">99.98%</span>
+                    <span className="text-muted-foreground">Origin Probe</span>
+                    <span className="font-mono text-foreground">
+                      {latency !== null ? "Reachable" : "Checking..."}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">Latency</span>
-                    <span className="text-foreground">
+                    <span className="font-mono text-foreground tabular-nums">
                       {latency !== null ? `${latency}ms` : "Checking..."}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground">Status</span>
-                    <span className="text-primary/90 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                      All systems operational
+                    <span className="text-muted-foreground">Sync</span>
+                    <span className="accent-ink font-medium">
+                      {currentUser ? "Connected" : "Connecting"}
                     </span>
                   </div>
                 </div>
-              </div>
-            </div>
+              </section>
+            </aside>
           </div>
         </Tabs>
       </div>
