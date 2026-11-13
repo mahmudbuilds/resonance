@@ -40,10 +40,13 @@ function buildBars(seed: string): { id: string; height: number }[] {
 export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const unregisterRef = useRef<(() => void) | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [hoverRatio, setHoverRatio] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const bars = useMemo(() => buildBars(url), [url]);
 
@@ -57,6 +60,9 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
   useEffect(() => {
     return () => {
       stopRegistration();
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+      }
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -95,12 +101,32 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
   useEffect(() => {
     if (!isPlaying) {
       stopRegistration();
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
       return;
     }
+
     unregisterRef.current = register(() => {
       audioRef.current?.pause();
     });
-    return stopRegistration;
+
+    const syncFrame = () => {
+      if (audioRef.current && !audioRef.current.paused) {
+        setCurrentTime(audioRef.current.currentTime);
+        rafRef.current = requestAnimationFrame(syncFrame);
+      }
+    };
+    rafRef.current = requestAnimationFrame(syncFrame);
+
+    return () => {
+      stopRegistration();
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+    };
   }, [isPlaying, stopRegistration]);
 
   const handleTogglePlay = useCallback(() => {
@@ -128,14 +154,55 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
     [ensureAudio],
   );
 
-  const handleSliderClick = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      const rect = event.currentTarget.getBoundingClientRect();
-      if (rect.width <= 0) return;
-      seekToRatio((event.clientX - rect.left) / rect.width);
+  const ratioFromPointer = (
+    event: React.PointerEvent<HTMLDivElement>,
+  ): number | null => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    if (rect.width <= 0) return null;
+    return Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  };
+
+  const handlePointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      const ratio = ratioFromPointer(event);
+      if (ratio === null) return;
+      event.currentTarget.setPointerCapture(event.pointerId);
+      setIsDragging(true);
+      setHoverRatio(ratio);
+      seekToRatio(ratio);
     },
     [seekToRatio],
   );
+
+  const handlePointerMove = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      const ratio = ratioFromPointer(event);
+      if (ratio === null) return;
+      setHoverRatio(ratio);
+      if (isDragging) {
+        seekToRatio(ratio);
+      }
+    },
+    [isDragging, seekToRatio],
+  );
+
+  const handlePointerUp = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (isDragging) {
+        setIsDragging(false);
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+          event.currentTarget.releasePointerCapture(event.pointerId);
+        }
+      }
+    },
+    [isDragging],
+  );
+
+  const handlePointerLeave = useCallback(() => {
+    if (!isDragging) {
+      setHoverRatio(null);
+    }
+  }, [isDragging]);
 
   const handleSliderKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -181,7 +248,12 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
         variant="ghost"
         onClick={handleTogglePlay}
         aria-label={isPlaying ? "Pause audio" : "Play audio"}
-        className="size-8 rounded-full bg-primary/10 accent-ink hover:bg-primary hover:text-primary-foreground transition-colors shrink-0 border border-primary/20"
+        className={cn(
+          "size-8 rounded-full transition-[background-color,color,border-color,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-95 shrink-0 border",
+          isPlaying
+            ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
+            : "bg-primary/10 accent-ink hover:bg-primary hover:text-primary-foreground border-primary/20",
+        )}
       >
         {isPlaying ? (
           <Pause className="size-3.5 fill-current" />
@@ -197,23 +269,38 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={Math.round(progress * 100)}
-        onClick={handleSliderClick}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onPointerLeave={handlePointerLeave}
         onKeyDown={handleSliderKeyDown}
-        className="flex-1 flex items-center gap-[2px] h-7 min-w-0 cursor-pointer group rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
+        className="flex-1 flex items-center gap-[2px] h-7 min-w-0 cursor-pointer touch-none select-none group rounded-sm focus-visible:outline-2 focus-visible:outline-primary"
       >
         {bars.map((bar, i) => {
-          const filled = i / BAR_COUNT < progress;
+          const barPos = i / BAR_COUNT;
+          const filled = barPos < progress;
+          const previewed =
+            !filled && hoverRatio !== null && barPos <= hoverRatio;
+          const isPlayhead =
+            isPlaying && Math.abs(barPos - progress) < 1 / BAR_COUNT;
+
           return (
             <span
               key={bar.id}
               aria-hidden="true"
               className={cn(
-                "flex-1 rounded-full transition-colors",
+                "flex-1 rounded-full transition-[background-color,transform] duration-100 ease-out",
                 filled
                   ? "bg-primary"
-                  : "bg-foreground/20 group-hover:bg-foreground/35",
+                  : previewed
+                    ? "bg-primary/45"
+                    : "bg-foreground/20 group-hover:bg-foreground/30",
               )}
-              style={{ height: `${Math.round(bar.height * 100)}%` }}
+              style={{
+                height: `${Math.round(bar.height * 100)}%`,
+                transform: isPlayhead ? "scaleY(1.14)" : undefined,
+              }}
             />
           );
         })}

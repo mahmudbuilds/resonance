@@ -220,10 +220,10 @@ export function HeroAudioAudition() {
                 type="button"
                 onClick={() => handleSelectPreset(preset.id)}
                 className={cn(
-                  "px-3 py-1 rounded-full text-xs font-medium transition-colors cursor-pointer",
+                  "px-3 py-1 rounded-full text-xs font-medium transition-[color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.97] cursor-pointer",
                   selected
                     ? "bg-foreground text-background"
-                    : "bg-secondary text-muted-foreground hover:text-foreground",
+                    : "bg-secondary text-muted-foreground hover:text-foreground hover:bg-accent",
                 )}
               >
                 {preset.name}
@@ -232,9 +232,18 @@ export function HeroAudioAudition() {
           })}
         </div>
 
-        <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
-          {activePreset.locale} / 48kHz
-        </span>
+        <div className="flex items-center gap-2">
+          <span
+            aria-hidden="true"
+            className={cn(
+              "size-1.5 rounded-full transition-colors duration-200",
+              isPlaying ? "bg-primary animate-tally-pulse" : "bg-border",
+            )}
+          />
+          <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+            {activePreset.locale} / 48kHz
+          </span>
+        </div>
       </div>
 
       <div className="flex items-center gap-3.5">
@@ -246,12 +255,12 @@ export function HeroAudioAudition() {
               ? `Pause ${activePreset.name} preview`
               : `Play ${activePreset.name} preview`
           }
-          className="size-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center justify-center shrink-0 cursor-pointer"
+          className="size-10 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] flex items-center justify-center shrink-0 cursor-pointer"
         >
           {isPlaying ? (
-            <Pause className="size-4 fill-current" />
+            <Pause className="size-4 fill-current animate-panel-swap" />
           ) : (
-            <Play className="size-4 fill-current ml-0.5" />
+            <Play className="size-4 fill-current ml-0.5 animate-panel-swap" />
           )}
         </button>
 
@@ -259,15 +268,28 @@ export function HeroAudioAudition() {
           {activePreset.bars.map((bar, idx) => {
             const barProgress = idx / activePreset.bars.length;
             const active = isPlaying && barProgress <= progress;
+            const isLeadBar =
+              isPlaying &&
+              Math.abs(barProgress - progress) < 1.5 / activePreset.bars.length;
+            const waveScale = isPlaying
+              ? 1 + Math.sin(progress * Math.PI * 10 + idx * 0.85) * 0.14
+              : 1;
+
             return (
               <div
                 key={bar.id}
                 className={cn(
-                  "flex-1 rounded-full transition-colors duration-150",
-                  active ? "bg-primary" : "bg-border dark:bg-white/15",
+                  "flex-1 rounded-full transition-[height,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
+                  active
+                    ? "bg-primary"
+                    : isLeadBar
+                      ? "bg-primary/60"
+                      : "bg-border dark:bg-white/15",
                 )}
                 style={{
                   height: `${Math.round(bar.height * 100)}%`,
+                  transform: `scaleY(${waveScale.toFixed(3)})`,
+                  transitionDelay: isPlaying ? "0ms" : `${idx * 10}ms`,
                 }}
               />
             );
@@ -275,14 +297,22 @@ export function HeroAudioAudition() {
         </div>
 
         <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
-          <Volume2 className="size-3.5" />
+          <Volume2
+            className={cn(
+              "size-3.5 transition-colors duration-200",
+              isPlaying && "accent-ink",
+            )}
+          />
           <span className="font-mono text-[11px] tabular-nums">
             {isPlaying ? `${(progress * 3.2).toFixed(1)}s` : "03.2s"}
           </span>
         </div>
       </div>
 
-      <div className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-4">
+      <div
+        key={activePreset.id}
+        className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-4 animate-panel-swap"
+      >
         <p className="text-xs text-muted-foreground leading-relaxed">
           &ldquo;{activePreset.sampleLine}&rdquo;
         </p>

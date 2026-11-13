@@ -87,7 +87,7 @@ function NavSection({
                       if (isMobile) setOpenMobile(false);
                     }}
                     tooltip={item.title}
-                    className={`text-sm font-medium h-10 rounded-lg transition-colors ${
+                    className={`group/nav text-sm font-medium h-10 rounded-lg transition-[color,background-color,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.985] ${
                       isActive
                         ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent"
@@ -98,10 +98,10 @@ function NavSection({
                       className="flex items-center gap-3 w-full px-2.5"
                     >
                       <item.icon
-                        className={`size-4 shrink-0 ${
+                        className={`size-4 shrink-0 transition-transform duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/nav:scale-105 ${
                           isActive
                             ? "text-primary-foreground"
-                            : "text-muted-foreground"
+                            : "text-muted-foreground group-hover/nav:text-foreground"
                         }`}
                       />
                       <span>{item.title}</span>

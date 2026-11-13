@@ -186,6 +186,7 @@ export default function VoiceCloningPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [recordTime, setRecordTime] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
 
   const voiceNameRef = useRef<HTMLInputElement>(null);
   const tagsRef = useRef<HTMLInputElement>(null);
@@ -359,6 +360,7 @@ export default function VoiceCloningPage() {
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    setIsDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) {
       setAudioBlob(file);
@@ -369,6 +371,12 @@ export default function VoiceCloningPage() {
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
+    if (!isDragging) setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
   };
 
   const handleCreateVoice = async () => {
@@ -561,14 +569,33 @@ export default function VoiceCloningPage() {
                         type="button"
                         onDrop={handleDrop}
                         onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
                         onClick={() => fileInputRef.current?.click()}
-                        className="border border-dashed border-border hover:border-primary/60 bg-secondary/40 hover:bg-secondary/80 rounded-xl p-8 transition-colors flex flex-col items-center justify-center text-center cursor-pointer min-h-[200px] w-full"
+                        className={`border border-dashed rounded-xl p-8 transition-[border-color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center text-center cursor-pointer min-h-[200px] w-full group ${
+                          isDragging
+                            ? "border-primary bg-primary/5 scale-[0.995]"
+                            : "border-border hover:border-primary/60 bg-secondary/40 hover:bg-secondary/80"
+                        }`}
                       >
-                        <div className="size-12 bg-card border border-border rounded-full flex items-center justify-center mb-3">
-                          <UploadCloud className="size-5 text-muted-foreground" />
+                        <div
+                          className={`size-12 bg-card border rounded-full flex items-center justify-center mb-3 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                            isDragging
+                              ? "border-primary scale-105"
+                              : "border-border group-hover:border-primary/40"
+                          }`}
+                        >
+                          <UploadCloud
+                            className={`size-5 transition-colors duration-200 ${
+                              isDragging
+                                ? "accent-ink"
+                                : "text-muted-foreground group-hover:text-foreground"
+                            }`}
+                          />
                         </div>
                         <p className="font-medium text-sm text-foreground mb-1">
-                          Upload an audio file
+                          {isDragging
+                            ? "Drop audio file to load"
+                            : "Upload an audio file"}
                         </p>
                         <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
                           MP3 or WAV up to 10MB. Drag and drop or click to
@@ -619,19 +646,22 @@ export default function VoiceCloningPage() {
                     </Select>
 
                     {selectedSentence !== "Custom (read your own text)" && (
-                      <div className="p-4 bg-secondary/50 rounded-lg border border-border text-sm text-foreground leading-relaxed mt-3">
+                      <div
+                        key={selectedSentence}
+                        className="p-4 bg-secondary/50 rounded-lg border border-border text-sm text-foreground leading-relaxed mt-3 animate-panel-swap"
+                      >
                         {selectedSentence}
                       </div>
                     )}
                   </div>
 
                   {!audioUrl && !isRecording && (
-                    <div className="border border-border bg-secondary/40 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[200px] w-full">
+                    <div className="border border-border bg-secondary/40 rounded-xl p-8 flex flex-col items-center justify-center text-center min-h-[200px] w-full animate-panel-swap">
                       <Button
                         type="button"
                         onClick={startRecording}
                         aria-label="Start recording"
-                        className="size-16 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors mb-4 flex items-center justify-center"
+                        className="size-16 rounded-full bg-primary hover:bg-primary/90 active:scale-95 text-primary-foreground transition-[background-color,transform] duration-150 mb-4 flex items-center justify-center"
                       >
                         <Mic className="size-6" />
                       </Button>
@@ -648,81 +678,95 @@ export default function VoiceCloningPage() {
 
               {/* Waveform Container */}
               <div
-                className={`mt-4 border border-border bg-secondary/30 rounded-xl p-5 relative ${
-                  audioUrl || isRecording ? "block" : "hidden"
+                className={`grid transition-[grid-template-rows,opacity,margin] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  audioUrl || isRecording
+                    ? "grid-rows-[1fr] opacity-100 mt-4"
+                    : "grid-rows-[0fr] opacity-0 mt-0 pointer-events-none"
                 }`}
               >
-                {isRecording && (
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs text-destructive font-medium">
-                      {isPaused ? "Recording paused" : "Recording live"}
-                    </span>
-                    <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                      {formatTime(recordTime)}
-                    </span>
-                  </div>
-                )}
+                <div className="overflow-hidden">
+                  <div className="border border-border bg-secondary/30 rounded-xl p-5 relative">
+                    {isRecording && (
+                      <div className="flex items-center justify-between mb-3 animate-panel-swap">
+                        <span className="text-xs text-destructive font-medium flex items-center gap-2">
+                          <span
+                            aria-hidden="true"
+                            className={`size-2 rounded-full ${
+                              isPaused
+                                ? "bg-muted-foreground"
+                                : "bg-destructive animate-tally-pulse"
+                            }`}
+                          />
+                          {isPaused ? "Recording paused" : "Recording live"}
+                        </span>
+                        <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                          {formatTime(recordTime)}
+                        </span>
+                      </div>
+                    )}
 
-                {!isRecording && audioUrl && (
-                  <div className="flex justify-end mb-2">
-                    <span className="font-mono text-xs accent-ink bg-primary/10 px-2.5 py-0.5 rounded-full tabular-nums">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </span>
-                  </div>
-                )}
+                    {!isRecording && audioUrl && (
+                      <div className="flex justify-end mb-2 animate-panel-swap">
+                        <span className="font-mono text-xs accent-ink bg-primary/10 px-2.5 py-0.5 rounded-full tabular-nums">
+                          {formatTime(currentTime)} / {formatTime(duration)}
+                        </span>
+                      </div>
+                    )}
 
-                <div ref={containerRef} className="w-full mb-4 h-[76px]" />
+                    <div ref={containerRef} className="w-full mb-4 h-[76px]" />
 
-                <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
-                  {isRecording ? (
-                    <div className="flex items-center gap-2.5 w-full sm:w-auto">
-                      <Button
-                        type="button"
-                        onClick={pauseRecording}
-                        variant="outline"
-                        className="rounded-lg border-border bg-card hover:bg-accent text-foreground font-medium text-xs h-9 px-4"
-                      >
-                        {isPaused ? (
-                          <Play className="size-3.5 mr-1.5" />
-                        ) : (
-                          <Pause className="size-3.5 mr-1.5" />
-                        )}
-                        {isPaused ? "Resume" : "Pause"}
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={stopRecording}
-                        variant="destructive"
-                        className="rounded-lg font-medium text-xs h-9 px-4"
-                      >
-                        <Square className="size-3.5 mr-1.5" />
-                        Stop
-                      </Button>
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-border">
+                      {isRecording ? (
+                        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                          <Button
+                            type="button"
+                            onClick={pauseRecording}
+                            variant="outline"
+                            className="rounded-lg border-border bg-card hover:bg-accent text-foreground font-medium text-xs h-9 px-4"
+                          >
+                            {isPaused ? (
+                              <Play className="size-3.5 mr-1.5" />
+                            ) : (
+                              <Pause className="size-3.5 mr-1.5" />
+                            )}
+                            {isPaused ? "Resume" : "Pause"}
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={stopRecording}
+                            variant="destructive"
+                            className="rounded-lg font-medium text-xs h-9 px-4"
+                          >
+                            <Square className="size-3.5 mr-1.5" />
+                            Stop
+                          </Button>
+                        </div>
+                      ) : audioUrl ? (
+                        <div className="flex items-center justify-between w-full">
+                          <Button
+                            type="button"
+                            onClick={togglePlayback}
+                            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 h-9 px-5"
+                          >
+                            {isPlaying ? (
+                              <Pause className="size-3.5" />
+                            ) : (
+                              <Play className="size-3.5 ml-0.5" />
+                            )}
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={clearAudio}
+                            variant="ghost"
+                            className="rounded-lg text-muted-foreground hover:text-destructive font-medium text-xs h-9 px-3"
+                          >
+                            <Trash2 className="size-3.5 mr-1.5" />
+                            Remove
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
-                  ) : audioUrl ? (
-                    <div className="flex items-center justify-between w-full">
-                      <Button
-                        type="button"
-                        onClick={togglePlayback}
-                        className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 h-9 px-5"
-                      >
-                        {isPlaying ? (
-                          <Pause className="size-3.5" />
-                        ) : (
-                          <Play className="size-3.5 ml-0.5" />
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={clearAudio}
-                        variant="ghost"
-                        className="rounded-lg text-muted-foreground hover:text-destructive font-medium text-xs h-9 px-3"
-                      >
-                        <Trash2 className="size-3.5 mr-1.5" />
-                        Remove
-                      </Button>
-                    </div>
-                  ) : null}
+                  </div>
                 </div>
               </div>
             </section>
@@ -730,7 +774,7 @@ export default function VoiceCloningPage() {
             <Button
               disabled={!audioUrl || isRecording || isProcessing}
               onClick={handleCreateVoice}
-              className="w-full h-11 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition-colors whitespace-nowrap"
+              className="w-full h-11 rounded-full bg-primary hover:bg-primary/90 active:scale-[0.99] text-primary-foreground font-medium text-sm transition-[background-color,transform] duration-150 whitespace-nowrap"
             >
               {isProcessing ? (
                 <Loader2 className="size-4 mr-2 animate-spin" />

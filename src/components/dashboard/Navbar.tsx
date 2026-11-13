@@ -23,12 +23,15 @@ export default function Navbar() {
     <header className="sticky top-0 z-30 w-full bg-background/95 border-b border-border h-16 flex items-center">
       <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 w-full h-full">
         <div className="flex items-center gap-3 min-w-0">
-          <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg size-9" />
+          <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg size-9 transition-colors duration-150" />
           <div className="h-4 w-px bg-border" />
           <div className="flex items-center gap-2 text-sm min-w-0">
             <span className="text-muted-foreground font-medium">Studio</span>
             <span className="text-muted-foreground/50">/</span>
-            <span className="text-foreground font-semibold truncate">
+            <span
+              key={formattedPath}
+              className="text-foreground font-semibold truncate animate-panel-swap"
+            >
               {formattedPath}
             </span>
           </div>

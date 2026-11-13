@@ -9,6 +9,7 @@ import Link from "next/link";
 import { HeroAudioAudition } from "@/components/home/HeroAudioAudition";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
+import { ScrollReveal } from "@/components/ui/scroll-reveal";
 
 const WORKSPACE_ROWS = [
   {
@@ -62,13 +63,13 @@ export default function LandingPage() {
       {/* Single-line navigation (64px) */}
       <header className="sticky top-0 z-30 h-16 border-b border-border bg-background/95">
         <div className="max-w-7xl mx-auto h-full px-5 sm:px-8 lg:px-12 flex items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
             <Image
               src="/logo.png"
               alt="Resonance"
               width={32}
               height={32}
-              className="size-8 object-contain dark:invert-0 invert"
+              className="size-8 object-contain dark:invert-0 invert transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
             />
             <span className="text-base font-semibold tracking-tight text-foreground">
               Resonance
@@ -81,19 +82,19 @@ export default function LandingPage() {
           >
             <Link
               href="/app/voices"
-              className="hover:text-foreground transition-colors whitespace-nowrap"
+              className="hover:text-foreground transition-colors duration-150 whitespace-nowrap"
             >
               Voices
             </Link>
             <Link
               href="/app/text-to-speech"
-              className="hover:text-foreground transition-colors whitespace-nowrap"
+              className="hover:text-foreground transition-colors duration-150 whitespace-nowrap"
             >
               Text to Speech
             </Link>
             <Link
               href="/app/voice-cloning"
-              className="hover:text-foreground transition-colors whitespace-nowrap"
+              className="hover:text-foreground transition-colors duration-150 whitespace-nowrap"
             >
               Voice Cloning
             </Link>
@@ -116,24 +117,24 @@ export default function LandingPage() {
         <section className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 lg:pt-16 pb-16 lg:pb-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-7 space-y-6">
-              <h1 className="text-4xl sm:text-6xl lg:text-[4.25rem] font-semibold tracking-[-0.03em] leading-[1.04] text-foreground max-w-xl">
+              <h1 className="animate-editorial-enter text-4xl sm:text-6xl lg:text-[4.25rem] font-semibold tracking-[-0.03em] leading-[1.04] text-foreground max-w-xl">
                 Voices that sound human.
               </h1>
 
-              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-[46ch]">
+              <p className="animate-editorial-enter animate-stagger-1 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-[46ch]">
                 Write a script, audition natural speakers, and export studio
                 narration in seconds without robotic cadence.
               </p>
 
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <div className="animate-editorial-enter animate-stagger-2 pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-full h-12 px-7 bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm whitespace-nowrap"
+                  className="rounded-full h-12 px-7 bg-primary text-primary-foreground hover:bg-primary/90 font-medium text-sm whitespace-nowrap group"
                 >
                   <Link href="/app/voice-cloning">
                     Clone a Voice
-                    <ArrowUpRight className="size-4 ml-1.5" />
+                    <ArrowUpRight className="size-4 ml-1.5 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Link>
                 </Button>
 
@@ -149,25 +150,27 @@ export default function LandingPage() {
             </div>
 
             <div className="lg:col-span-5 space-y-4">
-              <div className="overflow-hidden rounded-xl border border-border bg-card">
+              <div className="overflow-hidden rounded-xl border border-border bg-card group">
                 <Image
                   src="/images/studio-hero.webp"
                   alt="Minimalist architectural recording room with a brushed aluminum condenser microphone in soft daylight"
                   width={1200}
                   height={896}
                   priority
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full aspect-[4/3] object-cover animate-hero-media transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015]"
                 />
               </div>
 
-              <HeroAudioAudition />
+              <div className="animate-editorial-enter animate-stagger-3">
+                <HeroAudioAudition />
+              </div>
             </div>
           </div>
         </section>
 
         {/* Core Workspaces: Asymmetric 4+8 Ruled Index */}
         <section className="border-t border-border">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+          <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             <div className="lg:col-span-4 space-y-3">
               <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground leading-tight">
                 Built for spoken clarity
@@ -183,14 +186,14 @@ export default function LandingPage() {
                 <Link
                   key={item.title}
                   href={item.href}
-                  className="group py-6 sm:py-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-secondary/60 transition-colors px-2 sm:px-4 -mx-2 sm:-mx-4 rounded-lg"
+                  className="group py-6 sm:py-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-secondary/60 transition-colors duration-200 px-2 sm:px-4 -mx-2 sm:-mx-4 rounded-lg"
                 >
                   <div className="flex items-start gap-4 max-w-xl">
-                    <div className="size-10 rounded-lg border border-border bg-card flex items-center justify-center text-foreground group-hover:border-primary/40 group-hover:text-primary transition-colors shrink-0 mt-0.5">
+                    <div className="size-10 rounded-lg border border-border bg-card flex items-center justify-center text-foreground group-hover:border-primary/40 group-hover:text-primary transition-colors duration-200 shrink-0 mt-0.5">
                       <item.icon className="size-4" />
                     </div>
                     <div className="space-y-1">
-                      <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
                         {item.title}
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
@@ -203,25 +206,25 @@ export default function LandingPage() {
                     <span className="font-mono text-xs text-muted-foreground">
                       {item.meta}
                     </span>
-                    <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    <ArrowUpRight className="size-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-[color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]" />
                   </div>
                 </Link>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* Studio Craft Showcase: Editorial 2-column split */}
         <section className="border-t border-border bg-secondary/40">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-6">
-              <div className="overflow-hidden rounded-xl border border-border bg-card">
+              <div className="overflow-hidden rounded-xl border border-border bg-card group">
                 <Image
                   src="/images/studio-acoustic-detail.webp"
                   alt="Matte dark anodized studio audio interface next to an acoustic foam baffle on stone"
                   width={1200}
                   height={670}
-                  className="w-full aspect-video object-cover"
+                  className="w-full aspect-video object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.015]"
                 />
               </div>
             </div>
@@ -244,21 +247,21 @@ export default function LandingPage() {
                 <Button
                   asChild
                   variant="outline"
-                  className="rounded-full h-11 px-6 border-border bg-card hover:bg-accent text-foreground font-medium text-sm whitespace-nowrap"
+                  className="rounded-full h-11 px-6 border-border bg-card hover:bg-accent text-foreground font-medium text-sm whitespace-nowrap group"
                 >
                   <Link href="/app/voices">
                     Explore Voice Library
-                    <ArrowUpRight className="size-4 ml-1.5" />
+                    <ArrowUpRight className="size-4 ml-1.5 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </Link>
                 </Button>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* Supported Locales & Close */}
         <section className="border-t border-border">
-          <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 space-y-12">
+          <ScrollReveal className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-16 lg:py-24 space-y-12">
             <div className="max-w-xl space-y-3">
               <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
                 Sixteen locales, natural inflection
@@ -273,7 +276,7 @@ export default function LandingPage() {
               {SUPPORTED_LOCALES.map((code) => (
                 <div
                   key={code}
-                  className="studio-panel rounded-lg py-3 px-3 text-center font-mono text-xs font-medium text-foreground"
+                  className="studio-panel rounded-lg py-3 px-3 text-center font-mono text-xs font-medium text-foreground transition-[border-color,background-color] duration-150 hover:border-primary/40 hover:bg-secondary/60"
                 >
                   {code}
                 </div>
@@ -298,7 +301,7 @@ export default function LandingPage() {
                 <Link href="/app">Enter Resonance</Link>
               </Button>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
       </main>
 

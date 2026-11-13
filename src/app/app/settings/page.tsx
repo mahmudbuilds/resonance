@@ -262,7 +262,13 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border flex justify-end">
+                  <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
+                    {hasChanges && !isUpdating && (
+                      <span className="text-xs text-muted-foreground flex items-center gap-1.5 animate-panel-swap">
+                        <span className="size-1.5 rounded-full bg-primary animate-tally-pulse" />
+                        Unsaved changes
+                      </span>
+                    )}
                     <Button
                       onClick={handleCommitChanges}
                       disabled={isUpdating || !hasChanges}
@@ -405,7 +411,13 @@ export default function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border flex justify-end">
+                  <div className="pt-4 border-t border-border flex items-center justify-end gap-3">
+                    {hasChanges && !isUpdating && (
+                      <span className="text-xs text-muted-foreground flex items-center gap-1.5 animate-panel-swap">
+                        <span className="size-1.5 rounded-full bg-primary animate-tally-pulse" />
+                        Unsaved changes
+                      </span>
+                    )}
                     <Button
                       onClick={handleCommitChanges}
                       disabled={isUpdating || !hasChanges}

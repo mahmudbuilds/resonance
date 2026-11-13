@@ -43,6 +43,8 @@
 }
 
 :root {
+  --ease-studio: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.2, 0, 0, 1);
   --background: #f8f8f6;
   --foreground: #111215;
   --card: #ffffff;
@@ -120,6 +122,10 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   * {
     border-color: var(--border);
     caret-color: var(--primary);
@@ -151,9 +157,9 @@
   background-color: var(--card);
   border: 1px solid var(--border);
   transition:
-    border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    border-color 200ms var(--ease-studio),
+    background-color 200ms var(--ease-studio),
+    transform 220ms var(--ease-studio);
 }
 
 .studio-card:hover {
@@ -191,11 +197,11 @@
   background: var(--scrollbar-thumb-hover);
 }
 
-/* Fast, GPU-friendly entrance */
+/* Fast, GPU-friendly editorial motion primitives */
 @keyframes editorial-enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 8px, 0);
+    transform: translate3d(0, 10px, 0);
   }
   to {
     opacity: 1;
@@ -203,16 +209,132 @@
   }
 }
 
+@keyframes hero-media-enter {
+  from {
+    opacity: 0;
+    transform: scale(1.022);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes panel-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 4px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes tally-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes eq-bar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
 .animate-editorial-enter {
-  animation: editorial-enter 320ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: editorial-enter 340ms var(--ease-studio) both;
+}
+
+.animate-hero-media {
+  animation: hero-media-enter 520ms var(--ease-studio) both;
+}
+
+.animate-panel-swap {
+  animation: panel-swap 220ms var(--ease-studio) both;
+}
+
+.animate-tally-pulse {
+  animation: tally-pulse 1.4s ease-in-out infinite;
+}
+
+.animate-eq-bar {
+  transform-origin: bottom center;
+  animation: eq-bar 680ms ease-in-out infinite;
+}
+
+.animate-accordion-down {
+  animation: accordion-down 240ms var(--ease-studio) both;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 200ms var(--ease-studio) both;
+}
+
+.animate-stagger-1 {
+  animation-delay: 50ms;
+}
+
+.animate-stagger-2 {
+  animation-delay: 100ms;
+}
+
+.animate-stagger-3 {
+  animation-delay: 150ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-editorial-enter {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-editorial-enter,
+  .animate-hero-media,
+  .animate-panel-swap {
+    animation: none;
+  }
+  .animate-tally-pulse,
+  .animate-eq-bar {
+    animation: none;
+  }
+  .animate-accordion-down,
+  .animate-accordion-up {
     animation: none;
   }
   .studio-card {
-    transition: none;
+    transition: border-color 120ms ease-out, background-color 120ms ease-out;
   }
 }
 

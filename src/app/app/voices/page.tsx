@@ -300,13 +300,29 @@ export default function VoicesPage() {
                 </Button>
               </div>
             ) : filteredVoices.length === 0 ? (
-              <div className="studio-panel rounded-xl text-center py-16 px-6">
+              <div className="studio-panel rounded-xl text-center py-16 px-6 space-y-4 animate-panel-swap">
                 <p className="text-sm text-muted-foreground">
                   No voices match your current search or filters.
                 </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedLocale("all");
+                    setSelectedClass("all");
+                  }}
+                  className="rounded-full h-8 px-4 text-xs"
+                >
+                  Reset filters
+                </Button>
               </div>
             ) : viewMode === "list" ? (
-              <div className="studio-panel rounded-xl overflow-hidden">
+              <div
+                key="list-view"
+                className="studio-panel rounded-xl overflow-hidden animate-panel-swap"
+              >
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
@@ -334,16 +350,16 @@ export default function VoicesPage() {
                         return (
                           <tr
                             key={voice._id}
-                            className="hover:bg-secondary/40 transition-colors"
+                            className="group hover:bg-secondary/40 transition-colors duration-150"
                           >
                             <td className="pl-6 pr-3 py-3.5">
-                              <div className="size-9 rounded-lg bg-secondary border border-border flex items-center justify-center text-xs font-semibold text-foreground">
+                              <div className="size-9 rounded-lg bg-secondary border border-border flex items-center justify-center text-xs font-semibold text-foreground group-hover:border-primary/40 transition-colors duration-150">
                                 {voiceName[0]}
                               </div>
                             </td>
                             <td className="px-4 py-3.5">
                               <div className="flex items-center gap-2 min-w-0">
-                                <span className="font-semibold text-foreground truncate max-w-[12rem]">
+                                <span className="font-semibold text-foreground truncate max-w-[12rem] group-hover:text-primary transition-colors duration-150">
                                   {voiceName}
                                 </span>
                                 <span
@@ -395,7 +411,10 @@ export default function VoicesPage() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div
+                key="grid-view"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-panel-swap"
+              >
                 {filteredVoices.map((voice) => {
                   const voiceName = voice.displayName || "Unnamed voice";
                   const isCloned = !voice.isPublic;
@@ -405,7 +424,7 @@ export default function VoicesPage() {
                   return (
                     <div
                       key={voice._id}
-                      className="studio-card rounded-xl p-5 flex flex-col justify-between gap-4"
+                      className="studio-card rounded-xl p-5 flex flex-col justify-between gap-4 group"
                     >
                       <div className="space-y-4">
                         <div className="flex items-center justify-between gap-2">
@@ -425,7 +444,7 @@ export default function VoicesPage() {
 
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center font-semibold text-sm text-foreground shrink-0">
+                            <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center font-semibold text-sm text-foreground shrink-0 group-hover:border-primary/40 transition-colors duration-150">
                               {voiceName[0]}
                             </div>
                             <h3 className="text-base font-semibold text-foreground truncate">
@@ -439,7 +458,7 @@ export default function VoicesPage() {
                             onClick={() =>
                               handleUseVoice(voice.inworldVoiceId ?? voice._id)
                             }
-                            className="size-9 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shrink-0"
+                            className="size-9 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 shrink-0"
                           >
                             <Play className="size-3.5 ml-0.5 fill-current" />
                           </Button>

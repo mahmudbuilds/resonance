@@ -62,12 +62,38 @@ export default function TextToSpeechPage() {
   const [speakingRate, setSpeakingRate] = useState([1.0]);
   const [temperature, setTemperature] = useState([0.7]);
   const [playingId, setPlayingId] = useState<Id<"generations"> | null>(null);
+  const [playingProgress, setPlayingProgress] = useState(0);
   const [downloadingId, setDownloadingId] = useState<Id<"generations"> | null>(
     null,
   );
   const [isSsml, setIsSsml] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const lineNumbersRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!playingId) {
+      setPlayingProgress(0);
+      return;
+    }
+
+    let rafId = 0;
+    const syncProgress = () => {
+      const audio = document.getElementById(
+        `audio-${playingId}`,
+      ) as HTMLAudioElement | null;
+      if (
+        audio &&
+        !audio.paused &&
+        Number.isFinite(audio.duration) &&
+        audio.duration > 0
+      ) {
+        setPlayingProgress(audio.currentTime / audio.duration);
+        rafId = requestAnimationFrame(syncProgress);
+      }
+    };
+    rafId = requestAnimationFrame(syncProgress);
+    return () => cancelAnimationFrame(rafId);
+  }, [playingId]);
 
   const currentUser = useQuery(api.users.getCurrentUser);
   const userGenerations = useQuery(api.inworld.listUserGenerations);
@@ -327,12 +353,17 @@ export default function TextToSpeechPage() {
               </div>
 
               <div className="flex-1 flex relative items-stretch">
-                {isSsml && (
-                  <div
-                    ref={lineNumbersRef}
-                    className="flex flex-col items-end pt-5 pb-5 pl-3 pr-2.5 border-r border-border w-12 font-mono text-xs text-muted-foreground select-none bg-secondary/30 text-right overflow-hidden pointer-events-none"
-                  >
-                    {Array.from(
+                <div
+                  ref={lineNumbersRef}
+                  aria-hidden={!isSsml}
+                  className={`flex flex-col items-end pt-5 pb-5 font-mono text-xs text-muted-foreground select-none bg-secondary/30 text-right overflow-hidden pointer-events-none transition-[width,opacity,padding] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    isSsml
+                      ? "w-12 pl-3 pr-2.5 border-r border-border opacity-100"
+                      : "w-0 px-0 border-r-0 opacity-0"
+                  }`}
+                >
+                  {isSsml &&
+                    Array.from(
                       { length: Math.max(1, text.split("\n").length) },
                       (_, index) => index + 1,
                     ).map((lineNumber) => (
@@ -344,8 +375,7 @@ export default function TextToSpeechPage() {
                         {lineNumber}
                       </div>
                     ))}
-                  </div>
-                )}
+                </div>
 
                 <Textarea
                   placeholder={
@@ -413,12 +443,19 @@ export default function TextToSpeechPage() {
                       {Math.ceil(text.length / 18)}s
                     </span>
                   </span>
+
+                  {isGenerating && (
+                    <span className="flex items-center gap-1.5 text-foreground font-medium animate-panel-swap">
+                      <span className="size-1.5 rounded-full bg-primary animate-tally-pulse" />
+                      Rendering audio
+                    </span>
+                  )}
                 </div>
 
                 <Button
                   onClick={handleGenerateSpeech}
                   disabled={isGenerating || !text.trim() || !selectedVoice}
-                  className="rounded-full h-10 w-full sm:w-auto px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm transition-colors whitespace-nowrap"
+                  className="rounded-full h-10 w-full sm:w-auto px-6 bg-primary hover:bg-primary/90 active:scale-[0.98] text-primary-foreground font-medium text-sm transition-[background-color,transform] duration-150 whitespace-nowrap"
                 >
                   {isGenerating ? (
                     <Loader2 className="size-4 mr-2 animate-spin" />
@@ -477,24 +514,25 @@ export default function TextToSpeechPage() {
                       voice?.displayName ||
                       generation.inworldVoiceId ||
                       "System Voice";
+                    const isActive = playingId === generation._id;
 
                     return (
                       <div
                         key={generation._id}
-                        className="p-4 flex items-center justify-between hover:bg-secondary/40 transition-colors gap-4 group"
+                        className={`relative p-4 flex items-center justify-between transition-colors duration-150 gap-4 group ${
+                          isActive
+                            ? "bg-secondary/50"
+                            : "hover:bg-secondary/40"
+                        }`}
                       >
                         <div className="flex items-center gap-3.5 flex-1 min-w-0">
                           <Button
                             type="button"
                             variant="outline"
                             size="icon"
-                            aria-label={
-                              playingId === generation._id
-                                ? "Pause audio"
-                                : "Play audio"
-                            }
-                            className={`size-9 shrink-0 rounded-full transition-colors ${
-                              playingId === generation._id
+                            aria-label={isActive ? "Pause audio" : "Play audio"}
+                            className={`size-9 shrink-0 rounded-full transition-[background-color,color,border-color,transform] duration-150 active:scale-95 ${
+                              isActive
                                 ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90"
                                 : "bg-secondary text-foreground border-border hover:bg-accent"
                             }`}
@@ -519,7 +557,7 @@ export default function TextToSpeechPage() {
                               }
                             }}
                           >
-                            {playingId === generation._id ? (
+                            {isActive ? (
                               <Pause className="size-3.5 fill-current" />
                             ) : (
                               <Play className="size-3.5 fill-current ml-0.5" />
@@ -557,12 +595,45 @@ export default function TextToSpeechPage() {
                               >
                                 {voiceName}
                               </Badge>
+                              {isActive && (
+                                <span
+                                  aria-hidden="true"
+                                  className="inline-flex items-end gap-[2px] h-3"
+                                >
+                                  <span
+                                    className="w-[2px] h-2.5 bg-primary rounded-full animate-eq-bar"
+                                    style={{ animationDelay: "0ms" }}
+                                  />
+                                  <span
+                                    className="w-[2px] h-3 bg-primary rounded-full animate-eq-bar"
+                                    style={{ animationDelay: "140ms" }}
+                                  />
+                                  <span
+                                    className="w-[2px] h-2 bg-primary rounded-full animate-eq-bar"
+                                    style={{ animationDelay: "280ms" }}
+                                  />
+                                </span>
+                              )}
                               <span className="text-[11px] font-mono tabular-nums">
                                 {dateString}
                               </span>
                             </div>
                           </div>
                         </div>
+
+                        {isActive && (
+                          <div
+                            aria-hidden="true"
+                            className="absolute inset-x-0 bottom-0 h-[2px] bg-border overflow-hidden pointer-events-none"
+                          >
+                            <div
+                              className="h-full bg-primary origin-left transition-transform duration-75 ease-linear"
+                              style={{
+                                transform: `scaleX(${Math.max(0.02, playingProgress)})`,
+                              }}
+                            />
+                          </div>
+                        )}
 
                         <div className="flex items-center gap-1.5 shrink-0">
                           <Button

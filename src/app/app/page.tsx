@@ -114,18 +114,19 @@ export default function DashboardOverviewPage() {
           aria-label="Workspaces"
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
         >
-          {WORKSPACE_LINKS.map((item) => (
+          {WORKSPACE_LINKS.map((item, idx) => (
             <Link
               key={item.title}
               href={item.href}
-              className="studio-card rounded-xl p-6 flex flex-col justify-between gap-6 group"
+              style={{ animationDelay: `${idx * 55}ms` }}
+              className="studio-card animate-editorial-enter rounded-xl p-6 flex flex-col justify-between gap-6 group active:scale-[0.99]"
             >
               <div className="space-y-4">
-                <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors">
+                <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-colors duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]">
                   <item.icon className="size-4" />
                 </div>
                 <div className="space-y-1.5">
-                  <h2 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
+                  <h2 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-200">
                     {item.title}
                   </h2>
                   <p className="text-sm text-muted-foreground leading-relaxed">
@@ -134,9 +135,9 @@ export default function DashboardOverviewPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-border text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+              <div className="flex items-center justify-between pt-3 border-t border-border text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-200">
                 <span>{item.cta}</span>
-                <ArrowUpRight className="size-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <ArrowUpRight className="size-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]" />
               </div>
             </Link>
           ))}
