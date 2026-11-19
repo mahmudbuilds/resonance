@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Schibsted_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ClerkThemeProvider from "@/components/ClerkThemeProvider";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
@@ -8,10 +8,10 @@ import UserSync from "@/components/UserSync";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const schibstedGrotesk = Schibsted_Grotesk({
+const geistSans = Geist({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-schibsted",
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Resonance | Vocal Synthesis Studio",
   description:
-    "Write a script, audition natural voices, and clone custom speech profiles in seconds.",
+    "Write scripts, audition natural speakers, and clone custom voice profiles in seconds.",
 };
 
 export default function RootLayout({
@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={cn(
         "h-full antialiased",
-        schibstedGrotesk.variable,
+        geistSans.variable,
         geistMono.variable,
         "font-sans",
       )}

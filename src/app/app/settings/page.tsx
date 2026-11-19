@@ -1,8 +1,15 @@
 "use client";
 
 import { useClerk, useUser } from "@clerk/nextjs";
+import {
+  EnvelopeSimpleIcon,
+  PulseIcon,
+  ShieldWarningIcon,
+  SlidersHorizontalIcon,
+  SpinnerGapIcon,
+  UserIcon,
+} from "@phosphor-icons/react";
 import { useMutation, useQuery } from "convex/react";
-import { Activity, Loader2, Mail, Settings2, Shield, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -157,8 +164,8 @@ export default function SettingsPage() {
             <Skeleton className="h-4 w-80" />
           </div>
           <div className="grid lg:grid-cols-12 gap-6">
-            <Skeleton className="lg:col-span-8 h-80 rounded-xl" />
-            <Skeleton className="lg:col-span-4 h-60 rounded-xl" />
+            <Skeleton className="lg:col-span-8 h-80 rounded-2xl" />
+            <Skeleton className="lg:col-span-4 h-60 rounded-2xl" />
           </div>
         </div>
       </div>
@@ -169,7 +176,7 @@ export default function SettingsPage() {
     <div className="min-h-full bg-background text-foreground pb-16">
       <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8 animate-editorial-enter">
         <header className="pb-6 border-b border-border space-y-1.5">
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground">
             Account Settings
           </h1>
           <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
@@ -179,19 +186,19 @@ export default function SettingsPage() {
         </header>
 
         <Tabs defaultValue="profile" className="w-full space-y-6">
-          <TabsList className="bg-secondary border border-border p-1 rounded-lg h-10 w-full sm:w-auto">
+          <TabsList className="bg-secondary border border-border p-1 rounded-xl h-10 w-full sm:w-auto">
             <TabsTrigger
               value="profile"
-              className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
+              className="flex-1 sm:flex-initial rounded-lg px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
             >
-              <User className="size-3.5" />
+              <UserIcon className="size-3.5" />
               Profile
             </TabsTrigger>
             <TabsTrigger
               value="appearance"
-              className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
+              className="flex-1 sm:flex-initial rounded-lg px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
             >
-              <Settings2 className="size-3.5" />
+              <SlidersHorizontalIcon className="size-3.5" />
               Preferences
             </TabsTrigger>
           </TabsList>
@@ -202,9 +209,9 @@ export default function SettingsPage() {
                 value="profile"
                 className="m-0 space-y-6 outline-none"
               >
-                <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-6">
+                <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-6">
                   <div className="flex items-center gap-2 pb-3 border-b border-border">
-                    <User className="size-4 text-muted-foreground" />
+                    <UserIcon className="size-4 text-muted-foreground" />
                     <h2 className="text-sm font-semibold text-foreground">
                       Personal Information
                     </h2>
@@ -223,7 +230,7 @@ export default function SettingsPage() {
                           id="firstName"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
-                          className="bg-background border-input h-10 rounded-lg text-sm"
+                          className="bg-background border-input h-10 rounded-xl text-sm"
                         />
                       </div>
                       <div className="space-y-2">
@@ -237,7 +244,7 @@ export default function SettingsPage() {
                           id="lastName"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
-                          className="bg-background border-input h-10 rounded-lg text-sm"
+                          className="bg-background border-input h-10 rounded-xl text-sm"
                         />
                       </div>
                     </div>
@@ -250,13 +257,13 @@ export default function SettingsPage() {
                         Email Address
                       </Label>
                       <div className="relative">
-                        <Mail className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+                        <EnvelopeSimpleIcon className="absolute right-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                         <Input
                           id="email"
                           type="email"
                           disabled
                           value={user?.primaryEmailAddress?.emailAddress || ""}
-                          className="bg-secondary/50 border-input h-10 rounded-lg text-muted-foreground text-sm pr-10"
+                          className="bg-secondary/50 border-input h-10 rounded-xl text-muted-foreground text-sm pr-10"
                         />
                       </div>
                     </div>
@@ -276,7 +283,7 @@ export default function SettingsPage() {
                     >
                       {isUpdating ? (
                         <>
-                          <Loader2 className="size-4 mr-2 animate-spin" />
+                          <SpinnerGapIcon className="size-4 mr-2 animate-spin" />
                           Saving...
                         </>
                       ) : (
@@ -286,9 +293,9 @@ export default function SettingsPage() {
                   </div>
                 </section>
 
-                <section className="studio-panel rounded-xl p-5 sm:p-6 border-destructive/25 space-y-4">
+                <section className="studio-panel rounded-2xl p-5 sm:p-6 border-destructive/25 space-y-4">
                   <div className="flex items-center gap-2 text-destructive">
-                    <Shield className="size-4" />
+                    <ShieldWarningIcon className="size-4" />
                     <h2 className="text-sm font-semibold">Delete Account</h2>
                   </div>
 
@@ -310,10 +317,10 @@ export default function SettingsPage() {
                           : "Delete Account"}
                       </Button>
                     </AlertDialogTrigger>
-                    <AlertDialogContent className="bg-card border-border rounded-xl max-w-md">
+                    <AlertDialogContent className="bg-card border-border rounded-2xl max-w-md">
                       <AlertDialogHeader>
                         <AlertDialogTitle className="text-lg font-semibold text-destructive flex items-center gap-2">
-                          <Shield className="size-4 shrink-0" />
+                          <ShieldWarningIcon className="size-4 shrink-0" />
                           Confirm Deletion
                         </AlertDialogTitle>
                         <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-2">
@@ -341,16 +348,16 @@ export default function SettingsPage() {
                 value="appearance"
                 className="m-0 space-y-6 outline-none"
               >
-                <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-6">
+                <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-6">
                   <div className="flex items-center gap-2 pb-3 border-b border-border">
-                    <Settings2 className="size-4 text-muted-foreground" />
+                    <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
                     <h2 className="text-sm font-semibold text-foreground">
                       Notifications &amp; Haptic Feedback
                     </h2>
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/45">
                       <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           System Updates
@@ -365,7 +372,7 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/45">
                       <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Usage Alerts
@@ -380,7 +387,7 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/45">
                       <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Security Logs
@@ -395,7 +402,7 @@ export default function SettingsPage() {
                       />
                     </div>
 
-                    <div className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/40">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/45">
                       <div className="space-y-0.5 pr-4">
                         <Label className="text-sm font-medium text-foreground block">
                           Haptic Feedback
@@ -425,7 +432,7 @@ export default function SettingsPage() {
                     >
                       {isUpdating ? (
                         <>
-                          <Loader2 className="size-4 mr-2 animate-spin" />
+                          <SpinnerGapIcon className="size-4 mr-2 animate-spin" />
                           Saving...
                         </>
                       ) : (
@@ -439,7 +446,7 @@ export default function SettingsPage() {
 
             {/* Right Support & Status Rail */}
             <aside className="lg:col-span-4 space-y-6">
-              <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-4">
+              <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-4">
                 <h2 className="text-sm font-semibold text-foreground pb-3 border-b border-border">
                   Need Help?
                 </h2>
@@ -452,14 +459,14 @@ export default function SettingsPage() {
                   onClick={() => router.push("/app/support")}
                   className="w-full h-10 rounded-full bg-card border-border hover:bg-accent text-foreground text-xs font-medium"
                 >
-                  <Mail className="size-3.5 mr-2" />
+                  <EnvelopeSimpleIcon className="size-3.5 mr-2" />
                   Contact Support
                 </Button>
               </section>
 
-              <section className="studio-panel rounded-xl p-5 sm:p-6 space-y-4">
+              <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-4">
                 <h2 className="text-sm font-semibold text-foreground pb-3 border-b border-border flex items-center gap-2">
-                  <Activity className="size-4 text-muted-foreground" />
+                  <PulseIcon className="size-4 text-muted-foreground" />
                   Client Connection
                 </h2>
                 <div className="space-y-3 text-xs">

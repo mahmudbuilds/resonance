@@ -1,22 +1,22 @@
 "use client";
 
-import { useAction, useMutation, useQuery } from "convex/react";
 import {
-  Clock,
-  Download,
-  Gauge,
-  History,
-  Loader2,
-  Mic2,
-  MoreVertical,
-  Pause,
-  Play,
-  Settings2,
-  Sparkles,
-  Thermometer,
-  Trash2,
-  Type,
-} from "lucide-react";
+  ClockCounterClockwiseIcon,
+  ClockIcon,
+  DotsThreeVerticalIcon,
+  DownloadSimpleIcon,
+  GaugeIcon,
+  MicrophoneStageIcon,
+  PauseIcon,
+  PlayIcon,
+  SlidersHorizontalIcon,
+  SparkleIcon,
+  SpinnerGapIcon,
+  TextTIcon,
+  ThermometerSimpleIcon,
+  TrashIcon,
+} from "@phosphor-icons/react";
+import { useAction, useMutation, useQuery } from "convex/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useHaptics } from "@/components/haptics/HapticsProvider";
@@ -154,7 +154,7 @@ export default function TextToSpeechPage() {
         {/* Header */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
           <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground">
               Text to Speech
             </h1>
             <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
@@ -163,11 +163,11 @@ export default function TextToSpeechPage() {
             </p>
           </div>
           {currentUser && (
-            <div className="studio-panel rounded-lg px-4 py-2.5 flex items-center gap-3 w-fit shrink-0">
+            <div className="studio-panel rounded-xl px-4 py-2.5 flex items-center gap-3 w-fit shrink-0">
               <span className="text-xs font-medium text-muted-foreground">
                 Available Credits
               </span>
-              <span className="font-mono text-sm font-semibold tabular-nums text-foreground">
+              <span className="font-mono text-sm font-semibold tabular-nums accent-ink">
                 {currentUser.credits.toLocaleString()}
               </span>
             </div>
@@ -175,151 +175,12 @@ export default function TextToSpeechPage() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Configuration Rail */}
-          <aside className="lg:col-span-4 studio-panel rounded-xl p-5 sm:p-6 space-y-6">
-            <div className="flex items-center gap-2 pb-3 border-b border-border">
-              <Settings2 className="size-4 text-muted-foreground" />
-              <h2 className="text-sm font-semibold text-foreground">
-                Voice Configuration
-              </h2>
-            </div>
-
-            <div className="space-y-5">
-              <div className="space-y-2">
-                <Label className="text-xs font-medium text-muted-foreground">
-                  Voice Profile <span className="accent-ink">*</span>
-                </Label>
-                <Select
-                  value={isReady ? (selectedVoice ?? "") : ""}
-                  onValueChange={(value) => setSelectedVoice(value)}
-                  disabled={!isReady}
-                >
-                  <SelectTrigger className="w-full bg-background border-input h-10 rounded-lg text-sm px-3">
-                    <SelectValue
-                      placeholder={
-                        isReady
-                          ? "Select a voice profile..."
-                          : "Loading system voices..."
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-lg p-1">
-                    {voices?.map((voice) => {
-                      const isNew =
-                        Date.now() - voice._creationTime <
-                        7 * 24 * 60 * 60 * 1000;
-                      return (
-                        <SelectItem
-                          key={voice.inworldVoiceId}
-                          value={voice.inworldVoiceId!}
-                          className="rounded-md cursor-pointer px-3 py-2"
-                        >
-                          <div className="flex items-center justify-between w-full gap-3">
-                            <span className="truncate font-medium">
-                              {voice.displayName}
-                            </span>
-                            <div className="flex items-center gap-1.5 shrink-0">
-                              {isNew && (
-                                <Badge className="text-[10px] px-1.5 py-0 bg-primary/15 accent-ink border-none font-semibold uppercase rounded">
-                                  New
-                                </Badge>
-                              )}
-                              {voice.langCode && (
-                                <span className="text-[11px] text-muted-foreground font-mono bg-secondary px-1.5 py-0.5 rounded">
-                                  {voice.langCode}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </SelectItem>
-                      );
-                    })}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label className="text-xs font-medium text-muted-foreground">
-                    Neural Model
-                  </Label>
-                  <span className="font-mono text-[11px] text-muted-foreground">
-                    Adaptive
-                  </span>
-                </div>
-                <Select
-                  value={model}
-                  onValueChange={(value) => setModel(value)}
-                >
-                  <SelectTrigger className="w-full bg-background border-input h-10 rounded-lg text-sm px-3">
-                    <SelectValue placeholder="Select model..." />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-lg p-1">
-                    <SelectItem value="inworld-tts-2">inworld-tts-2</SelectItem>
-                    <SelectItem value="inworld-tts-1.5-mini">
-                      inworld-tts-1.5-mini
-                    </SelectItem>
-                    <SelectItem value="inworld-tts-1.5-max">
-                      inworld-tts-1.5-max
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-4 pt-4 border-t border-border">
-                <div className="text-xs font-semibold text-foreground">
-                  Vocal Parameters
-                </div>
-
-                <div className="space-y-2.5 bg-secondary/50 border border-border p-4 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                      <Gauge className="size-3.5 text-muted-foreground" />
-                      Speaking Rate
-                    </div>
-                    <span className="text-xs font-mono font-semibold accent-ink tabular-nums">
-                      {speakingRate[0].toFixed(1)}x
-                    </span>
-                  </div>
-                  <Slider
-                    value={speakingRate}
-                    onValueChange={setSpeakingRate}
-                    min={0.5}
-                    max={1.5}
-                    step={0.1}
-                    className="cursor-pointer py-1.5"
-                  />
-                </div>
-
-                <div className="space-y-2.5 bg-secondary/50 border border-border p-4 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-                      <Thermometer className="size-3.5 text-muted-foreground" />
-                      Temperature
-                    </div>
-                    <span className="text-xs font-mono font-semibold accent-ink tabular-nums">
-                      {temperature[0].toFixed(2)}
-                    </span>
-                  </div>
-                  <Slider
-                    value={temperature}
-                    onValueChange={setTemperature}
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    className="cursor-pointer py-1.5"
-                  />
-                </div>
-              </div>
-            </div>
-          </aside>
-
-          {/* Script Editor & History */}
-          <div className="lg:col-span-8 space-y-6">
-            <section className="studio-panel rounded-xl overflow-hidden flex flex-col min-h-[420px]">
-              <div className="border-b border-border px-4 sm:px-5 py-3 flex items-center justify-between bg-secondary/40">
+          {/* Primary Script Canvas & History (left 8 cols) */}
+          <div className="lg:col-span-8 space-y-6 order-1">
+            <section className="studio-panel rounded-2xl overflow-hidden flex flex-col min-h-[440px]">
+              <div className="border-b border-border px-4 sm:px-5 py-3 flex items-center justify-between bg-secondary/45">
                 <div className="flex items-center gap-2">
-                  <Type className="size-4 text-muted-foreground" />
+                  <TextTIcon className="size-4 text-muted-foreground" />
                   <h2 className="text-sm font-semibold text-foreground">
                     Script Editor
                   </h2>
@@ -345,7 +206,7 @@ export default function TextToSpeechPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => setText("")}
-                    className="text-xs text-muted-foreground hover:text-foreground h-8 px-2.5 rounded-md"
+                    className="text-xs text-muted-foreground hover:text-foreground h-8 px-2.5 rounded-lg"
                   >
                     Clear
                   </Button>
@@ -356,7 +217,7 @@ export default function TextToSpeechPage() {
                 <div
                   ref={lineNumbersRef}
                   aria-hidden={!isSsml}
-                  className={`flex flex-col items-end pt-5 pb-5 font-mono text-xs text-muted-foreground select-none bg-secondary/30 text-right overflow-hidden pointer-events-none transition-[width,opacity,padding] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  className={`flex flex-col items-end pt-5 pb-5 font-mono text-xs text-muted-foreground select-none bg-secondary/35 text-right overflow-hidden pointer-events-none transition-[width,opacity,padding] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     isSsml
                       ? "w-12 pl-3 pr-2.5 border-r border-border opacity-100"
                       : "w-0 px-0 border-r-0 opacity-0"
@@ -391,7 +252,7 @@ export default function TextToSpeechPage() {
                     }
                   }}
                   style={isSsml ? { lineHeight: "28px" } : undefined}
-                  className={`w-full h-full min-h-[300px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground overflow-y-auto ${
+                  className={`w-full h-full min-h-[320px] resize-none border-none shadow-none focus-visible:ring-0 rounded-none bg-transparent text-foreground placeholder:text-muted-foreground overflow-y-auto ${
                     isSsml
                       ? "py-5 px-4 font-mono text-sm accent-ink overflow-x-auto"
                       : "p-5 font-sans text-base leading-relaxed overflow-x-hidden"
@@ -421,7 +282,7 @@ export default function TextToSpeechPage() {
                 />
               </div>
 
-              <div className="border-t border-border px-4 sm:px-5 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-secondary/40">
+              <div className="border-t border-border px-4 sm:px-5 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-4 bg-secondary/45">
                 <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground w-full sm:w-auto">
                   <span>
                     <span
@@ -437,11 +298,15 @@ export default function TextToSpeechPage() {
                   </span>
 
                   <span className="flex items-center gap-1.5">
-                    <Clock className="size-3.5" />
+                    <ClockIcon className="size-3.5" />
                     Est.{" "}
                     <span className="font-mono text-foreground tabular-nums">
                       {Math.ceil(text.length / 18)}s
                     </span>
+                  </span>
+
+                  <span className="hidden md:inline font-mono text-[11px] text-muted-foreground">
+                    Ctrl+Enter to render
                   </span>
 
                   {isGenerating && (
@@ -458,9 +323,9 @@ export default function TextToSpeechPage() {
                   className="rounded-full h-10 w-full sm:w-auto px-6 bg-primary hover:bg-primary/90 active:scale-[0.98] text-primary-foreground font-medium text-sm transition-[background-color,transform] duration-150 whitespace-nowrap"
                 >
                   {isGenerating ? (
-                    <Loader2 className="size-4 mr-2 animate-spin" />
+                    <SpinnerGapIcon className="size-4 mr-2 animate-spin" />
                   ) : (
-                    <Sparkles className="size-4 mr-2" />
+                    <SparkleIcon weight="fill" className="size-4 mr-2" />
                   )}
                   {isGenerating ? "Synthesizing..." : "Generate Speech"}
                 </Button>
@@ -468,10 +333,10 @@ export default function TextToSpeechPage() {
             </section>
 
             {/* Recent Generations */}
-            <section className="studio-panel rounded-xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-border bg-secondary/40 flex items-center justify-between">
+            <section className="studio-panel rounded-2xl overflow-hidden">
+              <div className="px-5 py-4 border-b border-border bg-secondary/45 flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <History className="size-4 text-muted-foreground" />
+                  <ClockCounterClockwiseIcon className="size-4 text-muted-foreground" />
                   Generation History
                 </h3>
                 {userGenerations && userGenerations.length > 0 && (
@@ -484,7 +349,7 @@ export default function TextToSpeechPage() {
               {!userGenerations || userGenerations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-14 px-4 text-center">
                   <div className="size-11 bg-secondary rounded-xl border border-border flex items-center justify-center mb-3">
-                    <Mic2 className="size-5 text-muted-foreground" />
+                    <MicrophoneStageIcon className="size-5 text-muted-foreground" />
                   </div>
                   <p className="text-sm font-medium text-foreground">
                     No audio generations yet
@@ -520,9 +385,7 @@ export default function TextToSpeechPage() {
                       <div
                         key={generation._id}
                         className={`relative p-4 flex items-center justify-between transition-colors duration-150 gap-4 group ${
-                          isActive
-                            ? "bg-secondary/50"
-                            : "hover:bg-secondary/40"
+                          isActive ? "bg-secondary/55" : "hover:bg-secondary/40"
                         }`}
                       >
                         <div className="flex items-center gap-3.5 flex-1 min-w-0">
@@ -558,9 +421,12 @@ export default function TextToSpeechPage() {
                             }}
                           >
                             {isActive ? (
-                              <Pause className="size-3.5 fill-current" />
+                              <PauseIcon weight="fill" className="size-3.5" />
                             ) : (
-                              <Play className="size-3.5 fill-current ml-0.5" />
+                              <PlayIcon
+                                weight="fill"
+                                className="size-3.5 ml-0.5"
+                              />
                             )}
                           </Button>
 
@@ -641,7 +507,7 @@ export default function TextToSpeechPage() {
                             variant="outline"
                             size="icon"
                             aria-label="Download audio"
-                            className="size-8 rounded-lg bg-background border-border hover:bg-accent text-muted-foreground hover:text-foreground"
+                            className="size-8 rounded-xl bg-background border-border hover:bg-accent text-muted-foreground hover:text-foreground"
                             disabled={
                               downloadingId === generation._id ||
                               !generation.audioUrl
@@ -671,9 +537,9 @@ export default function TextToSpeechPage() {
                             }}
                           >
                             {downloadingId === generation._id ? (
-                              <Loader2 className="size-3.5 animate-spin" />
+                              <SpinnerGapIcon className="size-3.5 animate-spin" />
                             ) : (
-                              <Download className="size-3.5" />
+                              <DownloadSimpleIcon className="size-3.5" />
                             )}
                           </Button>
 
@@ -684,17 +550,20 @@ export default function TextToSpeechPage() {
                                 variant="outline"
                                 size="icon"
                                 aria-label="More options"
-                                className="size-8 rounded-lg bg-background border-border hover:bg-accent text-muted-foreground hover:text-foreground"
+                                className="size-8 rounded-xl bg-background border-border hover:bg-accent text-muted-foreground hover:text-foreground"
                               >
-                                <MoreVertical className="size-3.5" />
+                                <DotsThreeVerticalIcon
+                                  weight="bold"
+                                  className="size-4"
+                                />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                               align="end"
-                              className="w-36 rounded-lg p-1"
+                              className="w-36 rounded-xl p-1"
                             >
                               <DropdownMenuItem
-                                className="text-destructive focus:text-destructive cursor-pointer rounded-md text-xs font-medium px-3 py-2"
+                                className="text-destructive focus:text-destructive cursor-pointer rounded-lg text-xs font-medium px-3 py-2"
                                 onClick={async () => {
                                   trigger("error");
                                   try {
@@ -707,7 +576,7 @@ export default function TextToSpeechPage() {
                                   }
                                 }}
                               >
-                                <Trash2 className="size-3.5 mr-2" />
+                                <TrashIcon className="size-3.5 mr-2" />
                                 Delete Audio
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -720,6 +589,145 @@ export default function TextToSpeechPage() {
               )}
             </section>
           </div>
+
+          {/* Configuration Rack (right 4 cols) */}
+          <aside className="lg:col-span-4 studio-panel rounded-2xl p-5 sm:p-6 space-y-6 order-2 lg:sticky lg:top-24">
+            <div className="flex items-center gap-2 pb-3 border-b border-border">
+              <SlidersHorizontalIcon className="size-4 text-muted-foreground" />
+              <h2 className="text-sm font-semibold text-foreground">
+                Voice Configuration
+              </h2>
+            </div>
+
+            <div className="space-y-5">
+              <div className="space-y-2">
+                <Label className="text-xs font-medium text-muted-foreground">
+                  Voice Profile <span className="accent-ink">*</span>
+                </Label>
+                <Select
+                  value={isReady ? (selectedVoice ?? "") : ""}
+                  onValueChange={(value) => setSelectedVoice(value)}
+                  disabled={!isReady}
+                >
+                  <SelectTrigger className="w-full bg-background border-input h-10 rounded-xl text-sm px-3">
+                    <SelectValue
+                      placeholder={
+                        isReady
+                          ? "Select a voice profile..."
+                          : "Loading system voices..."
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl p-1">
+                    {voices?.map((voice) => {
+                      const isNew =
+                        Date.now() - voice._creationTime <
+                        7 * 24 * 60 * 60 * 1000;
+                      return (
+                        <SelectItem
+                          key={voice.inworldVoiceId}
+                          value={voice.inworldVoiceId!}
+                          className="rounded-lg cursor-pointer px-3 py-2"
+                        >
+                          <div className="flex items-center justify-between w-full gap-3">
+                            <span className="truncate font-medium">
+                              {voice.displayName}
+                            </span>
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              {isNew && (
+                                <Badge className="text-[10px] px-1.5 py-0 bg-primary/15 accent-ink border-none font-semibold uppercase rounded">
+                                  New
+                                </Badge>
+                              )}
+                              {voice.langCode && (
+                                <span className="text-[11px] text-muted-foreground font-mono bg-secondary px-1.5 py-0.5 rounded">
+                                  {voice.langCode}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </SelectItem>
+                      );
+                    })}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-medium text-muted-foreground">
+                    Neural Model
+                  </Label>
+                  <span className="font-mono text-[11px] text-muted-foreground">
+                    Adaptive
+                  </span>
+                </div>
+                <Select
+                  value={model}
+                  onValueChange={(value) => setModel(value)}
+                >
+                  <SelectTrigger className="w-full bg-background border-input h-10 rounded-xl text-sm px-3">
+                    <SelectValue placeholder="Select model..." />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl p-1">
+                    <SelectItem value="inworld-tts-2">inworld-tts-2</SelectItem>
+                    <SelectItem value="inworld-tts-1.5-mini">
+                      inworld-tts-1.5-mini
+                    </SelectItem>
+                    <SelectItem value="inworld-tts-1.5-max">
+                      inworld-tts-1.5-max
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-border">
+                <div className="text-xs font-semibold text-foreground">
+                  Vocal Parameters
+                </div>
+
+                <div className="space-y-2.5 bg-secondary/50 border border-border p-4 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                      <GaugeIcon className="size-3.5 text-muted-foreground" />
+                      Speaking Rate
+                    </div>
+                    <span className="text-xs font-mono font-semibold accent-ink tabular-nums">
+                      {speakingRate[0].toFixed(1)}x
+                    </span>
+                  </div>
+                  <Slider
+                    value={speakingRate}
+                    onValueChange={setSpeakingRate}
+                    min={0.5}
+                    max={1.5}
+                    step={0.1}
+                    className="cursor-pointer py-1.5"
+                  />
+                </div>
+
+                <div className="space-y-2.5 bg-secondary/50 border border-border p-4 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
+                      <ThermometerSimpleIcon className="size-3.5 text-muted-foreground" />
+                      Temperature
+                    </div>
+                    <span className="text-xs font-mono font-semibold accent-ink tabular-nums">
+                      {temperature[0].toFixed(2)}
+                    </span>
+                  </div>
+                  <Slider
+                    value={temperature}
+                    onValueChange={setTemperature}
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    className="cursor-pointer py-1.5"
+                  />
+                </div>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

@@ -1,18 +1,18 @@
 "use client";
 
-import { useQuery } from "convex/react";
 import {
-  Activity,
-  Filter,
-  Globe2,
-  History,
-  LayoutGrid,
-  List,
-  Music,
-  Play,
-  Plus,
-  Search,
-} from "lucide-react";
+  ClockCounterClockwiseIcon,
+  FunnelSimpleIcon,
+  GlobeHemisphereWestIcon,
+  ListBulletsIcon,
+  MagnifyingGlassIcon,
+  MusicNotesSimpleIcon,
+  PlayIcon,
+  PlusIcon,
+  PulseIcon,
+  SquaresFourIcon,
+} from "@phosphor-icons/react";
+import { useQuery } from "convex/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -104,7 +104,7 @@ export default function VoicesPage() {
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-border">
           <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground">
               Voice Library
             </h1>
             <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
@@ -118,7 +118,7 @@ export default function VoicesPage() {
             className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-5 text-xs sm:text-sm font-medium shrink-0 w-full sm:w-auto"
           >
             <Link href="/app/voice-cloning">
-              <Plus className="size-4 mr-1.5" />
+              <PlusIcon weight="bold" className="size-4 mr-1.5" />
               Clone Custom Voice
             </Link>
           </Button>
@@ -131,12 +131,12 @@ export default function VoicesPage() {
           className="w-full space-y-5"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <TabsList className="bg-secondary border border-border p-1 rounded-lg h-10 w-full sm:w-auto">
+            <TabsList className="bg-secondary border border-border p-1 rounded-xl h-10 w-full sm:w-auto">
               <TabsTrigger
                 value="registry"
-                className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
+                className="flex-1 sm:flex-initial rounded-lg px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
               >
-                <LayoutGrid className="size-3.5" />
+                <SquaresFourIcon className="size-3.5" />
                 <span>Profiles</span>
                 {voices && (
                   <span className="font-mono text-[11px] text-muted-foreground">
@@ -146,9 +146,9 @@ export default function VoicesPage() {
               </TabsTrigger>
               <TabsTrigger
                 value="generations"
-                className="flex-1 sm:flex-initial rounded-md px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
+                className="flex-1 sm:flex-initial rounded-lg px-4 h-8 text-xs font-medium data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs gap-2"
               >
-                <History className="size-3.5" />
+                <ClockCounterClockwiseIcon className="size-3.5" />
                 <span>History Logs</span>
                 {historyList.length > 0 && (
                   <span className="font-mono text-[11px] text-muted-foreground">
@@ -159,20 +159,20 @@ export default function VoicesPage() {
             </TabsList>
 
             {activeTab === "registry" && (
-              <div className="flex items-center gap-1 border border-border bg-secondary p-1 rounded-lg self-end sm:self-auto">
+              <div className="flex items-center gap-1 border border-border bg-secondary p-1 rounded-xl self-end sm:self-auto">
                 <Button
                   type="button"
                   size="icon"
                   variant="ghost"
                   aria-label="List view"
                   onClick={() => setViewMode("list")}
-                  className={`size-8 rounded-md ${
+                  className={`size-8 rounded-lg ${
                     viewMode === "list"
                       ? "bg-card text-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <List className="size-4" />
+                  <ListBulletsIcon className="size-4" />
                 </Button>
                 <Button
                   type="button"
@@ -180,13 +180,13 @@ export default function VoicesPage() {
                   variant="ghost"
                   aria-label="Grid view"
                   onClick={() => setViewMode("grid")}
-                  className={`size-8 rounded-md ${
+                  className={`size-8 rounded-lg ${
                     viewMode === "grid"
                       ? "bg-card text-foreground shadow-xs"
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <LayoutGrid className="size-4" />
+                  <SquaresFourIcon className="size-4" />
                 </Button>
               </div>
             )}
@@ -194,15 +194,15 @@ export default function VoicesPage() {
 
           {/* Filter Bar */}
           {activeTab === "registry" && (
-            <div className="studio-panel rounded-xl p-3 sm:p-4">
+            <div className="studio-panel rounded-2xl p-3 sm:p-4">
               <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+                  <MagnifyingGlassIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
                   <Input
                     placeholder="Search voice names or descriptions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-background border-input h-10 rounded-lg text-sm"
+                    className="pl-10 bg-background border-input h-10 rounded-xl text-sm"
                   />
                 </div>
 
@@ -211,16 +211,16 @@ export default function VoicesPage() {
                     value={selectedLocale}
                     onValueChange={setSelectedLocale}
                   >
-                    <SelectTrigger className="w-full lg:w-[175px] bg-background border-input h-10 rounded-lg text-xs px-3">
+                    <SelectTrigger className="w-full lg:w-[175px] bg-background border-input h-10 rounded-xl text-xs px-3">
                       <div className="flex items-center gap-2 truncate">
-                        <Globe2 className="size-3.5 text-muted-foreground shrink-0" />
+                        <GlobeHemisphereWestIcon className="size-3.5 text-muted-foreground shrink-0" />
                         <SelectValue placeholder="All Locales" />
                       </div>
                     </SelectTrigger>
                     <SelectContent
                       position="popper"
                       sideOffset={6}
-                      className="rounded-lg"
+                      className="rounded-xl"
                     >
                       <SelectItem value="all">All Locales</SelectItem>
                       <SelectItem value="en">English (EN)</SelectItem>
@@ -238,16 +238,16 @@ export default function VoicesPage() {
                     value={selectedClass}
                     onValueChange={setSelectedClass}
                   >
-                    <SelectTrigger className="w-full lg:w-[175px] bg-background border-input h-10 rounded-lg text-xs px-3">
+                    <SelectTrigger className="w-full lg:w-[175px] bg-background border-input h-10 rounded-xl text-xs px-3">
                       <div className="flex items-center gap-2 truncate">
-                        <Filter className="size-3.5 text-muted-foreground shrink-0" />
+                        <FunnelSimpleIcon className="size-3.5 text-muted-foreground shrink-0" />
                         <SelectValue placeholder="All Classes" />
                       </div>
                     </SelectTrigger>
                     <SelectContent
                       position="popper"
                       sideOffset={6}
-                      className="rounded-lg"
+                      className="rounded-xl"
                     >
                       <SelectItem value="all">All Classes</SelectItem>
                       <SelectItem value="public">Public Studio</SelectItem>
@@ -262,13 +262,13 @@ export default function VoicesPage() {
           {/* Voices Registry Tab */}
           <TabsContent value="registry" className="mt-0 outline-none">
             {voices === undefined ? (
-              <div className="studio-panel rounded-xl divide-y divide-border">
+              <div className="studio-panel rounded-2xl divide-y divide-border">
                 {[0, 1, 2, 3, 4].map((idx) => (
                   <div
                     key={idx}
                     className="p-4 sm:px-6 flex items-center gap-4"
                   >
-                    <Skeleton className="size-10 rounded-lg shrink-0" />
+                    <Skeleton className="size-10 rounded-xl shrink-0" />
                     <div className="flex-1 space-y-2">
                       <Skeleton className="h-4 w-40" />
                       <Skeleton className="h-3 w-64" />
@@ -278,9 +278,9 @@ export default function VoicesPage() {
                 ))}
               </div>
             ) : voicesList.length === 0 ? (
-              <div className="studio-panel rounded-xl text-center py-20 px-6">
+              <div className="studio-panel rounded-2xl text-center py-20 px-6">
                 <div className="size-12 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4 border border-border">
-                  <Music className="size-5 text-muted-foreground" />
+                  <MusicNotesSimpleIcon className="size-5 text-muted-foreground" />
                 </div>
                 <h2 className="text-base font-semibold text-foreground mb-1.5">
                   No voice profiles found
@@ -294,13 +294,13 @@ export default function VoicesPage() {
                   className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-6 text-xs font-medium"
                 >
                   <Link href="/app/voice-cloning">
-                    <Plus className="size-4 mr-1.5" />
+                    <PlusIcon weight="bold" className="size-4 mr-1.5" />
                     Clone Custom Voice
                   </Link>
                 </Button>
               </div>
             ) : filteredVoices.length === 0 ? (
-              <div className="studio-panel rounded-xl text-center py-16 px-6 space-y-4 animate-panel-swap">
+              <div className="studio-panel rounded-2xl text-center py-16 px-6 space-y-4 animate-panel-swap">
                 <p className="text-sm text-muted-foreground">
                   No voices match your current search or filters.
                 </p>
@@ -321,7 +321,7 @@ export default function VoicesPage() {
             ) : viewMode === "list" ? (
               <div
                 key="list-view"
-                className="studio-panel rounded-xl overflow-hidden animate-panel-swap"
+                className="studio-panel rounded-2xl overflow-hidden animate-panel-swap"
               >
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
@@ -350,10 +350,10 @@ export default function VoicesPage() {
                         return (
                           <tr
                             key={voice._id}
-                            className="group hover:bg-secondary/40 transition-colors duration-150"
+                            className="group hover:bg-secondary/45 transition-colors duration-150"
                           >
                             <td className="pl-6 pr-3 py-3.5">
-                              <div className="size-9 rounded-lg bg-secondary border border-border flex items-center justify-center text-xs font-semibold text-foreground group-hover:border-primary/40 transition-colors duration-150">
+                              <div className="size-9 rounded-xl bg-secondary border border-border flex items-center justify-center text-xs font-semibold text-foreground group-hover:border-primary/40 transition-colors duration-150">
                                 {voiceName[0]}
                               </div>
                             </td>
@@ -424,7 +424,7 @@ export default function VoicesPage() {
                   return (
                     <div
                       key={voice._id}
-                      className="studio-card rounded-xl p-5 flex flex-col justify-between gap-4 group"
+                      className="studio-card rounded-2xl p-5 flex flex-col justify-between gap-4 group"
                     >
                       <div className="space-y-4">
                         <div className="flex items-center justify-between gap-2">
@@ -444,7 +444,7 @@ export default function VoicesPage() {
 
                         <div className="flex items-center justify-between gap-3">
                           <div className="flex items-center gap-3 min-w-0">
-                            <div className="size-10 rounded-lg bg-secondary border border-border flex items-center justify-center font-semibold text-sm text-foreground shrink-0 group-hover:border-primary/40 transition-colors duration-150">
+                            <div className="size-10 rounded-xl bg-secondary border border-border flex items-center justify-center font-semibold text-sm text-foreground shrink-0 group-hover:border-primary/40 transition-colors duration-150">
                               {voiceName[0]}
                             </div>
                             <h3 className="text-base font-semibold text-foreground truncate">
@@ -460,7 +460,10 @@ export default function VoicesPage() {
                             }
                             className="size-9 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 shrink-0"
                           >
-                            <Play className="size-3.5 ml-0.5 fill-current" />
+                            <PlayIcon
+                              weight="fill"
+                              className="size-3.5 ml-0.5"
+                            />
                           </Button>
                         </div>
 
@@ -478,7 +481,7 @@ export default function VoicesPage() {
                       <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground">
                         <span className="capitalize">{mood}</span>
                         <span className="flex items-center gap-1.5 font-mono tabular-nums">
-                          <Activity className="size-3.5" />
+                          <PulseIcon className="size-3.5" />
                           {plays}
                         </span>
                       </div>
@@ -489,10 +492,10 @@ export default function VoicesPage() {
             )}
           </TabsContent>
 
-          {/* History Logs Tab (Single responsive DOM tree — zero duplicate player mounts) */}
+          {/* History Logs Tab */}
           <TabsContent value="generations" className="mt-0 outline-none">
             {generations === undefined ? (
-              <div className="studio-panel rounded-xl divide-y divide-border">
+              <div className="studio-panel rounded-2xl divide-y divide-border">
                 {[0, 1, 2, 3].map((idx) => (
                   <div key={idx} className="p-5 flex items-center gap-4">
                     <Skeleton className="h-8 w-64 rounded-full" />
@@ -502,9 +505,9 @@ export default function VoicesPage() {
                 ))}
               </div>
             ) : historyList.length === 0 ? (
-              <div className="studio-panel rounded-xl text-center py-20 px-6">
+              <div className="studio-panel rounded-2xl text-center py-20 px-6">
                 <div className="size-12 bg-secondary rounded-xl flex items-center justify-center mx-auto mb-4 border border-border">
-                  <History className="size-5 text-muted-foreground" />
+                  <ClockCounterClockwiseIcon className="size-5 text-muted-foreground" />
                 </div>
                 <h2 className="text-base font-semibold text-foreground mb-1.5">
                   No history logs yet
@@ -515,7 +518,7 @@ export default function VoicesPage() {
                 </p>
               </div>
             ) : (
-              <div className="studio-panel rounded-xl divide-y divide-border">
+              <div className="studio-panel rounded-2xl divide-y divide-border">
                 {historyList.map((g) => {
                   const voiceName =
                     voiceNameByInworldId.get(g.inworldVoiceId ?? "") ??
@@ -523,7 +526,7 @@ export default function VoicesPage() {
                   return (
                     <div
                       key={g._id}
-                      className="p-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 hover:bg-secondary/30 transition-colors"
+                      className="p-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 hover:bg-secondary/35 transition-colors"
                     >
                       <WaveformPlayer
                         url={g.audioUrl}

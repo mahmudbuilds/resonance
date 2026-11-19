@@ -1,6 +1,6 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
+import { PauseIcon, PlayIcon } from "@phosphor-icons/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -154,13 +154,14 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
     [ensureAudio],
   );
 
-  const ratioFromPointer = (
-    event: React.PointerEvent<HTMLDivElement>,
-  ): number | null => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (rect.width <= 0) return null;
-    return Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-  };
+  const ratioFromPointer = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>): number | null => {
+      const rect = event.currentTarget.getBoundingClientRect();
+      if (rect.width <= 0) return null;
+      return Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    },
+    [],
+  );
 
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -171,7 +172,7 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
       setHoverRatio(ratio);
       seekToRatio(ratio);
     },
-    [seekToRatio],
+    [ratioFromPointer, seekToRatio],
   );
 
   const handlePointerMove = useCallback(
@@ -183,7 +184,7 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
         seekToRatio(ratio);
       }
     },
-    [isDragging, seekToRatio],
+    [isDragging, ratioFromPointer, seekToRatio],
   );
 
   const handlePointerUp = useCallback(
@@ -256,9 +257,9 @@ export function WaveformPlayer({ url, className }: WaveformPlayerProps) {
         )}
       >
         {isPlaying ? (
-          <Pause className="size-3.5 fill-current" />
+          <PauseIcon weight="fill" className="size-3.5" />
         ) : (
-          <Play className="size-3.5 ml-0.5 fill-current" />
+          <PlayIcon weight="fill" className="size-3.5 ml-0.5" />
         )}
       </Button>
 

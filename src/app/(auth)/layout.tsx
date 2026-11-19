@@ -14,15 +14,15 @@ export default function AuthLayout({
         <ModeToggle className="rounded-full size-9 border-border bg-card hover:bg-accent" />
       </div>
 
-      {/* Left Editorial Studio Column */}
-      <aside className="hidden lg:flex lg:col-span-6 flex-col justify-between border-r border-border bg-secondary/40 p-10 xl:p-14">
-        <Link href="/" className="flex items-center gap-2.5 w-fit">
+      {/* Left Architectural Studio Column */}
+      <aside className="hidden lg:flex lg:col-span-6 flex-col justify-between border-r border-border bg-secondary/45 p-10 xl:p-14">
+        <Link href="/" className="flex items-center gap-2.5 w-fit group">
           <Image
             src="/logo.png"
             alt="Resonance"
             width={32}
             height={32}
-            className="size-8 object-contain dark:invert-0 invert"
+            className="size-8 object-contain dark:invert-0 invert transition-transform duration-200 group-hover:scale-105"
           />
           <span className="text-base font-semibold tracking-tight text-foreground">
             Resonance
@@ -30,19 +30,19 @@ export default function AuthLayout({
         </Link>
 
         <div className="space-y-6 max-w-lg my-auto py-8">
-          <div className="overflow-hidden rounded-xl border border-border bg-card">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
             <Image
-              src="/images/studio-hero.webp"
-              alt="Architectural vocal recording room with condenser microphone"
+              src="/images/studio-headphones-auth.jpg"
+              alt="Open-back studio reference headphones on a dark basalt desk"
               width={1200}
-              height={896}
+              height={900}
               priority
               className="w-full aspect-[4/3] object-cover"
             />
           </div>
 
           <div className="space-y-2.5">
-            <h1 className="text-3xl font-semibold tracking-tight text-foreground leading-tight">
+            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground leading-tight">
               Your vocal studio, ready when your script is.
             </h1>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-[44ch]">

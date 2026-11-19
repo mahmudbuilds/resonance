@@ -2,14 +2,14 @@
 
 import { UserButton } from "@clerk/nextjs";
 import {
-  AudioLines,
-  Headphones,
-  Home,
-  LayoutGrid,
-  type LucideIcon,
-  Settings,
-  Volume2,
-} from "lucide-react";
+  GearSixIcon,
+  HeadphonesIcon,
+  HouseSimpleIcon,
+  type Icon,
+  MicrophoneStageIcon,
+  SquaresFourIcon,
+  WaveformIcon,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,19 +34,23 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface MenuItem {
   title: string;
   url: string;
-  icon: LucideIcon;
+  icon: Icon;
 }
 
 const mainMenuItems: MenuItem[] = [
-  { title: "Overview", url: "/app", icon: Home },
-  { title: "Voice Library", url: "/app/voices", icon: LayoutGrid },
-  { title: "Text to Speech", url: "/app/text-to-speech", icon: AudioLines },
-  { title: "Voice Cloning", url: "/app/voice-cloning", icon: Volume2 },
+  { title: "Overview", url: "/app", icon: HouseSimpleIcon },
+  { title: "Voice Library", url: "/app/voices", icon: SquaresFourIcon },
+  { title: "Text to Speech", url: "/app/text-to-speech", icon: WaveformIcon },
+  {
+    title: "Voice Cloning",
+    url: "/app/voice-cloning",
+    icon: MicrophoneStageIcon,
+  },
 ];
 
 const otherMenuItems: MenuItem[] = [
-  { title: "Settings", url: "/app/settings", icon: Settings },
-  { title: "Support", url: "/app/support", icon: Headphones },
+  { title: "Settings", url: "/app/settings", icon: GearSixIcon },
+  { title: "Support", url: "/app/support", icon: HeadphonesIcon },
 ];
 
 function NavSection({
@@ -87,9 +91,9 @@ function NavSection({
                       if (isMobile) setOpenMobile(false);
                     }}
                     tooltip={item.title}
-                    className={`group/nav text-sm font-medium h-10 rounded-lg transition-[color,background-color,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.985] ${
+                    className={`group/nav text-sm font-medium h-10 rounded-xl transition-[color,background-color,transform] duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.985] ${
                       isActive
-                        ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                        ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-xs"
                         : "text-muted-foreground hover:text-foreground hover:bg-sidebar-accent"
                     }`}
                   >
@@ -98,7 +102,8 @@ function NavSection({
                       className="flex items-center gap-3 w-full px-2.5"
                     >
                       <item.icon
-                        className={`size-4 shrink-0 transition-transform duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/nav:scale-105 ${
+                        weight={isActive ? "fill" : "regular"}
+                        className={`size-[18px] shrink-0 transition-transform duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/nav:scale-105 ${
                           isActive
                             ? "text-primary-foreground"
                             : "text-muted-foreground group-hover/nav:text-foreground"
