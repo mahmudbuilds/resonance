@@ -1,6 +1,6 @@
 # Resonance
 
-> Next-Generation AI Voice Generator. Text-to-Speech, Voice Library & Voice Cloning — create human-sounding voiceovers in seconds.
+> Real-time AI voice synthesis studio with live voice cloning, interactive waveforms, server-enforced credit metering, and multi-key API failover. Built with Next.js 16, Convex, Clerk, and Wavesurfer.js.
 
 ---
 
@@ -14,11 +14,11 @@
 
 - **Text to Speech** — Type any script and generate studio-quality voiceovers with natural pacing, temperature control, and emotion.
 - **Voice Library** — Browse a curated collection of high-fidelity AI voices spanning 9+ languages and regions.
-- **Voice Cloning** — Create a digital replica of your own voice using sample audio recordings or file uploads.
-- **Credit Balancing** — Character-level credit tracking with automatic deduction and validation.
-- **Key Rotation & Auto-Cloning** — Automatic failover across multiple Inworld API keys with auto-cloning from cached audio samples.
+- **Live Voice Cloning** — Create a digital replica of your own voice using live microphone recordings or sample audio uploads.
+- **Server-Enforced Credit Metering** — Character-level credit tracking with atomic server-side validation and deduction in Convex.
+- **Multi-Key API Failover & Auto-Cloning** — Automatic failover across multiple Inworld API keys with auto-cloning from cached audio samples.
 - **Multi-Language Support** — EN-US, ES-ES, JA-JP, ZH-CN, KO-KR, AR-SA, HI-IN, HE-IL, PL-PL, and more.
-- **Real-Time Dashboard** — Real-time telemetry, generation histories, and waveform audio previews.
+- **Interactive Waveform Dashboard** — Real-time telemetry, generation histories, and Wavesurfer.js waveform audio previews.
 
 ---
 
@@ -45,7 +45,7 @@
 
 ```bash
 # Clone the repository
-git clone <repo-url>
+git clone https://github.com/mahmudbuilds/resonance.git
 cd resonance
 
 # Install dependencies
