@@ -223,13 +223,17 @@ export default function VoiceCloningPage() {
 
     const initWaveSurfer = async () => {
       try {
+        const isDark = document.documentElement.classList.contains("dark");
         ws = WaveSurfer.create({
           container,
-          waveColor: "rgba(29, 91, 255, 0.32)",
-          progressColor: "rgba(29, 91, 255, 1)",
-          cursorColor: "rgba(29, 91, 255, 1)",
+          waveColor: isDark
+            ? "rgba(255, 255, 255, 0.24)"
+            : "rgba(13, 13, 15, 0.22)",
+          progressColor: isDark ? "#ffffff" : "#0d0d0f",
+          cursorColor: isDark ? "#ffffff" : "#0d0d0f",
           barWidth: 3,
           barGap: 3,
+          barRadius: 99,
           height: 76,
           normalize: true,
         });
@@ -423,53 +427,53 @@ export default function VoiceCloningPage() {
   };
 
   return (
-    <div className="min-h-full bg-background text-foreground pb-16">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8 animate-editorial-enter">
+    <div className="min-h-full px-5 py-6 sm:px-7 sm:py-8 lg:px-8 lg:py-8">
+      <div className="mx-auto max-w-[1280px] space-y-6 animate-editorial-enter">
         {/* Header */}
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-border">
-          <div className="space-y-1.5">
-            <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground">
-              Voice Cloning
-            </h1>
-            <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
-              Record or upload a clean 5 to 15 second speech sample to build a
-              custom voice profile.
-            </p>
-          </div>
+        <header className="space-y-1">
+          <h1 className="text-[24px] sm:text-[26px] font-bold tracking-[-0.03em] text-foreground">
+            Voice Cloning
+          </h1>
+          <p className="text-[13px] text-muted-foreground max-w-xl leading-relaxed">
+            Record or upload a clean 5 to 15 second speech sample to build a
+            custom voice profile.
+          </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* Main Cloning Workspace */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Voice Metadata */}
-            <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-border">
-                <UserIcon className="size-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-foreground">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-start">
+          {/* Left 7 Cols: Voice Details + Audio Capture */}
+          <div className="xl:col-span-7 space-y-5">
+            {/* Voice Details Card */}
+            <section className="bento-card p-6 space-y-5">
+              <div className="flex items-center gap-2.5">
+                <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-foreground">
+                  <UserIcon weight="bold" className="size-4" />
+                </span>
+                <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
                   Voice Details
                 </h2>
               </div>
 
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <Label
                     htmlFor="voiceName"
-                    className="text-xs font-medium text-muted-foreground"
+                    className="text-xs font-semibold text-foreground"
                   >
-                    Voice Name <span className="accent-ink">*</span>
+                    Voice Name *
                   </Label>
                   <Input
                     id="voiceName"
                     ref={voiceNameRef}
                     placeholder="e.g. Documentary Narrator"
-                    className="bg-background border-input h-10 rounded-xl text-sm"
+                    className="bg-secondary/75 border-0 h-11 rounded-2xl px-4 text-sm shadow-none"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label
                     htmlFor="desc"
-                    className="text-xs font-medium text-muted-foreground"
+                    className="text-xs font-semibold text-foreground"
                   >
                     Description
                   </Label>
@@ -477,7 +481,7 @@ export default function VoiceCloningPage() {
                     id="desc"
                     ref={descriptionRef}
                     placeholder="Describe this voice (e.g. warm, measured, conversational)"
-                    className="resize-none bg-background border-input h-24 rounded-xl text-sm"
+                    className="resize-none bg-secondary/75 border-0 h-24 rounded-2xl p-4 text-sm shadow-none"
                   />
                 </div>
 
@@ -485,23 +489,23 @@ export default function VoiceCloningPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="langCode"
-                      className="text-xs font-medium text-muted-foreground"
+                      className="text-xs font-semibold text-foreground"
                     >
                       Language
                     </Label>
                     <Select value={langCode} onValueChange={setLangCode}>
                       <SelectTrigger
                         id="langCode"
-                        className="w-full bg-background border-input h-10 rounded-xl text-sm"
+                        className="w-full bg-secondary/75 border-0 h-11 rounded-2xl px-4 text-sm shadow-none"
                       >
                         <SelectValue placeholder="Select a language" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-xl">
+                      <SelectContent className="rounded-2xl">
                         {LANG_CODES.map((code) => (
                           <SelectItem
                             key={code}
                             value={code}
-                            className="rounded-lg cursor-pointer"
+                            className="rounded-xl cursor-pointer"
                           >
                             {LANG_LABELS[code] ?? code}
                           </SelectItem>
@@ -513,7 +517,7 @@ export default function VoiceCloningPage() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="tags"
-                      className="text-xs font-medium text-muted-foreground"
+                      className="text-xs font-semibold text-foreground"
                     >
                       Tags
                     </Label>
@@ -521,18 +525,20 @@ export default function VoiceCloningPage() {
                       id="tags"
                       ref={tagsRef}
                       placeholder="narration, calm, clear"
-                      className="bg-background border-input h-10 rounded-xl text-sm"
+                      className="bg-secondary/75 border-0 h-11 rounded-2xl px-4 text-sm shadow-none"
                     />
                   </div>
                 </div>
               </div>
             </section>
 
-            {/* Audio Sample Input */}
-            <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-5">
-              <div className="flex items-center gap-2 pb-3 border-b border-border">
-                <MicrophoneIcon className="size-4 text-muted-foreground" />
-                <h2 className="text-sm font-semibold text-foreground">
+            {/* Audio Sample Capture Card */}
+            <section className="bento-card p-6 space-y-5">
+              <div className="flex items-center gap-2.5">
+                <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                  <MicrophoneIcon weight="fill" className="size-4" />
+                </span>
+                <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
                   Audio Sample
                 </h2>
               </div>
@@ -545,17 +551,17 @@ export default function VoiceCloningPage() {
                 }}
                 className="w-full"
               >
-                <TabsList className="bg-secondary border border-border p-1 rounded-xl h-10 w-full flex mb-5">
+                <TabsList className="bg-secondary/85 p-1 rounded-full h-11 w-full flex mb-5 border-0">
                   <TabsTrigger
                     value="upload"
-                    className="flex-1 rounded-lg data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs font-medium text-xs h-full gap-2"
+                    className="flex-1 rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-semibold text-xs h-full gap-2 transition-all"
                   >
                     <CloudArrowUpIcon className="size-3.5 shrink-0" />
                     <span>Upload file</span>
                   </TabsTrigger>
                   <TabsTrigger
                     value="record"
-                    className="flex-1 rounded-lg data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-xs font-medium text-xs h-full gap-2"
+                    className="flex-1 rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-semibold text-xs h-full gap-2 transition-all"
                   >
                     <MicrophoneIcon className="size-3.5 shrink-0" />
                     <span>Record sample</span>
@@ -571,28 +577,16 @@ export default function VoiceCloningPage() {
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onClick={() => fileInputRef.current?.click()}
-                        className={`border border-dashed rounded-2xl p-8 transition-[border-color,background-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center justify-center text-center cursor-pointer min-h-[200px] w-full group ${
+                        className={`border-2 border-dashed rounded-[22px] p-8 transition-all duration-200 flex flex-col items-center justify-center text-center cursor-pointer min-h-[200px] w-full group ${
                           isDragging
-                            ? "border-primary bg-primary/5 scale-[0.995]"
-                            : "border-border hover:border-primary/60 bg-secondary/40 hover:bg-secondary/80"
+                            ? "border-primary bg-secondary scale-[0.995]"
+                            : "border-border hover:border-foreground/30 bg-secondary/45 hover:bg-secondary/75"
                         }`}
                       >
-                        <div
-                          className={`size-12 bg-card border rounded-full flex items-center justify-center mb-3 transition-[border-color,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                            isDragging
-                              ? "border-primary scale-105"
-                              : "border-border group-hover:border-primary/40"
-                          }`}
-                        >
-                          <CloudArrowUpIcon
-                            className={`size-5 transition-colors duration-200 ${
-                              isDragging
-                                ? "accent-ink"
-                                : "text-muted-foreground group-hover:text-foreground"
-                            }`}
-                          />
+                        <div className="size-12 bg-card shadow-xs rounded-full flex items-center justify-center mb-3 transition-transform duration-200 group-hover:scale-105">
+                          <CloudArrowUpIcon className="size-5 text-foreground" />
                         </div>
-                        <p className="font-medium text-sm text-foreground mb-1">
+                        <p className="font-semibold text-sm text-foreground mb-1">
                           {isDragging
                             ? "Drop audio file to load"
                             : "Upload an audio file"}
@@ -615,25 +609,25 @@ export default function VoiceCloningPage() {
 
                 <TabsContent
                   value="record"
-                  className="mt-0 outline-none space-y-5"
+                  className="mt-0 outline-none space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label className="text-xs font-medium text-muted-foreground">
+                    <Label className="text-xs font-semibold text-foreground">
                       Sample calibration text
                     </Label>
                     <Select
                       value={selectedSentence}
                       onValueChange={setSelectedSentence}
                     >
-                      <SelectTrigger className="w-full bg-background border-input h-10 rounded-xl text-sm">
+                      <SelectTrigger className="w-full bg-secondary/75 border-0 h-11 rounded-2xl px-4 text-sm shadow-none">
                         <SelectValue placeholder="Choose a sample" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-xl">
+                      <SelectContent className="rounded-2xl">
                         {RECORDING_SENTENCES.map((sentence, i) => (
                           <SelectItem
                             key={sentence}
                             value={sentence}
-                            className="rounded-lg cursor-pointer text-sm py-2"
+                            className="rounded-xl cursor-pointer text-sm py-2"
                           >
                             {i === 0
                               ? sentence
@@ -648,7 +642,7 @@ export default function VoiceCloningPage() {
                     {selectedSentence !== "Custom (read your own text)" && (
                       <div
                         key={selectedSentence}
-                        className="p-4 bg-secondary/50 rounded-xl border border-border text-sm text-foreground leading-relaxed mt-3 animate-panel-swap"
+                        className="bento-row p-4 text-sm text-foreground leading-relaxed mt-2 animate-panel-swap"
                       >
                         {selectedSentence}
                       </div>
@@ -656,16 +650,16 @@ export default function VoiceCloningPage() {
                   </div>
 
                   {!audioUrl && !isRecording && (
-                    <div className="border border-border bg-secondary/40 rounded-2xl p-8 flex flex-col items-center justify-center text-center min-h-[200px] w-full animate-panel-swap">
+                    <div className="bento-row rounded-[22px] p-8 flex flex-col items-center justify-center text-center min-h-[200px] w-full animate-panel-swap">
                       <Button
                         type="button"
                         onClick={startRecording}
                         aria-label="Start recording"
-                        className="size-16 rounded-full bg-primary hover:bg-primary/90 active:scale-95 text-primary-foreground transition-[background-color,transform] duration-150 mb-4 flex items-center justify-center"
+                        className="size-16 rounded-full bg-primary hover:bg-primary/90 active:scale-95 text-primary-foreground transition-all mb-4 flex items-center justify-center shadow-md cursor-pointer"
                       >
                         <MicrophoneIcon weight="fill" className="size-6" />
                       </Button>
-                      <p className="font-medium text-sm text-foreground mb-1">
+                      <p className="font-semibold text-sm text-foreground mb-1">
                         Start recording
                       </p>
                       <p className="text-xs text-muted-foreground">
@@ -685,10 +679,10 @@ export default function VoiceCloningPage() {
                 }`}
               >
                 <div className="overflow-hidden">
-                  <div className="border border-border bg-secondary/35 rounded-2xl p-5 relative">
+                  <div className="bento-row rounded-[22px] p-5 relative">
                     {isRecording && (
                       <div className="flex items-center justify-between mb-3 animate-panel-swap">
-                        <span className="text-xs text-destructive font-medium flex items-center gap-2">
+                        <span className="text-xs text-destructive font-semibold flex items-center gap-2">
                           <span
                             aria-hidden="true"
                             className={`size-2 rounded-full ${
@@ -707,7 +701,7 @@ export default function VoiceCloningPage() {
 
                     {!isRecording && audioUrl && (
                       <div className="flex justify-end mb-2 animate-panel-swap">
-                        <span className="font-mono text-xs accent-ink bg-primary/10 px-2.5 py-0.5 rounded-full tabular-nums">
+                        <span className="font-mono text-xs font-semibold text-foreground bg-card px-3 py-1 rounded-full tabular-nums shadow-2xs">
                           {formatTime(currentTime)} / {formatTime(duration)}
                         </span>
                       </div>
@@ -722,7 +716,7 @@ export default function VoiceCloningPage() {
                             type="button"
                             onClick={pauseRecording}
                             variant="outline"
-                            className="rounded-full border-border bg-card hover:bg-accent text-foreground font-medium text-xs h-9 px-4"
+                            className="rounded-full border-border bg-card hover:bg-accent text-foreground font-semibold text-xs h-9 px-4"
                           >
                             {isPaused ? (
                               <PlayIcon
@@ -741,7 +735,7 @@ export default function VoiceCloningPage() {
                             type="button"
                             onClick={stopRecording}
                             variant="destructive"
-                            className="rounded-full font-medium text-xs h-9 px-4"
+                            className="rounded-full font-semibold text-xs h-9 px-4"
                           >
                             <StopIcon
                               weight="fill"
@@ -755,7 +749,7 @@ export default function VoiceCloningPage() {
                           <Button
                             type="button"
                             onClick={togglePlayback}
-                            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 h-9 px-5"
+                            className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 h-9 px-5 cursor-pointer"
                           >
                             {isPlaying ? (
                               <PauseIcon weight="fill" className="size-3.5" />
@@ -770,7 +764,7 @@ export default function VoiceCloningPage() {
                             type="button"
                             onClick={clearAudio}
                             variant="ghost"
-                            className="rounded-full text-muted-foreground hover:text-destructive font-medium text-xs h-9 px-3"
+                            className="rounded-full text-muted-foreground hover:text-destructive font-semibold text-xs h-9 px-3.5"
                           >
                             <TrashIcon className="size-3.5 mr-1.5" />
                             Remove
@@ -781,58 +775,36 @@ export default function VoiceCloningPage() {
                   </div>
                 </div>
               </div>
-            </section>
 
-            <Button
-              disabled={!audioUrl || isRecording || isProcessing}
-              onClick={handleCreateVoice}
-              className="w-full h-11 rounded-full bg-primary hover:bg-primary/90 active:scale-[0.99] text-primary-foreground font-medium text-sm transition-[background-color,transform] duration-150 whitespace-nowrap"
-            >
-              {isProcessing ? (
-                <SpinnerGapIcon className="size-4 mr-2 animate-spin" />
-              ) : (
-                <SparkleIcon weight="fill" className="size-4 mr-2" />
-              )}
-              {isProcessing ? "Creating your voice..." : "Create Voice"}
-            </Button>
+              <Button
+                disabled={!audioUrl || isRecording || isProcessing}
+                onClick={handleCreateVoice}
+                className="w-full h-11 rounded-full bg-primary hover:bg-primary/90 active:scale-[0.99] text-primary-foreground font-semibold text-sm transition-all whitespace-nowrap cursor-pointer"
+              >
+                {isProcessing ? (
+                  <SpinnerGapIcon className="size-4 mr-2 animate-spin" />
+                ) : (
+                  <SparkleIcon weight="fill" className="size-4 mr-2" />
+                )}
+                {isProcessing ? "Creating your voice..." : "Create Voice"}
+              </Button>
+            </section>
           </div>
 
-          {/* Right Guidelines & Cloned Voices */}
-          <aside className="lg:col-span-4 space-y-6">
-            <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-5">
-              <h2 className="text-sm font-semibold text-foreground flex items-center gap-2 pb-3 border-b border-border">
-                <LightbulbIcon className="size-4 text-muted-foreground" />
-                Recording Guidelines
-              </h2>
-
-              <div className="space-y-4 text-xs text-muted-foreground leading-relaxed">
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-foreground">Delivery</h3>
-                  <p>
-                    Speak naturally with expression. Flat, monotone audio
-                    produces flat results. Record in a quiet room free of echo.
-                  </p>
+          {/* Right 5 Cols: Cloned Voices + Recording Guidelines */}
+          <aside className="xl:col-span-5 space-y-5">
+            <section className="bento-card p-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-foreground">
+                    <WaveformIcon weight="fill" className="size-4" />
+                  </span>
+                  <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
+                    Your Cloned Voices
+                  </h2>
                 </div>
-                <div className="space-y-2 pt-3 border-t border-border">
-                  <h3 className="font-semibold text-foreground">
-                    Audio Quality
-                  </h3>
-                  <p>
-                    Aim for 5 to 15 seconds of clear speech at 22kHz or higher,
-                    avoiding microphone clipping or loud peaks.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            <section className="studio-panel rounded-2xl p-5 sm:p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-border">
-                <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
-                  <WaveformIcon className="size-4 text-muted-foreground" />
-                  Your Voices
-                </h2>
                 {clonedVoices && (
-                  <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                  <span className="rounded-full bg-secondary px-3 py-1 font-mono text-xs font-semibold text-foreground tabular-nums">
                     {clonedVoices.length}
                   </span>
                 )}
@@ -840,36 +812,36 @@ export default function VoiceCloningPage() {
 
               {clonedVoices === undefined ? (
                 <div className="space-y-3">
-                  <Skeleton className="h-24 w-full rounded-xl" />
-                  <Skeleton className="h-24 w-full rounded-xl" />
+                  <Skeleton className="h-24 w-full rounded-2xl" />
+                  <Skeleton className="h-24 w-full rounded-2xl" />
                 </div>
               ) : clonedVoices.length === 0 ? (
-                <div className="text-center py-8 bg-secondary/40 border border-border rounded-xl px-4">
-                  <MicrophoneIcon className="size-5 text-muted-foreground mx-auto mb-2.5" />
-                  <p className="text-sm font-medium text-foreground mb-1">
-                    No voices yet
+                <div className="bento-row text-center py-10 px-4">
+                  <div className="size-10 rounded-full bg-card shadow-2xs flex items-center justify-center mx-auto mb-3">
+                    <MicrophoneIcon className="size-4 text-muted-foreground" />
+                  </div>
+                  <p className="text-sm font-semibold text-foreground mb-1">
+                    No cloned voices yet
                   </p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Add an audio sample on the left to clone your first voice.
+                  <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px] mx-auto">
+                    Add an audio sample on the left to clone your first custom
+                    voice.
                   </p>
                 </div>
               ) : (
-                <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
                   {clonedVoices.map((voice) => (
-                    <div
-                      key={voice._id}
-                      className="rounded-xl border border-border bg-secondary/35 p-4 space-y-3"
-                    >
+                    <div key={voice._id} className="bento-row p-4 space-y-3">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0 flex-1">
-                          <h3 className="text-sm font-semibold text-foreground truncate">
+                          <h3 className="text-[14px] font-bold text-foreground truncate">
                             {voice.displayName}
                           </h3>
                           <span className="font-mono text-[11px] text-muted-foreground block truncate mt-0.5">
                             {voice.inworldVoiceId}
                           </span>
                         </div>
-                        <span className="font-mono text-[10px] accent-ink bg-primary/10 px-2 py-0.5 rounded-full shrink-0">
+                        <span className="font-mono text-[10px] font-semibold text-foreground bg-card px-2.5 py-1 rounded-full shrink-0 shadow-2xs">
                           {LANG_LABELS[voice.langCode ?? "EN_US"] ??
                             voice.langCode ??
                             "English (US)"}
@@ -891,7 +863,7 @@ export default function VoiceCloningPage() {
                           {voice.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="text-[11px] text-muted-foreground bg-secondary px-2 py-0.5 rounded-md"
+                              className="text-[11px] font-medium text-muted-foreground bg-card px-2.5 py-0.5 rounded-full shadow-2xs"
                             >
                               #{tag}
                             </span>
@@ -899,31 +871,60 @@ export default function VoiceCloningPage() {
                         </div>
                       )}
 
-                      <div className="flex items-center gap-2 pt-3 border-t border-border">
+                      <div className="flex items-center gap-2 pt-2">
                         <Button
                           asChild
                           variant="ghost"
                           onClick={() => handleUseVoice(voice.inworldVoiceId!)}
-                          className="flex-1 rounded-full bg-primary/10 accent-ink hover:bg-primary hover:text-primary-foreground font-medium text-xs h-8 transition-colors"
+                          className="flex-1 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground font-semibold text-xs h-9 transition-all"
                         >
                           <Link href="/app/text-to-speech">Use Voice</Link>
                         </Button>
-                        <Button
+                        <button
                           type="button"
                           onClick={() =>
                             handleDeleteVoice(voice._id, voice.displayName)
                           }
-                          variant="ghost"
                           aria-label={`Delete ${voice.displayName}`}
-                          className="rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive h-8 px-2.5 transition-colors"
+                          className="flex size-9 items-center justify-center rounded-full bg-card text-muted-foreground hover:text-destructive hover:shadow-xs transition-all cursor-pointer"
                         >
                           <TrashIcon className="size-3.5" />
-                        </Button>
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
+            </section>
+
+            <section className="bento-card p-6 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-foreground">
+                  <LightbulbIcon weight="bold" className="size-4" />
+                </span>
+                <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
+                  Recording Guidelines
+                </h2>
+              </div>
+
+              <div className="space-y-3 text-xs text-muted-foreground leading-relaxed">
+                <div className="bento-row p-4 space-y-1">
+                  <h3 className="font-semibold text-foreground">Delivery</h3>
+                  <p>
+                    Speak naturally with expression. Flat, monotone audio
+                    produces flat results. Record in a quiet room free of echo.
+                  </p>
+                </div>
+                <div className="bento-row p-4 space-y-1">
+                  <h3 className="font-semibold text-foreground">
+                    Audio Quality
+                  </h3>
+                  <p>
+                    Aim for 5 to 15 seconds of clear speech at 22kHz or higher,
+                    avoiding microphone clipping or loud peaks.
+                  </p>
+                </div>
+              </div>
             </section>
           </aside>
         </div>
@@ -933,22 +934,22 @@ export default function VoiceCloningPage() {
         open={voiceToDelete !== null}
         onOpenChange={(open) => !open && setVoiceToDelete(null)}
       >
-        <AlertDialogContent className="bg-card border-border rounded-2xl max-w-md">
+        <AlertDialogContent className="bg-card border-border rounded-[26px] max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-base font-semibold text-destructive flex items-center gap-2">
+            <AlertDialogTitle className="text-base font-bold text-destructive flex items-center gap-2">
               <WarningIcon className="size-4" />
               Delete voice
             </AlertDialogTitle>
             <AlertDialogDescription className="text-sm text-muted-foreground leading-relaxed pt-2">
               Are you sure you want to delete{" "}
-              <span className="font-medium text-foreground">
+              <span className="font-semibold text-foreground">
                 &ldquo;{voiceToDelete?.name}&rdquo;
               </span>
               ? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="mt-4">
-            <AlertDialogCancel className="rounded-full h-9 px-4 text-xs">
+            <AlertDialogCancel className="rounded-full h-9 px-4 text-xs font-semibold">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
@@ -956,7 +957,7 @@ export default function VoiceCloningPage() {
                 trigger("error");
                 void handleConfirmDelete();
               }}
-              className="rounded-full bg-destructive hover:bg-destructive/90 text-destructive-foreground h-9 px-4 text-xs"
+              className="rounded-full bg-destructive hover:bg-destructive/90 text-destructive-foreground h-9 px-4 text-xs font-semibold"
             >
               Delete
             </AlertDialogAction>

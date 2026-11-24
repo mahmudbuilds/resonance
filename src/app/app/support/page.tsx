@@ -34,24 +34,26 @@ const FAQS = [
 
 export default function SupportPage() {
   return (
-    <div className="min-h-full bg-background text-foreground pb-16">
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-8 sm:pt-10 space-y-8 animate-editorial-enter">
-        <header className="pb-6 border-b border-border space-y-1.5">
-          <h1 className="text-3xl font-semibold tracking-[-0.03em] text-foreground">
+    <div className="min-h-full px-5 py-6 sm:px-7 sm:py-8 lg:px-8 lg:py-8">
+      <div className="mx-auto max-w-[1280px] space-y-6 animate-editorial-enter">
+        <header className="space-y-1">
+          <h1 className="text-[24px] sm:text-[26px] font-bold tracking-[-0.03em] text-foreground">
             Help &amp; Support
           </h1>
-          <p className="text-sm text-muted-foreground max-w-xl leading-relaxed">
+          <p className="text-[13px] text-muted-foreground max-w-xl leading-relaxed">
             Browse answers to common studio questions or email our engineering
             support team.
           </p>
         </header>
 
-        <div className="grid lg:grid-cols-12 gap-6 items-start">
+        <div className="grid lg:grid-cols-12 gap-5 items-start">
           {/* FAQ Knowledge Base */}
-          <section className="lg:col-span-7 studio-panel rounded-2xl p-5 sm:p-6 space-y-5">
-            <div className="flex items-center gap-2 pb-3 border-b border-border">
-              <ChatCircleTextIcon className="size-4 text-muted-foreground" />
-              <h2 className="text-sm font-semibold text-foreground">
+          <section className="bento-card lg:col-span-7 p-6 space-y-5">
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-8 items-center justify-center rounded-full bg-secondary text-foreground">
+                <ChatCircleTextIcon weight="bold" className="size-4" />
+              </span>
+              <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
                 Frequently Asked Questions
               </h2>
             </div>
@@ -61,12 +63,12 @@ export default function SupportPage() {
                 <AccordionItem
                   key={faq.q}
                   value={`item-${i}`}
-                  className="border border-border bg-secondary/35 px-4 rounded-xl data-[state=open]:border-primary/40 transition-colors"
+                  className="bento-row border-0 px-4"
                 >
-                  <AccordionTrigger className="text-sm font-medium text-foreground hover:text-primary transition-colors hover:no-underline text-left py-4">
+                  <AccordionTrigger className="text-[13.5px] font-semibold text-foreground hover:no-underline text-left py-4">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed pb-4">
+                  <AccordionContent className="text-[13px] text-muted-foreground leading-relaxed pb-4">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -75,33 +77,35 @@ export default function SupportPage() {
           </section>
 
           {/* Direct Contact */}
-          <aside className="lg:col-span-5 studio-panel rounded-2xl p-5 sm:p-6 space-y-6">
-            <div className="flex items-center gap-2 pb-3 border-b border-border">
-              <EnvelopeSimpleIcon className="size-4 text-muted-foreground" />
-              <h2 className="text-sm font-semibold text-foreground">
+          <aside className="bento-card lg:col-span-5 p-6 space-y-5">
+            <div className="flex items-center gap-2.5">
+              <span className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <EnvelopeSimpleIcon weight="fill" className="size-4" />
+              </span>
+              <h2 className="text-[15px] font-bold tracking-[-0.02em] text-foreground">
                 Direct Contact
               </h2>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-foreground tracking-tight">
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-foreground tracking-[-0.02em]">
                 Need direct assistance?
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-[13px] text-muted-foreground leading-relaxed">
                 If you encounter a technical issue or need help with custom
                 voice limits, write to our team directly.
               </p>
             </div>
 
-            <div className="rounded-xl p-4 border border-border bg-secondary/45 flex items-center gap-3.5">
-              <div className="size-10 rounded-xl bg-card border border-border flex items-center justify-center accent-ink shrink-0">
-                <EnvelopeSimpleIcon className="size-4" />
+            <div className="bento-row p-4 flex items-center gap-3.5">
+              <div className="size-10 rounded-full bg-card shadow-2xs flex items-center justify-center text-foreground shrink-0">
+                <EnvelopeSimpleIcon weight="fill" className="size-4" />
               </div>
               <div className="min-w-0">
-                <div className="text-xs text-muted-foreground">
+                <div className="text-[11px] font-medium text-muted-foreground">
                   Email Support
                 </div>
-                <div className="text-sm font-semibold text-foreground truncate">
+                <div className="text-sm font-bold text-foreground truncate">
                   support@resonance.ai
                 </div>
               </div>
@@ -109,11 +113,11 @@ export default function SupportPage() {
 
             <Button
               asChild
-              className="w-full rounded-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm"
+              className="w-full rounded-full h-10 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold text-xs"
             >
               <a href="mailto:support@resonance.ai">
                 Email Support
-                <ArrowRightIcon className="size-4 ml-2" />
+                <ArrowRightIcon weight="bold" className="size-3.5 ml-2" />
               </a>
             </Button>
           </aside>

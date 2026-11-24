@@ -1,30 +1,22 @@
-import { cookies } from "next/headers";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import Navbar from "@/components/dashboard/Navbar";
 import { HapticsProvider } from "@/components/haptics/HapticsProvider";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookiesStore = await cookies();
-  const sidebarCookie = cookiesStore.get("sidebar_state")?.value;
-  const sidebarOpen = sidebarCookie !== "false";
-
   return (
-    <SidebarProvider
-      defaultOpen={sidebarOpen}
-      style={{ "--sidebar-width-icon": "4.25rem" } as React.CSSProperties}
-    >
+    <div className="studio-theme min-h-[100dvh] bg-background text-foreground flex flex-col lg:flex-row">
       <DashboardSidebar />
-      <SidebarInset className="min-h-[100dvh] min-w-0 bg-background">
-        <Navbar />
-        <main className="flex flex-col min-h-0 flex-1">
+      <Navbar />
+
+      <div className="flex-1 min-w-0 flex flex-col lg:py-3.5 lg:pr-3.5">
+        <main className="bento-canvas flex-1 min-w-0 flex flex-col lg:rounded-[30px] overflow-x-clip">
           <HapticsProvider>{children}</HapticsProvider>
         </main>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </div>
   );
 }

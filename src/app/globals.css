@@ -7,8 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  --font-heading: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-sans:
+    var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
+  --font-heading:
+    var(--font-plus-jakarta-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
@@ -122,6 +124,88 @@
   --selection-fg: #ffffff;
 }
 
+/* Monochrome Bento Studio Theme (/app/*) */
+.studio-theme {
+  --background: #ffffff;
+  --foreground: #0d0d0f;
+  --card: #ffffff;
+  --card-foreground: #0d0d0f;
+  --popover: #ffffff;
+  --popover-foreground: #0d0d0f;
+  --primary: #0d0d0f;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #141518;
+  --muted: #f3f4f6;
+  --muted-foreground: #6e737d;
+  --accent: #ecedf0;
+  --accent-foreground: #0d0d0f;
+  --destructive: #d92d34;
+  --destructive-foreground: #ffffff;
+  --border: rgba(13, 13, 15, 0.075);
+  --input: rgba(13, 13, 15, 0.11);
+  --ring: rgba(13, 13, 15, 0.24);
+  --radius: 1rem;
+
+  --surface-subtle: #f5f6f8;
+  --studio-canvas: #eceef1;
+  --studio-row: #f6f7f9;
+  --studio-row-hover: #eff0f3;
+  --accent-ink: #0d0d0f;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d0d0f;
+  --sidebar-primary: #0d0d0f;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: #0d0d0f;
+  --sidebar-border: transparent;
+  --sidebar-ring: rgba(13, 13, 15, 0.2);
+
+  --selection-bg: rgba(13, 13, 15, 0.12);
+  --selection-fg: #0d0d0f;
+}
+
+.dark .studio-theme {
+  --background: #0a0b0d;
+  --foreground: #f6f7f9;
+  --card: #181a1f;
+  --card-foreground: #f6f7f9;
+  --popover: #1c1f25;
+  --popover-foreground: #f6f7f9;
+  --primary: #ffffff;
+  --primary-foreground: #0d0d0f;
+  --secondary: #22252c;
+  --secondary-foreground: #f6f7f9;
+  --muted: #22252c;
+  --muted-foreground: #8f96a3;
+  --accent: #272b33;
+  --accent-foreground: #f6f7f9;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255, 255, 255, 0.075);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: rgba(255, 255, 255, 0.28);
+
+  --surface-subtle: #14161b;
+  --studio-canvas: #111317;
+  --studio-row: rgba(255, 255, 255, 0.035);
+  --studio-row-hover: rgba(255, 255, 255, 0.065);
+  --accent-ink: #ffffff;
+
+  --sidebar: #0a0b0d;
+  --sidebar-foreground: #f6f7f9;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #0d0d0f;
+  --sidebar-accent: #1c1f25;
+  --sidebar-accent-foreground: #f6f7f9;
+  --sidebar-border: transparent;
+  --sidebar-ring: rgba(255, 255, 255, 0.25);
+
+  --selection-bg: rgba(255, 255, 255, 0.2);
+  --selection-fg: #ffffff;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -148,7 +232,70 @@
   }
 }
 
-/* Architectural studio surfaces (tinted shadow in light mode, crisp edge in dark) */
+/* Monochrome Bento Studio Surfaces */
+.bento-canvas {
+  background-color: var(--studio-canvas);
+  box-shadow: inset 0 1px 6px rgba(13, 13, 15, 0.045);
+}
+
+.dark .bento-canvas {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.bento-card {
+  background-color: var(--card);
+  border-radius: 1.625rem;
+  box-shadow:
+    0 1px 2px rgba(13, 13, 15, 0.03),
+    0 6px 20px -12px rgba(13, 13, 15, 0.06);
+  transition:
+    box-shadow 200ms var(--ease-studio),
+    transform 200ms var(--ease-studio);
+}
+
+.dark .bento-card {
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 24px -12px rgba(0, 0, 0, 0.45);
+}
+
+.bento-capsule {
+  background-color: var(--card);
+  border-radius: 1.75rem;
+  box-shadow:
+    0 1px 2px rgba(13, 13, 15, 0.025),
+    0 8px 20px -14px rgba(13, 13, 15, 0.08);
+  transition:
+    transform 220ms var(--ease-studio),
+    box-shadow 220ms var(--ease-studio);
+}
+
+.bento-capsule:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 4px 12px -4px rgba(13, 13, 15, 0.06),
+    0 14px 28px -16px rgba(13, 13, 15, 0.12);
+}
+
+.dark .bento-capsule {
+  border: 1px solid rgba(255, 255, 255, 0.055);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 20px -14px rgba(0, 0, 0, 0.5);
+}
+
+.bento-row {
+  background-color: var(--studio-row);
+  border-radius: 1rem;
+  transition: background-color 160ms var(--ease-studio);
+}
+
+.bento-row:hover {
+  background-color: var(--studio-row-hover);
+}
+
+/* Architectural studio surfaces (landing / legacy compatibility) */
 .studio-panel {
   background-color: var(--card);
   border: 1px solid var(--border);

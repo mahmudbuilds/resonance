@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import ClerkThemeProvider from "@/components/ClerkThemeProvider";
 import ConvexClientProvider from "@/components/ConvexClientProvider";
@@ -8,10 +8,10 @@ import UserSync from "@/components/UserSync";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-geist-sans",
+  variable: "--font-plus-jakarta-sans",
   display: "swap",
 });
 
@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={cn(
         "h-full antialiased",
-        geistSans.variable,
+        plusJakartaSans.variable,
         geistMono.variable,
         "font-sans",
       )}
