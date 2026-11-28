@@ -5,12 +5,8 @@ export default function SignUpPage() {
     <SignUp
       appearance={{
         elements: {
-          logoBox: "flex items-center justify-center mb-6",
-          logoImage: {
-            width: "96px",
-            height: "96px",
-            objectFit: "contain",
-          },
+          logoBox: "flex items-center justify-center mb-3",
+          logoImage: "size-9 object-contain dark:invert-0 invert",
         },
       }}
     />

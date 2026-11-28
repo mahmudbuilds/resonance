@@ -1,6 +1,11 @@
 "use client";
 
-import { PauseIcon, PlayIcon, SpeakerHighIcon } from "@phosphor-icons/react";
+import {
+  PauseIcon,
+  PlayIcon,
+  SparkleIcon,
+  WaveformIcon,
+} from "@phosphor-icons/react";
 import { motion, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -8,6 +13,7 @@ import { cn } from "@/lib/utils";
 interface AuditionPreset {
   id: string;
   name: string;
+  genre: string;
   register: string;
   locale: string;
   sampleLine: string;
@@ -23,40 +29,43 @@ const PRESETS: AuditionPreset[] = [
   {
     id: "nadia",
     name: "Nadia",
-    register: "Documentary",
+    genre: "Documentary",
+    register: "warm studio cadence",
     locale: "EN-US",
     sampleLine: "Light enters the room before the first word is spoken.",
     baseFreq: 196,
     formantFreq: 520,
     bars: toBars([
-      0.32, 0.54, 0.84, 0.62, 0.92, 0.74, 0.44, 0.8, 0.96, 0.66, 0.48, 0.86,
-      0.58, 0.4, 0.78, 0.9, 0.52, 0.38, 0.64, 0.46, 0.72, 0.56, 0.36, 0.44,
+      0.34, 0.58, 0.86, 0.64, 0.94, 0.72, 0.46, 0.82, 0.96, 0.68, 0.5, 0.84,
+      0.6, 0.42, 0.76, 0.88,
     ]),
   },
   {
     id: "tomas",
     name: "Tomas",
-    register: "Warm Narration",
+    genre: "Product Film",
+    register: "measured baritone",
     locale: "ES-ES",
     sampleLine: "Pacing and breath give technical writing a human pulse.",
     baseFreq: 138,
     formantFreq: 410,
     bars: toBars([
-      0.42, 0.68, 0.52, 0.88, 0.94, 0.56, 0.46, 0.82, 0.74, 0.96, 0.62, 0.48,
-      0.8, 0.68, 0.52, 0.76, 0.64, 0.44, 0.58, 0.36, 0.66, 0.5, 0.4, 0.32,
+      0.44, 0.7, 0.54, 0.88, 0.94, 0.58, 0.48, 0.82, 0.74, 0.96, 0.62, 0.5, 0.8,
+      0.66, 0.52, 0.74,
     ]),
   },
   {
     id: "hana",
     name: "Hana",
-    register: "Studio Guide",
+    genre: "Tutorial",
+    register: "crisp articulation",
     locale: "JA-JP",
-    sampleLine: "Clean studio articulation tuned for concise tutorials.",
+    sampleLine: "Clean studio articulation tuned for concise walkthroughs.",
     baseFreq: 224,
     formantFreq: 610,
     bars: toBars([
-      0.3, 0.62, 0.78, 0.94, 0.54, 0.68, 0.86, 0.48, 0.72, 0.88, 0.64, 0.42,
-      0.78, 0.92, 0.58, 0.46, 0.7, 0.52, 0.66, 0.38, 0.74, 0.58, 0.44, 0.34,
+      0.32, 0.64, 0.8, 0.94, 0.56, 0.7, 0.86, 0.5, 0.74, 0.9, 0.64, 0.44, 0.78,
+      0.92, 0.58, 0.48,
     ]),
   },
 ];
@@ -210,12 +219,41 @@ export function HeroAudioAudition() {
   };
 
   return (
-    <div className="studio-panel rounded-2xl p-4 sm:p-5 space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <div className="tactile-tile rounded-[24px] p-5 sm:p-6 w-full max-w-[600px] mx-auto bg-card/95 backdrop-blur-md">
+      {/* Top Prompt Line */}
+      <div
+        key={activePreset.id}
+        className="flex items-start gap-3 animate-panel-swap"
+      >
+        <span
+          aria-hidden="true"
+          className="mt-0.5 size-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
+        >
+          <SparkleIcon weight="fill" className="size-3.5" />
+        </span>
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-sm sm:text-[15px] text-foreground leading-snug">
+            Generate a{" "}
+            <span className="italic underline decoration-primary/40 underline-offset-4 font-medium pb-0.5">
+              {activePreset.genre}
+            </span>{" "}
+            with{" "}
+            <span className="italic underline decoration-primary/40 underline-offset-4 font-medium pb-0.5">
+              {activePreset.name}&apos;s {activePreset.register}
+            </span>
+          </p>
+          <p className="text-xs text-muted-foreground truncate">
+            &ldquo;{activePreset.sampleLine}&rdquo;
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom Interactive Controls */}
+      <div className="mt-5 pt-4 border-t border-border/80 flex flex-wrap items-center justify-between gap-3">
         <div
           role="tablist"
           aria-label="Voice presets"
-          className="inline-flex items-center gap-1 p-1 rounded-full bg-secondary border border-border"
+          className="inline-flex items-center gap-1 p-1 rounded-full bg-secondary/90 border border-border/70"
         >
           {PRESETS.map((preset) => {
             const selected = preset.id === activePreset.id;
@@ -250,97 +288,62 @@ export function HeroAudioAudition() {
           })}
         </div>
 
-        <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground tabular-nums">
-          {isPlaying && (
-            <span
+        <div className="flex items-center gap-3 ml-auto">
+          <div className="hidden sm:flex items-center gap-2">
+            <span className="font-mono text-[11px] text-muted-foreground tabular-nums">
+              {activePreset.locale}
+            </span>
+            <div
+              className="flex items-center gap-[2.5px] h-6 w-20"
               aria-hidden="true"
-              className="size-1.5 rounded-full bg-primary animate-tally-pulse"
-            />
-          )}
-          <span>{activePreset.locale}</span>
-          <span className="text-border">/</span>
-          <span>48kHz</span>
-        </div>
-      </div>
+            >
+              {activePreset.bars.map((bar, idx) => {
+                const barProgress = idx / activePreset.bars.length;
+                const active = isPlaying && barProgress <= progress;
+                const waveScale =
+                  isPlaying && !prefersReducedMotion
+                    ? 1 + Math.sin(progress * Math.PI * 10 + idx * 0.85) * 0.16
+                    : 1;
 
-      <div className="flex items-center gap-3.5">
-        <button
-          type="button"
-          onClick={handleTogglePlay}
-          aria-label={
-            isPlaying
-              ? `Pause ${activePreset.name} preview`
-              : `Play ${activePreset.name} preview`
-          }
-          className="size-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.96] transition-[background-color,transform] duration-150 flex items-center justify-center shrink-0 cursor-pointer shadow-xs"
-        >
-          {isPlaying ? (
-            <PauseIcon weight="fill" className="size-4" />
-          ) : (
-            <PlayIcon weight="fill" className="size-4 ml-0.5" />
-          )}
-        </button>
+                return (
+                  <div
+                    key={bar.id}
+                    className={cn(
+                      "flex-1 rounded-full transition-[height,background-color] duration-200",
+                      active ? "bg-primary" : "bg-foreground/20",
+                    )}
+                    style={{
+                      height: `${Math.round(bar.height * 100)}%`,
+                      transform: `scaleY(${waveScale.toFixed(3)})`,
+                    }}
+                  />
+                );
+              })}
+            </div>
+          </div>
 
-        <div
-          className="flex-1 flex items-center gap-[3px] h-10"
-          aria-hidden="true"
-        >
-          {activePreset.bars.map((bar, idx) => {
-            const barProgress = idx / activePreset.bars.length;
-            const active = isPlaying && barProgress <= progress;
-            const isLeadBar =
-              isPlaying &&
-              Math.abs(barProgress - progress) < 1.5 / activePreset.bars.length;
-            const waveScale =
-              isPlaying && !prefersReducedMotion
-                ? 1 + Math.sin(progress * Math.PI * 10 + idx * 0.85) * 0.14
-                : 1;
-
-            return (
-              <div
-                key={bar.id}
-                className={cn(
-                  "flex-1 rounded-full transition-[height,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                  active
-                    ? "bg-primary"
-                    : isLeadBar
-                      ? "bg-primary/60"
-                      : "bg-foreground/15",
-                )}
-                style={{
-                  height: `${Math.round(bar.height * 100)}%`,
-                  transform: `scaleY(${waveScale.toFixed(3)})`,
-                  transitionDelay: isPlaying ? "0ms" : `${idx * 8}ms`,
-                }}
-              />
-            );
-          })}
-        </div>
-
-        <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
-          <SpeakerHighIcon
-            weight={isPlaying ? "fill" : "regular"}
-            className={cn(
-              "size-4 transition-colors duration-200",
-              isPlaying && "accent-ink",
-            )}
-          />
-          <span className="font-mono text-[11px] tabular-nums w-9 text-right">
-            {isPlaying ? `${(progress * 3.2).toFixed(1)}s` : "03.2s"}
+          <span className="sm:hidden flex items-center gap-1 font-mono text-[11px] text-muted-foreground tabular-nums">
+            <WaveformIcon className="size-3.5 text-primary" />
+            {isPlaying ? `${(progress * 3.2).toFixed(1)}s` : "3.2s"}
           </span>
-        </div>
-      </div>
 
-      <div
-        key={activePreset.id}
-        className="pt-3 border-t border-border flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5 sm:gap-4 animate-panel-swap"
-      >
-        <p className="text-xs text-muted-foreground leading-relaxed">
-          &ldquo;{activePreset.sampleLine}&rdquo;
-        </p>
-        <span className="text-[11px] font-medium text-foreground shrink-0">
-          {activePreset.register}
-        </span>
+          <button
+            type="button"
+            onClick={handleTogglePlay}
+            aria-label={
+              isPlaying
+                ? `Pause ${activePreset.name} preview`
+                : `Play ${activePreset.name} preview`
+            }
+            className="size-10 rounded-xl bg-foreground text-background hover:bg-foreground/90 active:scale-[0.96] transition-[background-color,transform] duration-150 flex items-center justify-center shrink-0 cursor-pointer shadow-xs"
+          >
+            {isPlaying ? (
+              <PauseIcon weight="fill" className="size-4" />
+            ) : (
+              <PlayIcon weight="fill" className="size-4 ml-0.5" />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

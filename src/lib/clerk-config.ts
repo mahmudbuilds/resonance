@@ -1,8 +1,11 @@
 import { dark } from "@clerk/themes";
 
 const sharedElements = {
-  rootBox: "w-full",
-  card: "rounded-2xl border border-border shadow-sm p-0 w-full max-w-full bg-card",
+  rootBox: "w-full flex justify-center",
+  cardBox:
+    "w-full max-w-[420px] rounded-3xl border border-border bg-card shadow-sm overflow-hidden",
+  card: "bg-transparent shadow-none border-none w-full px-6 py-7 sm:px-8 sm:py-8",
+  footer: "bg-secondary/45 border-t border-border/80 px-6 py-4",
   navbar: "rounded-l-2xl border-r border-border bg-card py-8 px-4",
   navbarButton: "rounded-xl transition-colors hover:bg-accent",
   navbarButtonActive: "bg-accent text-foreground",
@@ -31,27 +34,27 @@ const sharedElements = {
   userPreviewMainIdentifier: "text-base font-semibold text-foreground",
   userPreviewSecondaryIdentifier: "text-xs text-muted-foreground",
   formButtonPrimary:
-    "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium text-sm h-10 border-none",
+    "rounded-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-[background-color,transform] font-medium text-sm h-10 border-none shadow-xs",
   formButtonReset:
     "rounded-full hover:bg-accent text-foreground text-sm font-medium h-10",
   formFieldInput:
-    "border border-input h-10 rounded-xl focus:ring-1 focus:ring-primary focus:border-primary text-foreground text-sm px-3.5 transition-colors bg-background",
-  formFieldLabel: "text-xs font-medium text-muted-foreground mb-1.5",
+    "border border-input h-10 rounded-xl focus:ring-2 focus:ring-primary/25 focus:border-primary text-foreground text-sm px-3.5 transition-colors bg-background",
+  formFieldLabel: "text-xs font-medium text-foreground/80 mb-1.5",
   formFieldLabelRow: "mb-1.5",
   formFieldAction: "text-primary hover:text-primary/90 text-xs font-medium",
   formFieldInputGroup: "rounded-xl",
   formHeaderTitle:
-    "font-heading text-2xl font-semibold tracking-tight text-foreground mb-1",
+    "font-heading text-xl font-semibold tracking-tight text-foreground mb-1",
   formHeaderSubtitle: "text-sm text-muted-foreground",
   headerTitle:
-    "font-heading text-3xl font-semibold tracking-tight text-foreground mb-1",
+    "font-heading text-2xl font-semibold tracking-[-0.025em] text-foreground mb-1",
   headerSubtitle: "text-sm text-muted-foreground",
   socialButtonsBlockButton:
-    "border border-border hover:bg-accent transition-colors text-foreground h-10 rounded-xl bg-secondary",
+    "border border-border hover:bg-accent transition-colors text-foreground h-10 rounded-xl bg-background shadow-2xs",
   socialButtonsBlockButtonText: "font-medium text-sm text-foreground",
-  dividerLine: "bg-border",
+  dividerLine: "bg-border/80",
   dividerText: "text-muted-foreground text-xs font-medium",
-  footerActionText: "text-muted-foreground text-sm",
+  footerActionText: "text-muted-foreground text-xs sm:text-sm",
   footerActionLink:
     "text-primary hover:text-primary/90 transition-colors font-medium",
   identityPreviewTextPrimary: "text-sm font-medium text-foreground",
